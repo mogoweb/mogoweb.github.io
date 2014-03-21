@@ -3,11 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>放飞梦想</title>
+	<title>Chromium网络加载速度研究(1) - 放飞梦想</title>
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="本文主要内容翻译自Google的文档Data Compression Proxy，如果您觉得文章写的不明白，请参看原文。 对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera &hellip;">
+	<meta name="description" content="本文主要内容翻译自Google的文档Data Compression Proxy，如果您觉得文章写的不明白，请参看原文。 对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera、 &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -73,18 +73,9 @@
 	
 		
 	
-	<div id="content" class="inner">
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/03/18/chromium-loading-speed-research-0/">
-		
-			Chromium网络加载速度研究(1)</a>
-	</h2>
-	<div class="entry-content">
-		<p>本文主要内容翻译自Google的文档<a href="https://developers.google.com/chrome/mobile/docs/data-compression?hl=zh-CN">Data Compression Proxy</a>，如果您觉得文章写的不明白，请参看原文。</p>
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Chromium网络加载速度研究(1)</h2>
+	<div class="entry-content"><p>本文主要内容翻译自Google的文档<a href="https://developers.google.com/chrome/mobile/docs/data-compression?hl=zh-CN">Data Compression Proxy</a>，如果您觉得文章写的不明白，请参看原文。</p>
 
 <p>对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera、QQ浏览器都采用了服务器端加速技术。Chrome移动版从V33开始正式支持数据压缩代理。下面就分析一下Chrome for Android所采用的数据压缩技术。</p>
 
@@ -143,10 +134,7 @@
 * 拥有强大的分布式计算能力，浏览器终端需要能够就近连接数据压缩代理</p>
 
 <p>在中国，Chrome for Android如果开启数据压缩代理功能，速度反而更慢，其原因就在于Google在中国并没有部署服务器。对于个人开发者和中小企业，一来无法部署强大的数据中心，二来也无法使用Google的服务，所以服务器端加速方案不具备可行性。</p>
-
-		
-		
-	</div>
+</div>
 
 
 <div class="meta">
@@ -174,11 +162,20 @@
 </div>
 </article>
 
-<nav id="pagenavi">
-    
-    
-    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
-</nav></div>
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+</div>
 	<footer id="footer" class="inner">Copyright &copy; 2014
 
     mogoweb
