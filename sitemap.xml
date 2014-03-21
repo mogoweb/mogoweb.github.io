@@ -2,18 +2,26 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/</loc>
-        <lastmod>2014-03-21T16:48:58+08:00</lastmod>
+        <lastmod>2014-03-21T17:20:07+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/robots.txt</loc>
         <lastmod>2014-03-19T17:41:46+08:00</lastmod>
     </url>
     <url>
+        <loc>http://mogoweb.github.io/mogo-browser/</loc>
+        <lastmod>2014-03-21T18:04:51+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://mogoweb.github.io/</loc>
-        <lastmod>2014-03-21T16:48:58+08:00</lastmod>
+        <lastmod>2014-03-21T17:20:07+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://mogoweb.github.io/about/</loc>
+        <lastmod>2014-03-21T17:35:15+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/blog/archives/</loc>
-        <lastmod>2014-03-21T16:48:58+08:00</lastmod>
+        <lastmod>2014-03-21T17:20:07+08:00</lastmod>
     </url>
 </urlset>

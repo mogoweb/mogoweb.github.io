@@ -4,7 +4,7 @@
   <title><![CDATA[Category: chromium, | 放飞梦想]]></title>
   <link href="http://mogoweb.github.io/blog/categories/chromium/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-03-21T16:49:09+08:00</updated>
+  <updated>2014-03-21T18:04:51+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -21,6 +21,9 @@
     <content type="html"><![CDATA[<p>本文主要内容翻译自Google的文档<a href="https://developers.google.com/chrome/mobile/docs/data-compression?hl=zh-CN">Data Compression Proxy</a>，如果您觉得文章写的不明白，请参看原文。</p>
 
 <p>对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera、QQ浏览器都采用了服务器端加速技术。Chrome移动版从V33开始正式支持数据压缩代理。下面就分析一下Chrome for Android所采用的数据压缩技术。</p>
+
+<!--more-->
+
 
 <h2>数据压缩代理</h2>
 
