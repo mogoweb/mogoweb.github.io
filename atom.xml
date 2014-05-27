@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-03-25T17:14:07+08:00</updated>
+  <updated>2014-05-27T09:53:59+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,119 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用iphot和微云管理照片]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/"/>
+    <updated>2014-05-25T07:35:09+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos</id>
+    <content type="html"><![CDATA[<p>自从上次移动硬盘损坏，丢失了不少珍贵的照片，一直心有余悸，保存资料都会进行双备份。近一两年，云存储市场风起云涌，越来越多的企业加入战团。不仅免费，而且容量越来越大。当腾讯宣布微云免费容量10T后，我毫不犹豫的就申请了一个账号，将资料都保存在云端（基本上是一些照片和视频，对于普通老百姓，隐私从来都不是大事），形成本地和云端双保险。近期新入手了一台iMac，Mac OS自带的iPhoto应用程序让人爱不释手，管理照片起来非常方便，可以直接导入RAW文件，还提供简单的编辑功能。但iPhoto通常是将相机照片导入到自己的库中，这样会出现iPhoto和微云两套照片，有点浪费空间。在琢磨了一段时间后，总结了一套自己的照片管理方法。</p>
+
+<!--more-->
+
+
+<p>首先，在微云文件夹里面，还是按照手工的方式整理文件夹，基本的目录命名原则是第一层目录为年份，在年份下面再根据日期和事件（或地点）建立子文件夹。单反拍的照片用RAW格式存储，将SD卡取下来，接到电脑上，将其中的照片文件复制到对应的子文件夹。这一步完成了数码照片在微云上的存储。RAW格式虽然方便后期处理，但是浏览起来不太方便，如果要发布到网上，或者传给他人，还是需要转成jpg格式才行，这时就需要iPhoto上场了。</p>
+
+<p>接下来，打开iPhoto，点选菜单项“iPhoto ｜ 偏好设置“，在弹出的界面，点击“高级”选项卡，去掉“将项目拷贝到iPhoto图库“前面的勾，如下图所示：</p>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_iphoto_preferences.png" alt="偏好设置" /></p>
+
+<p>修改这一设置的目的是不用将原始的RAW文件复制到iPhoto库，节省空间。然后点选菜单项“文件 ｜ 导入到图库“，选择微云上的照片，完成导入。这样如果要浏览照片，就可以在iPhoto中进行，大部分照片可以进行简单的修饰。如果需要复杂的修饰处理，可以打开PhotoShop，对微云下的RAW格式文件进行处理。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Chromium网络加载速度研究(2)]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/04/03/chromium-loading-spped-research-1/"/>
+    <updated>2014-04-03T18:10:06+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/04/03/chromium-loading-spped-research-1</id>
+    <content type="html"><![CDATA[<p>本文主要内容翻译自chromium的文档<a href="http://www.chromium.org/developers/design-documents/network-stack/netlog">NetLog: Chrome’s network logging system</a>，如果您觉得文章写的不明白，请参看原文。</p>
+
+<p>通过&lt;&lt;<a href="http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/">Chromium网络加载速度研究(1)</a>>>这篇文章的分析，可以得出结论，云端加速是高富帅的玩法。对于个人开发者和小公司而言，是没有那个实力去部署强大的数据中心的。所以接下来还得继续研究，看看有没有其它的途径提高网页加载速度。在着手优化之前，我们需要一个profiling手段找出瓶颈，有目的的优化。另一方面，也需要考虑如何评估优化的效果。如果没有一个客观的评估，优化方案是否有效心中就没有底。谈到Profiling，大多数人估计都会想到log大法，就是在程序的一些关键位置打上log。log通常包括时间、事件、状态等。在chromium中，开发人员早就预料了此类需求，设计了一套强大的NetLog。下面就分析一下chromium中NetLog的设计、实现及其用法。</p>
+
+<!--more-->
+
+
+<h2>概述</h2>
+
+<p>NetLog是一套为Chrome网络栈而设计的事件日志机制，帮助调试问题和分析性能。它遵照&#8221;抓取->转储->分析&#8221;的工作流程，这点和某些工具，如tcpdump有些相像。</p>
+
+<p>典型的使用场景为：</p>
+
+<ol>
+<li> 用户启用网络日志</li>
+<li> 用户重现问题</li>
+<li> 用户将日志上传到BUG报告系统</li>
+<li> 开发人员分析日志，定位问题</li>
+</ol>
+
+
+<p>在chrome网络栈内部，在一些关键位置都加入了日志机制，产生事件。观察者监控事件流，对数据进行处理。Chrome中已有的观察者有：</p>
+
+<ul>
+<li>(net_log_logger.cc) 将事件流序列化到文件</li>
+<li>(net_internals_ui.cc) 将事件传递到Javascript应用程序chrome://net-internals,改应用程序可以将数据可视化展现，也可以导出到文件</li>
+</ul>
+
+
+<h2>NetLog的设计理念：</h2>
+
+<ul>
+<li>NetLog缺省关闭</li>
+<li>NetLog关闭时不会影响性能</li>
+<li>Chrome官方发行版本支持NetLog</li>
+<li>事件容易序列化/反序列化到磁盘</li>
+<li>NetLog仅仅用作记录日志</li>
+</ul>
+
+
+<p>也就是说，日志如何序列化，如何分析并非NetLog需要关心的事情。此外，不要通过NetLog获取内部网络信息，比如为NetLog增加一个观察者得到内部网络状态信息。正确的做法是为NetworkDelegate增加接口，进行充分的测试，然后增加文档进行说明。</p>
+
+<h2>NetLog事件的结构定义</h2>
+
+<p>C++中NetLog事件用net::NetLog::Entry定义，这是在内存中的表示，非常容易序列化到JSON。</p>
+
+<p>不到必要的时候，NetLog事件并不会序列化到JSON。在需要序列化事件时，JSON格式如下：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center"> 字段 </th>
+<th align="center"> 类型 </th>
+<th align="left"> 描述 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"> time </td>
+<td align="center"> string </td>
+<td align="left">事件发生的时间（毫秒)，这是时间滴答数而不是unix时间戳. 尽管这是一个数字域，使用字符串表示是避免精度损失</td>
+</tr>
+<tr>
+<td align="center"> type </td>
+<td align="center"> number </td>
+<td align="left">事件类型的ID，枚举值定义在<a href="http://src.chromium.org/viewvc/chrome/trunk/src/net/base/net_log_event_type_list.h?view=markup">net_log_event_type_list.h</a></td>
+</tr>
+<tr>
+<td align="center"> source </td>
+<td align="center"> object </td>
+<td align="left">产生事件的实例，比如可以标识出某个特定的URLRequest</td>
+</tr>
+<tr>
+<td align="center"> phase </td>
+<td align="center"> number </td>
+<td align="left">BEGIN, END, NONE三个枚举值之一</td>
+</tr>
+<tr>
+<td align="center"> params </td>
+<td align="center"> object </td>
+<td align="left">可选字段 </td>
+</tr>
+</tbody>
+</table>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Chromium网络加载速度研究(1)]]></title>

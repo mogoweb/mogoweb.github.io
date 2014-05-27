@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: 瞎折腾 | 放飞梦想]]></title>
+  <link href="http://mogoweb.github.io/blog/categories/xia-zhe-teng/atom.xml" rel="self"/>
+  <link href="http://mogoweb.github.io/"/>
+  <updated>2014-05-27T09:53:59+08:00</updated>
+  <id>http://mogoweb.github.io/</id>
+  <author>
+    <name><![CDATA[mogoweb]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用iphot和微云管理照片]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/"/>
+    <updated>2014-05-25T07:35:09+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos</id>
+    <content type="html"><![CDATA[<p>自从上次移动硬盘损坏，丢失了不少珍贵的照片，一直心有余悸，保存资料都会进行双备份。近一两年，云存储市场风起云涌，越来越多的企业加入战团。不仅免费，而且容量越来越大。当腾讯宣布微云免费容量10T后，我毫不犹豫的就申请了一个账号，将资料都保存在云端（基本上是一些照片和视频，对于普通老百姓，隐私从来都不是大事），形成本地和云端双保险。近期新入手了一台iMac，Mac OS自带的iPhoto应用程序让人爱不释手，管理照片起来非常方便，可以直接导入RAW文件，还提供简单的编辑功能。但iPhoto通常是将相机照片导入到自己的库中，这样会出现iPhoto和微云两套照片，有点浪费空间。在琢磨了一段时间后，总结了一套自己的照片管理方法。</p>
+
+<!--more-->
+
+
+<p>首先，在微云文件夹里面，还是按照手工的方式整理文件夹，基本的目录命名原则是第一层目录为年份，在年份下面再根据日期和事件（或地点）建立子文件夹。单反拍的照片用RAW格式存储，将SD卡取下来，接到电脑上，将其中的照片文件复制到对应的子文件夹。这一步完成了数码照片在微云上的存储。RAW格式虽然方便后期处理，但是浏览起来不太方便，如果要发布到网上，或者传给他人，还是需要转成jpg格式才行，这时就需要iPhoto上场了。</p>
+
+<p>接下来，打开iPhoto，点选菜单项“iPhoto ｜ 偏好设置“，在弹出的界面，点击“高级”选项卡，去掉“将项目拷贝到iPhoto图库“前面的勾，如下图所示：</p>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_iphoto_preferences.png" alt="偏好设置" /></p>
+
+<p>修改这一设置的目的是不用将原始的RAW文件复制到iPhoto库，节省空间。然后点选菜单项“文件 ｜ 导入到图库“，选择微云上的照片，完成导入。这样如果要浏览照片，就可以在iPhoto中进行，大部分照片可以进行简单的修饰。如果需要复杂的修饰处理，可以打开PhotoShop，对微云下的RAW格式文件进行处理。</p>
+]]></content>
+  </entry>
+  
+</feed>

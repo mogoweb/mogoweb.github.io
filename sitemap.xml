@@ -5,6 +5,16 @@
         <lastmod>2014-03-21T17:20:07+08:00</lastmod>
     </url>
     <url>
+        <loc>http://mogoweb.github.io/blog/2014/04/03/chromium-loading-spped-research-1/</loc>
+        <lastmod>2014-04-05T23:26:49+08:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/
+        </loc>
+        <lastmod>2014-05-27T09:48:53+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://mogoweb.github.io/robots.txt</loc>
         <lastmod>2014-03-19T17:41:46+08:00</lastmod>
     </url>
@@ -14,7 +24,7 @@
     </url>
     <url>
         <loc>http://mogoweb.github.io/</loc>
-        <lastmod>2014-03-21T17:20:07+08:00</lastmod>
+        <lastmod>2014-05-27T09:48:53+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/about/</loc>
@@ -22,6 +32,6 @@
     </url>
     <url>
         <loc>http://mogoweb.github.io/blog/archives/</loc>
-        <lastmod>2014-03-21T17:20:07+08:00</lastmod>
+        <lastmod>2014-05-27T09:48:53+08:00</lastmod>
     </url>
 </urlset>
