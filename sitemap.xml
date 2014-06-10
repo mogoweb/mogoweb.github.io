@@ -12,7 +12,11 @@
         <loc>
             http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/
         </loc>
-        <lastmod>2014-05-27T09:48:53+08:00</lastmod>
+        <lastmod>2014-05-28T09:13:01+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://mogoweb.github.io/blog/2014/06/10/about-chromium-webview-project/</loc>
+        <lastmod>2014-06-10T22:56:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/robots.txt</loc>
@@ -24,7 +28,7 @@
     </url>
     <url>
         <loc>http://mogoweb.github.io/</loc>
-        <lastmod>2014-05-27T09:48:53+08:00</lastmod>
+        <lastmod>2014-06-10T22:56:32+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/about/</loc>
@@ -32,6 +36,6 @@
     </url>
     <url>
         <loc>http://mogoweb.github.io/blog/archives/</loc>
-        <lastmod>2014-05-27T09:48:53+08:00</lastmod>
+        <lastmod>2014-06-10T22:56:32+08:00</lastmod>
     </url>
 </urlset>
