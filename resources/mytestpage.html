@@ -3,11 +3,13 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Category: 瞎折腾 - 放飞梦想</title>
+	<title>测试页面 - 放飞梦想</title>
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="Category: 瞎折腾">
+	<meta name="description" content="function onJsAlert() { window.alert("onJsAlert");
+} function onJsConfirm() { var res = window.confirm("onJsConfirm"); window.alert(res);
+} function &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -79,33 +81,55 @@
 	
 		
 	
-	<div id="content" class="inner">
-	
+	<div id="content" class="inner"><article class="page">
+    
+    <h1 class="title">测试页面</h1>
+    
+    <div class="entry-content"><script language="javascript">
+function onJsAlert() {
+    window.alert("onJsAlert");
+}
+
+function onJsConfirm() {
+    var res = window.confirm("onJsConfirm");
+    window.alert(res);
+}
+
+function onJsPrompt() {
+    var res = window.prompt("onJsPrompt", "onJsPrompt");
+    window.alert(res);
+}
+
+</script>
 
 
-	
-	
-	<section class="archives"><h1 class="year">2014</h1>
+<h3>Js test</h3>
 
-<article>
-	<h2 class="title"><a href="/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/">使用iPhoto和微云管理照片</a></h2>
-	<div class="meta">
-		<div class="date">May 25</div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/xia-zhe-teng/'>瞎折腾</a>
-
-
+<p><li><a href="javascript:onJsAlert()">Click me: onJsAlert</a></li>
+<li><a href="javascript:onJsConfirm()">Click me: onJsConfirm</a></li>
+<li><a href="javascript:onJsPrompt()">Click me: onJsPrompt</a></li></p>
 </div>
-	    
-	    <div class="comments"><a href="/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/#disqus_thread">Comments</a></div>
-	    
-	</div>
 </article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
 	
-	</section>
-	
+</div>
+
+
+
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
 
 </div>
 	<footer id="footer" class="inner">Copyright &copy; 2014
@@ -126,7 +150,10 @@
       var disqus_shortname = 'mogoweb';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mogoweb.github.io/resources/mytestpage.html';
+        var disqus_url = 'http://mogoweb.github.io/resources/mytestpage.html';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
