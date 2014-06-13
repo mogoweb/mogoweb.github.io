@@ -20,11 +20,15 @@
     </url>
     <url>
         <loc>http://mogoweb.github.io/resources/mytestpage.html</loc>
-        <lastmod>2014-06-12T19:13:34+08:00</lastmod>
+        <lastmod>2014-06-13T09:32:28+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/resources/</loc>
         <lastmod>2014-06-12T09:44:18+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://mogoweb.github.io/resources/select.html</loc>
+        <lastmod>2014-06-13T09:40:54+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/robots.txt</loc>

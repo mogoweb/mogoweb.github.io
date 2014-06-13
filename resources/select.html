@@ -3,13 +3,22 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>测试页面 - 放飞梦想</title>
+	<title>Select Element - 放飞梦想</title>
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="function onJsAlert() { window.alert("onJsAlert");
-} function onJsConfirm() { var res = window.confirm("onJsConfirm"); window.alert(res);
-} function &hellip;">
+	<meta name="description" content="Default: Volvo
+Saab
+Fiat
+Audi Select: Volvo
+Saab
+Fiat
+Audi Group: Volvo
+Saab Fiat
+Audi Multiple: Volvo
+Saab
+Fiat
+Audi Multiple with group: Volvo &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -83,39 +92,81 @@
 	
 	<div id="content" class="inner"><article class="page">
     
-    <h1 class="title">测试页面</h1>
+    <h1 class="title">Select Element</h1>
     
-    <div class="entry-content"><script language="javascript">
-function onJsAlert() {
-    window.alert("onJsAlert");
-}
+    <div class="entry-content"><p><form></p>
 
-function onJsConfirm() {
-    var res = window.confirm("onJsConfirm");
-    window.alert(res);
-}
-
-function onJsPrompt() {
-    var res = window.prompt("onJsPrompt", "onJsPrompt");
-    window.alert(res);
-}
-
-</script>
+<p>
+Default:
+<select name="cars">
+<option value="volvo">Volvo</option>
+<option value="saab">Saab</option>
+<option value="fiat">Fiat</option>
+<option value="audi">Audi</option>
+</select>
+</p>
 
 
-<h3>HTML Control</h3>
 
-<p><a href="/resources/select.html">Select Element</a></p>
 
-<h3>Js dialog</h3>
+<p>
+Select:
+<select name="cars2">
+<option value="volvo">Volvo</option>
+<option value="saab">Saab</option>
+<option value="fiat" selected="select">Fiat</option>
+<option value="audi">Audi</option>
+</select>
+</p>
 
-<p><li><a href="javascript:onJsAlert()">Click me: onJsAlert</a></li>
-<li><a href="javascript:onJsConfirm()">Click me: onJsConfirm</a></li>
-<li><a href="javascript:onJsPrompt()">Click me: onJsPrompt</a></li></p>
 
-<h3>HTTP Authentication</h3>
 
-<p><li><a href="http://www.httpwatch.com/httpgallery/authentication/">Basic Authentication</a></li></p>
+
+<p>
+Group:
+<select name="cars4">
+<optgroup label="Swedish Cars">
+<option value="volvo">Volvo</option>
+<option value="saab">Saab</option>
+</optgroup>
+<optgroup label="German Cars">
+<option value="fiat" selected="selected">Fiat</option>
+<option value="audi">Audi</option>
+</optgroup>
+</select>
+</p>
+
+
+
+
+<p>
+Multiple:
+<select name="cars3" multiple="multiple">
+<option value="volvo">Volvo</option>
+<option value="saab">Saab</option>
+<option value="fiat" selected="selected">Fiat</option>
+<option value="audi">Audi</option>
+</select>
+</p>
+
+
+
+
+<p>
+Multiple with group:
+<select name="cars5" multiple="multiple">
+<optgroup label="Swedish Cars">
+<option value="volvo">Volvo</option>
+<option value="saab">Saab</option>
+</optgroup>
+<optgroup label="German Cars">
+<option value="fiat" selected="selected">Fiat</option>
+<option value="audi">Audi</option>
+</optgroup></select>
+</p>
+
+
+<p></form></p>
 </div>
 </article>
 
@@ -159,8 +210,8 @@ function onJsPrompt() {
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://mogoweb.github.io/resources/mytestpage.html';
-        var disqus_url = 'http://mogoweb.github.io/resources/mytestpage.html';
+        var disqus_identifier = 'http://mogoweb.github.io/resources/select.html';
+        var disqus_url = 'http://mogoweb.github.io/resources/select.html';
         var disqus_script = 'embed.js';
       
     (function () {
