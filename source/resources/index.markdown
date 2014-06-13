@@ -14,3 +14,9 @@ footer: true
 # 2. 浏览器测试
 
 [简单的浏览器测试页面]({{ root_url }}/resources/mytestpage.html)
+
+## HTML5
+
+1. [HTML5 Test](http://www.html5test.com)
+1. [HTML5 Video](http://www.w3.org/2010/05/video/mediaevents.html)
+

@@ -24,9 +24,16 @@ function onJsPrompt() {
 
 </script>
 
-### Js test
+### HTML Control
+
+[Select Element]({{ root_url }}/resources/select.html)
+
+### Js dialog
 
 <li><a href="javascript:onJsAlert()">Click me: onJsAlert</a></li>
 <li><a href="javascript:onJsConfirm()">Click me: onJsConfirm</a></li>
 <li><a href="javascript:onJsPrompt()">Click me: onJsPrompt</a></li>
+
+### HTTP Authentication
+<li><a href="http://www.httpwatch.com/httpgallery/authentication/">Basic Authentication</a></li>
 
