@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-06-13T13:56:14+08:00</updated>
+  <updated>2014-06-17T15:18:52+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,138 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用pandoc和markdown书写文档]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/06/16/writing-document-with-pandoc-and-markdown/"/>
+    <updated>2014-06-16T14:37:47+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/06/16/writing-document-with-pandoc-and-markdown</id>
+    <content type="html"><![CDATA[<p>公司决定以后使用markdown+pandoc书写文档，于是就研究了一下markdown的写作（补充一下：markdown是一种标记语言，而pandoc则是转化工具）。虽然使用word书写文档得到大多数程序员的鄙视，但不得不承认，Word书写文档最直观，门槛最低。使用markdown+pandoc，选择太多，问题层出不穷，以至于无法参照某一个文档搞定所有问题。在折腾了一天、google了各种中英文资料后，终于打通各路神仙。特此撰文一篇，如有雷同，纯属引用。</p>
+
+<!-- more -->
+
+
+<h2>什么是Markdown</h2>
+
+<p>Markdown 是一种轻量级标记语言，它允许人们『使用易读易写的纯文本格式编写文档，然后转换成有效的XHTML(或者HTML)文档”』。这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。一份使用Markdown格式编写的文档应该可以直接以纯文本发布，而且看起来不会像是由许多标签惑是格式指令所构成。因此，Markdown的语法全由标点符号所组成，并经过严谨筛选，为了让它们看起来就像所要表达的意思。</p>
+
+<p>Markdown语法请查看<a href="http://www.ituring.com.cn/article/504">Markdown语法说明（详解版）</a>, 或者完整的<a href="http://daringfireball.net/projects/markdown/syntax">Markdown语法</a>.</p>
+
+<p>Markdown不是要来取代HTML，甚至也没有和它相似。它的语法种类不多，只和HTML的一部分有关。重点不是要创建一种更容易写作HTML文档的语法，Markdown的重点在于，它能让文档更容易阅读、编写。HTML是一种『发布』的格式，Markdown是一种『编写』的格式，因此，Markdown的格式语法只涵盖纯文本可以覆盖的范围。</p>
+
+<p>不在Markdown涵盖范围之内的标签，都可以直接在文档里面用HTM撰写，不需要额外标注这是HTML或是Markdown。</p>
+
+<h2>Ubuntu篇</h2>
+
+<p>主机环境：Ubuntu 12.04 LTS 64位</p>
+
+<h3>markdown编辑器</h3>
+
+<p>因为是纯文本格式写作，理论上任何文本编辑器，如VIM、gedit，都可以胜任此项工作。不过考虑到大多数人希望所见及所得的编辑效果（要不Microsoft Word就不会这么流行了），还是推荐使用具有图形界面并带预览功能的编辑器，如ubuntu下的retext。</p>
+
+<h4>retext</h4>
+
+<pre><code>1. sudo apt-get install retext
+2. retext&amp;
+3. 界面如下图所示：
+</code></pre>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_retext_markdown_ui.png" alt="retext ui" /></p>
+
+<h3>安装pandoc</h3>
+
+<pre><code>sudo apt-get autoremove pandoc      #删掉之前的pandoc安装
+sudo apt-get install cabal-install  #安装Haskell包管理器
+cabal update                        #获取Haskell包信息
+cabal install pandoc                #通过cabal安装pandoc
+</code></pre>
+
+<p>然后再把~/.cabal加到路径中去，在.bashrc里加上一句</p>
+
+<pre><code>export PATH=$HOME/.cabal/bin:$PATH
+</code></pre>
+
+<p>如果在安装过程中出现：</p>
+
+<pre><code>setup: The program alex is required but it could not be found.
+cabal: Error: some packages failed to install:
+pandoc-1.12.4.2 failed during the configure step. The exception was:
+ExitFailure 1
+</code></pre>
+
+<p>执行如下命令安装软件包</p>
+
+<pre><code>cabal install alex
+cabal install happy
+</code></pre>
+
+<p>如果安装pandoc仍提示错误，修改环境变量：</p>
+
+<pre><code>export PATH=/home/alex/.cabal/bin:$PATH
+</code></pre>
+
+<h3>安装之后的校验</h3>
+
+<p>打开Shell，输入：</p>
+
+<pre><code>pandoc --version
+</code></pre>
+
+<p>如果安装无误，应能看到pandoc相关的作者、版权、序列许可等信息。当然，更令人震撼的是，能看到Pandoc已经支持的语言列表。使用</p>
+
+<pre><code>pandoc --help
+</code></pre>
+
+<p>可以看到pandoc主要支持的输入与输出格式：</p>
+
+<pre><code>input formats:  docbook, haddock, html, json, latex, markdown, markdown_github,
+                markdown_mmd, markdown_phpextra, markdown_strict, mediawiki,
+                native, opml, org, rst, textile
+Output formats: asciidoc, beamer, context, docbook, docx, dzslides, epub, epub3,
+                fb2, html, html5, icml, json, latex, man, markdown,
+                markdown_github, markdown_mmd, markdown_phpextra,
+                markdown_strict, mediawiki, native, odt, opendocument, opml,
+                org, pdf*, plain, revealjs, rst, rtf, s5, slideous, slidy,
+                texinfo, textile
+                [*for pdf output, use latex or beamer and -o FILENAME.pdf]
+</code></pre>
+
+<p>上述语言的互转关系，可以看看作者制作的<a href="http://johnmacfarlane.net/pandoc/diagram.png">这份壮观的图</a>，从中可以看出Pandoc的强大。这年头，哲学系教授会写程序，还是Haskell，伤不起啊:D</p>
+
+<h3>安装LaTex</h3>
+
+<pre><code>sudo apt-get install texlive texlive-latex-extra texlive-latex-recommended texlive-xetex
+</code></pre>
+
+<p>这个过程会下载大约七八百兆的包，可以先喝杯咖啡，活动一下筋骨。</p>
+
+<h3>安装中文字体</h3>
+
+<p>可以用“fc-list&#8221;命令查看已安装字体。如果没有中文字体，或者缺少某些中文字体，使用如下命令安装gnome中文字体。</p>
+
+<pre><code>apt-get install apt-get install language-pack-gnome-zh*
+</code></pre>
+
+<p>如果有ttf文件，比如Windows的字体文件在（Windows fonts）下，双击即可安装。</p>
+
+<h3>输出pdf格式</h3>
+
+<pre><code>pandoc  test.markdown -o test.pdf --latex-engine=xelatex -V mainfont=文泉驿微米黑
+</code></pre>
+
+<p>需要注意，mainfont需要指定系统存在的字体，否则中文会变成空格。</p>
+
+<h2>参考文档</h2>
+
+<ol>
+<li><a href="http://www.cnblogs.com/liuyangnuts/archive/2013/04/23/3038354.html">让pandoc输出pdf时支持中文</a></li>
+<li><a href="http://www.yangzhiping.com/tech/pandoc.html">Markdown写作进阶：Pandoc入门浅谈</a></li>
+<li><a href="http://johnmacfarlane.net/pandoc/demo/example3.html">Pandoc User’s Guide</a></li>
+<li><a href="http://stackoverflow.com/">stackoverflow</a></li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[关于chromium_webview项目]]></title>
