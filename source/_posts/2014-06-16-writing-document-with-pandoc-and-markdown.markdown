@@ -1,0 +1,345 @@
+---
+layout: post
+title: "使用pandoc和markdown书写文档"
+date: 2014-06-16 14:37:47 +0800
+comments: true
+categories: 瞎折腾 
+---
+
+公司决定以后使用markdown+pandoc书写文档，于是就研究了一下markdown的写作（补充一下：markdown是一种标记语言，而pandoc则是转化工具）。虽然使用word书写文档得到大多数程序员的鄙视，但不得不承认，Word书写文档最直观，门槛最低。使用markdown+pandoc，各种问题层出不穷，以至于无法参照某一个文档搞定所有问题。在折腾了一天、google了各种中英文资料后，终于打通各路神仙。特此撰文一篇，如有雷同，纯属复制。
+
+<!-- more -->
+
+## 什么是Markdown
+
+Markdown 是一种轻量级标记语言，它允许人们『使用易读易写的纯文本格式编写文档，然后转换成有效的XHTML(或者HTML)文档”』。这种语言吸收了很多在电子邮件中已有的纯文本标记的特性。一份使用Markdown格式编写的文档应该可以直接以纯文本发布，而且看起来不会像是由许多标签惑是格式指令所构成。因此，Markdown的语法全由标点符号所组成，并经过严谨筛选，为了让它们看起来就像所要表达的意思。
+
+Markdown语法请查看[Markdown语法说明（详解版）][1], 或者完整的[Markdown语法][2].
+
+Markdown不是要来取代HTML，甚至也没有和它相似。它的语法种类不多，只和HTML的一部分有关。重点不是要创建一种更容易写作HTML文档的语法，Markdown的重点在于，它能让文档更容易阅读、编写。HTML是一种『发布』的格式，Markdown是一种『编写』的格式，因此，Markdown的格式语法只涵盖纯文本可以覆盖的范围。
+
+不在Markdown涵盖范围之内的标签，都可以直接在文档里面用HTM撰写，不需要额外标注这是HTML或是Markdown。
+
+[1]: http://www.ituring.com.cn/article/504
+[2]: http://daringfireball.net/projects/markdown/syntax
+
+## 什么是pandoc
+
+Markdown自身的设计哲学决定了markdown并不适合编写复杂的文档。但各路大神都觉得markdown是个好东西，不够用怎么办，扩充呗。于是，我们可以看到github flavored markdown、multimarkdown、maruku等各路扩展。Markdown文档写完了，该如何展现给别人呢，总不至于丢给您的客户一个markdown文本文档，说您就将就着看吧。所以markdown文档最终还是会转换为html、word、pdf等格式，这时就需要一个强大的转换工具，不仅能转成各种格式，还需要转换的漂亮。
+
+pandoc是开源界传说中的高帅富社区-haskell社区的作品，一方面它定义了markdown扩展，另一方面其转换功能强大的令人发指，支持众多的输入和输出格式（markdown只是其中一种）。使用
+
+    pandoc --help
+
+可以看到pandoc主要支持的输入与输出格式：
+
+    input formats:  docbook, haddock, html, json, latex, markdown, markdown_github,
+                    markdown_mmd, markdown_phpextra, markdown_strict, mediawiki,
+                    native, opml, org, rst, textile
+    Output formats: asciidoc, beamer, context, docbook, docx, dzslides, epub, epub3,
+                    fb2, html, html5, icml, json, latex, man, markdown,
+                    markdown_github, markdown_mmd, markdown_phpextra,
+                    markdown_strict, mediawiki, native, odt, opendocument, opml,
+                    org, pdf*, plain, revealjs, rst, rtf, s5, slideous, slidy,
+                    texinfo, textile
+                    [*for pdf output, use latex or beamer and -o FILENAME.pdf]
+
+上述语言的互转关系，可以看看作者制作的[这份壮观的图](http://johnmacfarlane.net/pandoc/diagram.png)，从中可以看出Pandoc的强大。这年头，哲学系教授会写程序，还是Haskell，伤不起啊:D
+
+## Ubuntu环境配置篇
+
+主机环境：Ubuntu 12.04 LTS 64位
+
+### markdown编辑器
+
+因为是纯文本格式写作，理论上任何文本编辑器，如VIM、gedit，都可以胜任此项工作。不过考虑到大多数人希望所见及所得的编辑效果（要不Microsoft Word就不会这么流行了），还是推荐使用具有图形界面并带预览功能的编辑器，如ubuntu下的retext。
+
+#### retext
+
+    1. sudo apt-get install retext
+    2. retext&
+    3. 界面如下图所示：
+    
+![retext ui](http://mogoweb.qiniudn.com/mogoweb_2014_retext_markdown_ui.png)
+
+### 安装pandoc
+
+    sudo apt-get autoremove pandoc      #删掉之前的pandoc安装
+    sudo apt-get install cabal-install  #安装Haskell包管理器
+    cabal update                        #获取Haskell包信息
+    cabal install pandoc                #通过cabal安装pandoc
+
+然后再把~/.cabal加到路径中去，在.bashrc里加上一句
+
+    export PATH=$HOME/.cabal/bin:$PATH
+
+如果在安装过程中出现：
+
+    setup: The program alex is required but it could not be found.
+    cabal: Error: some packages failed to install:
+    pandoc-1.12.4.2 failed during the configure step. The exception was:
+    ExitFailure 1
+
+执行如下命令安装软件包
+
+    cabal install alex
+    cabal install happy
+
+如果安装pandoc仍提示错误，修改环境变量：
+
+    export PATH=/home/alex/.cabal/bin:$PATH
+
+### 安装之后的校验
+
+打开Shell，输入：
+
+    pandoc --version
+
+如果安装无误，应能看到pandoc相关的作者、版权、序列许可等信息。
+
+### 安装LaTex
+
+    sudo apt-get install texlive texlive-latex-extra texlive-latex-recommended texlive-xetex
+
+这个过程会下载大约七八百兆的包，可以先喝杯咖啡，活动一下筋骨。
+
+### 安装中文字体
+
+可以用“fc-list"命令查看已安装字体。如果没有中文字体，或者缺少某些中文字体，使用如下命令安装gnome中文字体。
+
+    apt-get install apt-get install language-pack-gnome-zh*
+
+如果有ttf文件，比如Windows的字体文件在（Windows fonts）下，双击即可安装。
+
+### 输出pdf格式
+
+    pandoc  test.markdown -o test.pdf --latex-engine=xelatex -V mainfont=文泉驿微米黑
+
+需要注意，mainfont需要指定系统存在的字体，否则中文会变成空格。
+
+### 设定边界、中文换行
+
+使用前一步骤生成的pdf文件，边界过大，中文换行也存在问题，这时需要pandoc模板上场了。其实系统中已经存在针对不同格式转换的模板了，位于$HOME/.cabal/share/pandoc-1.12.4.2/data/templates下，针对lextex的模板为default.latex。可以修改这个系统模板，也可以自己创建一个，然后在执行pandoc时指定模板。建议采用自定义模板的方式，针对不同的格式要求定义模板。以下就是我定义的模板文件template.tex:
+
+```
+\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+\usepackage{geometry}       % 設定邊界
+\geometry{
+  top=1in,
+  inner=1in,
+  outer=1in,
+  bottom=1in,
+  headheight=3ex,
+  headsep=2ex
+}
+$if(fontfamily)$
+\usepackage{$fontfamily$}
+$else$
+\usepackage{lmodern}
+$endif$
+$if(linestretch)$
+\usepackage{setspace}
+\setstretch{$linestretch$}
+$endif$
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+$if(euro)$
+  \usepackage{eurosym}
+$endif$
+\else % if luatex or xelatex
+  \usepackage{fontspec}     % 允許設定字體
+  \usepackage{xeCJK}        % 分開設置中英文字型
+  \setCJKmainfont{文泉驿微米黑}    % 設定中文字型
+  \setmainfont{Droid Serif}     % 設定英文字型
+  \setromanfont{Droid Serif}    % 字型
+  \setmonofont{Droid Sans Mono}
+  \linespread{1.2}\selectfont   % 行距
+  \XeTeXlinebreaklocale "zh"    % 針對中文自動換行
+  \XeTeXlinebreakskip = 0pt plus 1pt % 字與字之間加入0pt至1pt的間距，確保左右對整齊
+  \parindent 0em        % 段落縮進
+  \setlength{\parskip}{20pt}    % 段落之間的距離
+  \ifxetex
+    \usepackage{xltxtra,xunicode}
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \newcommand{\euro}{€}
+$if(mainfont)$
+    \setmainfont{$mainfont$}
+$endif$
+$if(sansfont)$
+    \setsansfont{$sansfont$}
+$endif$
+$if(monofont)$
+    \setmonofont[Mapping=tex-ansi]{$monofont$}
+$endif$
+$if(mathfont)$
+    \setmathfont(Digits,Latin,Greek){$mathfont$}
+$endif$
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+$if(geometry)$
+\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+$endif$
+$if(natbib)$
+\usepackage{natbib}
+\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+$endif$
+$if(biblatex)$
+\usepackage{biblatex}
+$if(biblio-files)$
+\bibliography{$biblio-files$}
+$endif$
+$endif$
+$if(listings)$
+\usepackage{listings}
+$endif$
+$if(lhs)$
+\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
+$endif$
+$if(highlighting-macros)$
+$highlighting-macros$
+$endif$
+$if(verbatim-in-note)$
+\usepackage{fancyvrb}
+$endif$
+$if(tables)$
+\usepackage{longtable,booktabs}
+$endif$
+$if(graphics)$
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+$endif$
+\ifxetex
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
+  \usepackage[unicode=true]{hyperref}
+\fi
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={$author-meta$},
+            pdftitle={$title-meta$},
+            colorlinks=true,
+            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
+$if(links-as-notes)$
+% Make links footnotes instead of hotlinks:
+\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+$endif$
+$if(strikeout)$
+\usepackage[normalem]{ulem}
+% avoid problems with \sout in headers with hyperref:
+\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
+$endif$
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+$if(numbersections)$
+\setcounter{secnumdepth}{5}
+$else$
+\setcounter{secnumdepth}{0}
+$endif$
+$if(verbatim-in-note)$
+\VerbatimFootnotes % allows verbatim text in footnotes
+$endif$
+$if(lang)$
+\ifxetex
+  \usepackage{polyglossia}
+  \setmainlanguage{$mainlang$}
+\else
+  \usepackage[$lang$]{babel}
+\fi
+$endif$
+
+$if(title)$
+\title{$title$}
+$endif$
+$if(subtitle)$
+\subtitle{$subtitle$}
+$endif$
+$if(author)$
+\author{$for(author)$$author$$sep$ \and $endfor$}
+$endif$
+$if(date)$
+\date{$date$}
+$endif$
+$for(header-includes)$
+$header-includes$
+$endfor$
+
+\begin{document}
+$if(title)$
+\maketitle
+$endif$
+$if(abstract)$
+\begin{abstract}
+$abstract$
+\end{abstract}
+$endif$
+
+$for(include-before)$
+$include-before$
+
+$endfor$
+$if(toc)$
+{
+\hypersetup{linkcolor=black}
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+}
+$endif$
+$body$
+
+$if(natbib)$
+$if(biblio-files)$
+$if(biblio-title)$
+$if(book-class)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+\bibliography{$biblio-files$}
+
+$endif$
+$endif$
+$if(biblatex)$
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+
+$endif$
+$for(include-after)$
+$include-after$
+
+$endfor$
+\end{document}
+```
+
+使用如下命令生成pdf文档：
+
+    pandoc test.md -o test.pdf --latex-engine=xelatex --template=/home/alex/template.tex
+
+## 参考文档
+
+1. [让pandoc输出pdf时支持中文](http://www.cnblogs.com/liuyangnuts/archive/2013/04/23/3038354.html)
+2. [Markdown写作进阶：Pandoc入门浅谈](http://www.yangzhiping.com/tech/pandoc.html)
+3. [Pandoc User’s Guide](http://johnmacfarlane.net/pandoc/demo/example3.html)
+4. [stackoverflow](http://stackoverflow.com/)
+5. [pandoc 用markdown写毕业论文 markdown转pdf,docx](http://blog.csdn.net/phodal/article/details/23381821)
+6. [利用Pandoc转换markdown和HTML、LaTeX](http://higrid.net/c-art-pandoc_command.htm)
