@@ -81,7 +81,7 @@
 	
 	<div id="content" class="inner"><article class="post">
 	<h2 class="title">使用pandoc和markdown书写文档</h2>
-	<div class="entry-content"><p>公司决定以后使用markdown+pandoc书写文档，于是就研究了一下markdown的写作（补充一下：markdown是一种标记语言，而pandoc则是转化工具）。虽然使用word书写文档得到大多数程序员的鄙视，但不得不承认，Word书写文档最直观，门槛最低。使用markdown+pandoc，选择太多，问题层出不穷，以至于无法参照某一个文档搞定所有问题。在折腾了一天、google了各种中英文资料后，终于打通各路神仙。特此撰文一篇，如有雷同，纯属引用。</p>
+	<div class="entry-content"><p>公司决定以后使用markdown+pandoc书写文档，于是就研究了一下markdown的写作（补充一下：markdown是一种标记语言，而pandoc则是转化工具）。虽然使用word书写文档得到大多数程序员的鄙视，但不得不承认，Word书写文档最直观，门槛最低。使用markdown+pandoc，各种问题层出不穷，以至于无法参照某一个文档搞定所有问题。在折腾了一天、google了各种中英文资料后，终于打通各路神仙。特此撰文一篇，如有雷同，纯属复制。</p>
 
 <!-- more -->
 
@@ -96,7 +96,32 @@
 
 <p>不在Markdown涵盖范围之内的标签，都可以直接在文档里面用HTM撰写，不需要额外标注这是HTML或是Markdown。</p>
 
-<h2>Ubuntu篇</h2>
+<h2>什么是pandoc</h2>
+
+<p>Markdown自身的设计哲学决定了markdown并不适合编写复杂的文档。但各路大神都觉得markdown是个好东西，不够用怎么办，扩充呗。于是，我们可以看到github flavored markdown、multimarkdown、maruku等各路扩展。Markdown文档写完了，该如何展现给别人呢，总不至于丢给您的客户一个markdown文本文档，说您就将就着看吧。所以markdown文档最终还是会转换为html、word、pdf等格式，这时就需要一个强大的转换工具，不仅能转成各种格式，还需要转换的漂亮。</p>
+
+<p>pandoc是开源界传说中的高帅富社区-haskell社区的作品，一方面它定义了markdown扩展，另一方面其转换功能强大的令人发指，支持众多的输入和输出格式（markdown只是其中一种）。使用</p>
+
+<pre><code>pandoc --help
+</code></pre>
+
+<p>可以看到pandoc主要支持的输入与输出格式：</p>
+
+<pre><code>input formats:  docbook, haddock, html, json, latex, markdown, markdown_github,
+                markdown_mmd, markdown_phpextra, markdown_strict, mediawiki,
+                native, opml, org, rst, textile
+Output formats: asciidoc, beamer, context, docbook, docx, dzslides, epub, epub3,
+                fb2, html, html5, icml, json, latex, man, markdown,
+                markdown_github, markdown_mmd, markdown_phpextra,
+                markdown_strict, mediawiki, native, odt, opendocument, opml,
+                org, pdf*, plain, revealjs, rst, rtf, s5, slideous, slidy,
+                texinfo, textile
+                [*for pdf output, use latex or beamer and -o FILENAME.pdf]
+</code></pre>
+
+<p>上述语言的互转关系，可以看看作者制作的<a href="http://johnmacfarlane.net/pandoc/diagram.png">这份壮观的图</a>，从中可以看出Pandoc的强大。这年头，哲学系教授会写程序，还是Haskell，伤不起啊:D</p>
+
+<h2>Ubuntu环境配置篇</h2>
 
 <p>主机环境：Ubuntu 12.04 LTS 64位</p>
 
@@ -152,26 +177,7 @@ cabal install happy
 <pre><code>pandoc --version
 </code></pre>
 
-<p>如果安装无误，应能看到pandoc相关的作者、版权、序列许可等信息。当然，更令人震撼的是，能看到Pandoc已经支持的语言列表。使用</p>
-
-<pre><code>pandoc --help
-</code></pre>
-
-<p>可以看到pandoc主要支持的输入与输出格式：</p>
-
-<pre><code>input formats:  docbook, haddock, html, json, latex, markdown, markdown_github,
-                markdown_mmd, markdown_phpextra, markdown_strict, mediawiki,
-                native, opml, org, rst, textile
-Output formats: asciidoc, beamer, context, docbook, docx, dzslides, epub, epub3,
-                fb2, html, html5, icml, json, latex, man, markdown,
-                markdown_github, markdown_mmd, markdown_phpextra,
-                markdown_strict, mediawiki, native, odt, opendocument, opml,
-                org, pdf*, plain, revealjs, rst, rtf, s5, slideous, slidy,
-                texinfo, textile
-                [*for pdf output, use latex or beamer and -o FILENAME.pdf]
-</code></pre>
-
-<p>上述语言的互转关系，可以看看作者制作的<a href="http://johnmacfarlane.net/pandoc/diagram.png">这份壮观的图</a>，从中可以看出Pandoc的强大。这年头，哲学系教授会写程序，还是Haskell，伤不起啊:D</p>
+<p>如果安装无误，应能看到pandoc相关的作者、版权、序列许可等信息。</p>
 
 <h3>安装LaTex</h3>
 
@@ -196,6 +202,431 @@ Output formats: asciidoc, beamer, context, docbook, docx, dzslides, epub, epub3,
 
 <p>需要注意，mainfont需要指定系统存在的字体，否则中文会变成空格。</p>
 
+<h3>设定边界、中文换行</h3>
+
+<p>使用前一步骤生成的pdf文件，边界过大，中文换行也存在问题，这时需要pandoc模板上场了。其实系统中已经存在针对不同格式转换的模板了，位于$HOME/.cabal/share/pandoc-1.12.4.2/data/templates下，针对lextex的模板为default.latex。可以修改这个系统模板，也可以自己创建一个，然后在执行pandoc时指定模板。建议采用自定义模板的方式，针对不同的格式要求定义模板。以下就是我定义的模板文件template.tex:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+<span class='line-number'>92</span>
+<span class='line-number'>93</span>
+<span class='line-number'>94</span>
+<span class='line-number'>95</span>
+<span class='line-number'>96</span>
+<span class='line-number'>97</span>
+<span class='line-number'>98</span>
+<span class='line-number'>99</span>
+<span class='line-number'>100</span>
+<span class='line-number'>101</span>
+<span class='line-number'>102</span>
+<span class='line-number'>103</span>
+<span class='line-number'>104</span>
+<span class='line-number'>105</span>
+<span class='line-number'>106</span>
+<span class='line-number'>107</span>
+<span class='line-number'>108</span>
+<span class='line-number'>109</span>
+<span class='line-number'>110</span>
+<span class='line-number'>111</span>
+<span class='line-number'>112</span>
+<span class='line-number'>113</span>
+<span class='line-number'>114</span>
+<span class='line-number'>115</span>
+<span class='line-number'>116</span>
+<span class='line-number'>117</span>
+<span class='line-number'>118</span>
+<span class='line-number'>119</span>
+<span class='line-number'>120</span>
+<span class='line-number'>121</span>
+<span class='line-number'>122</span>
+<span class='line-number'>123</span>
+<span class='line-number'>124</span>
+<span class='line-number'>125</span>
+<span class='line-number'>126</span>
+<span class='line-number'>127</span>
+<span class='line-number'>128</span>
+<span class='line-number'>129</span>
+<span class='line-number'>130</span>
+<span class='line-number'>131</span>
+<span class='line-number'>132</span>
+<span class='line-number'>133</span>
+<span class='line-number'>134</span>
+<span class='line-number'>135</span>
+<span class='line-number'>136</span>
+<span class='line-number'>137</span>
+<span class='line-number'>138</span>
+<span class='line-number'>139</span>
+<span class='line-number'>140</span>
+<span class='line-number'>141</span>
+<span class='line-number'>142</span>
+<span class='line-number'>143</span>
+<span class='line-number'>144</span>
+<span class='line-number'>145</span>
+<span class='line-number'>146</span>
+<span class='line-number'>147</span>
+<span class='line-number'>148</span>
+<span class='line-number'>149</span>
+<span class='line-number'>150</span>
+<span class='line-number'>151</span>
+<span class='line-number'>152</span>
+<span class='line-number'>153</span>
+<span class='line-number'>154</span>
+<span class='line-number'>155</span>
+<span class='line-number'>156</span>
+<span class='line-number'>157</span>
+<span class='line-number'>158</span>
+<span class='line-number'>159</span>
+<span class='line-number'>160</span>
+<span class='line-number'>161</span>
+<span class='line-number'>162</span>
+<span class='line-number'>163</span>
+<span class='line-number'>164</span>
+<span class='line-number'>165</span>
+<span class='line-number'>166</span>
+<span class='line-number'>167</span>
+<span class='line-number'>168</span>
+<span class='line-number'>169</span>
+<span class='line-number'>170</span>
+<span class='line-number'>171</span>
+<span class='line-number'>172</span>
+<span class='line-number'>173</span>
+<span class='line-number'>174</span>
+<span class='line-number'>175</span>
+<span class='line-number'>176</span>
+<span class='line-number'>177</span>
+<span class='line-number'>178</span>
+<span class='line-number'>179</span>
+<span class='line-number'>180</span>
+<span class='line-number'>181</span>
+<span class='line-number'>182</span>
+<span class='line-number'>183</span>
+<span class='line-number'>184</span>
+<span class='line-number'>185</span>
+<span class='line-number'>186</span>
+<span class='line-number'>187</span>
+<span class='line-number'>188</span>
+<span class='line-number'>189</span>
+<span class='line-number'>190</span>
+<span class='line-number'>191</span>
+<span class='line-number'>192</span>
+<span class='line-number'>193</span>
+<span class='line-number'>194</span>
+<span class='line-number'>195</span>
+<span class='line-number'>196</span>
+<span class='line-number'>197</span>
+<span class='line-number'>198</span>
+<span class='line-number'>199</span>
+<span class='line-number'>200</span>
+<span class='line-number'>201</span>
+<span class='line-number'>202</span>
+<span class='line-number'>203</span>
+<span class='line-number'>204</span>
+<span class='line-number'>205</span>
+<span class='line-number'>206</span>
+<span class='line-number'>207</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+</span><span class='line'>\usepackage{geometry}       % 設定邊界
+</span><span class='line'>\geometry{
+</span><span class='line'>  top=1in,
+</span><span class='line'>  inner=1in,
+</span><span class='line'>  outer=1in,
+</span><span class='line'>  bottom=1in,
+</span><span class='line'>  headheight=3ex,
+</span><span class='line'>  headsep=2ex
+</span><span class='line'>}
+</span><span class='line'>$if(fontfamily)$
+</span><span class='line'>\usepackage{$fontfamily$}
+</span><span class='line'>$else$
+</span><span class='line'>\usepackage{lmodern}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(linestretch)$
+</span><span class='line'>\usepackage{setspace}
+</span><span class='line'>\setstretch{$linestretch$}
+</span><span class='line'>$endif$
+</span><span class='line'>\usepackage{amssymb,amsmath}
+</span><span class='line'>\usepackage{ifxetex,ifluatex}
+</span><span class='line'>\usepackage{fixltx2e} % provides \textsubscript
+</span><span class='line'>\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+</span><span class='line'>  \usepackage[T1]{fontenc}
+</span><span class='line'>  \usepackage[utf8]{inputenc}
+</span><span class='line'>$if(euro)$
+</span><span class='line'>  \usepackage{eurosym}
+</span><span class='line'>$endif$
+</span><span class='line'>\else % if luatex or xelatex
+</span><span class='line'>  \usepackage{fontspec}     % 允許設定字體
+</span><span class='line'>  \usepackage{xeCJK}        % 分開設置中英文字型
+</span><span class='line'>  \setCJKmainfont{文泉驿微米黑}    % 設定中文字型
+</span><span class='line'>  \setmainfont{Droid Serif}     % 設定英文字型
+</span><span class='line'>  \setromanfont{Droid Serif}    % 字型
+</span><span class='line'>  \setmonofont{Droid Sans Mono}
+</span><span class='line'>  \linespread{1.2}\selectfont   % 行距
+</span><span class='line'>  \XeTeXlinebreaklocale "zh"    % 針對中文自動換行
+</span><span class='line'>  \XeTeXlinebreakskip = 0pt plus 1pt % 字與字之間加入0pt至1pt的間距，確保左右對整齊
+</span><span class='line'>  \parindent 0em        % 段落縮進
+</span><span class='line'>  \setlength{\parskip}{20pt}    % 段落之間的距離
+</span><span class='line'>  \ifxetex
+</span><span class='line'>    \usepackage{xltxtra,xunicode}
+</span><span class='line'>  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+</span><span class='line'>  \newcommand{\euro}{€}
+</span><span class='line'>$if(mainfont)$
+</span><span class='line'>    \setmainfont{$mainfont$}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(sansfont)$
+</span><span class='line'>    \setsansfont{$sansfont$}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(monofont)$
+</span><span class='line'>    \setmonofont[Mapping=tex-ansi]{$monofont$}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(mathfont)$
+</span><span class='line'>    \setmathfont(Digits,Latin,Greek){$mathfont$}
+</span><span class='line'>$endif$
+</span><span class='line'>\fi
+</span><span class='line'>% use upquote if available, for straight quotes in verbatim environments
+</span><span class='line'>\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+</span><span class='line'>% use microtype if available
+</span><span class='line'>\IfFileExists{microtype.sty}{\usepackage{microtype}}{}
+</span><span class='line'>$if(geometry)$
+</span><span class='line'>\usepackage[$for(geometry)$$geometry$$sep$,$endfor$]{geometry}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(natbib)$
+</span><span class='line'>\usepackage{natbib}
+</span><span class='line'>\bibliographystyle{$if(biblio-style)$$biblio-style$$else$plainnat$endif$}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(biblatex)$
+</span><span class='line'>\usepackage{biblatex}
+</span><span class='line'>$if(biblio-files)$
+</span><span class='line'>\bibliography{$biblio-files$}
+</span><span class='line'>$endif$
+</span><span class='line'>$endif$
+</span><span class='line'>$if(listings)$
+</span><span class='line'>\usepackage{listings}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(lhs)$
+</span><span class='line'>\lstnewenvironment{code}{\lstset{language=Haskell,basicstyle=\small\ttfamily}}{}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(highlighting-macros)$
+</span><span class='line'>$highlighting-macros$
+</span><span class='line'>$endif$
+</span><span class='line'>$if(verbatim-in-note)$
+</span><span class='line'>\usepackage{fancyvrb}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(tables)$
+</span><span class='line'>\usepackage{longtable,booktabs}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(graphics)$
+</span><span class='line'>\usepackage{graphicx}
+</span><span class='line'>\makeatletter
+</span><span class='line'>\def\maxwidth{\ifdim\Gin@nat@width&gt;\linewidth\linewidth\else\Gin@nat@width\fi}
+</span><span class='line'>\def\maxheight{\ifdim\Gin@nat@height&gt;\textheight\textheight\else\Gin@nat@height\fi}
+</span><span class='line'>\makeatother
+</span><span class='line'>% Scale images if necessary, so that they will not overflow the page
+</span><span class='line'>% margins by default, and it is still possible to overwrite the defaults
+</span><span class='line'>% using explicit options in \includegraphics[width, height, ...]{}
+</span><span class='line'>\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+</span><span class='line'>$endif$
+</span><span class='line'>\ifxetex
+</span><span class='line'>  \usepackage[setpagesize=false, % page size defined by xetex
+</span><span class='line'>              unicode=false, % unicode breaks when used with xetex
+</span><span class='line'>              xetex]{hyperref}
+</span><span class='line'>\else
+</span><span class='line'>  \usepackage[unicode=true]{hyperref}
+</span><span class='line'>\fi
+</span><span class='line'>\hypersetup{breaklinks=true,
+</span><span class='line'>            bookmarks=true,
+</span><span class='line'>            pdfauthor={$author-meta$},
+</span><span class='line'>            pdftitle={$title-meta$},
+</span><span class='line'>            colorlinks=true,
+</span><span class='line'>            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
+</span><span class='line'>            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
+</span><span class='line'>            linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,
+</span><span class='line'>            pdfborder={0 0 0}}
+</span><span class='line'>\urlstyle{same}  % don't use monospace font for urls
+</span><span class='line'>$if(links-as-notes)$
+</span><span class='line'>% Make links footnotes instead of hotlinks:
+</span><span class='line'>\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(strikeout)$
+</span><span class='line'>\usepackage[normalem]{ulem}
+</span><span class='line'>% avoid problems with \sout in headers with hyperref:
+</span><span class='line'>\pdfstringdefDisableCommands{\renewcommand{\sout}{}}
+</span><span class='line'>$endif$
+</span><span class='line'>\setlength{\parindent}{0pt}
+</span><span class='line'>\setlength{\parskip}{6pt plus 2pt minus 1pt}
+</span><span class='line'>\setlength{\emergencystretch}{3em}  % prevent overfull lines
+</span><span class='line'>$if(numbersections)$
+</span><span class='line'>\setcounter{secnumdepth}{5}
+</span><span class='line'>$else$
+</span><span class='line'>\setcounter{secnumdepth}{0}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(verbatim-in-note)$
+</span><span class='line'>\VerbatimFootnotes % allows verbatim text in footnotes
+</span><span class='line'>$endif$
+</span><span class='line'>$if(lang)$
+</span><span class='line'>\ifxetex
+</span><span class='line'>  \usepackage{polyglossia}
+</span><span class='line'>  \setmainlanguage{$mainlang$}
+</span><span class='line'>\else
+</span><span class='line'>  \usepackage[$lang$]{babel}
+</span><span class='line'>\fi
+</span><span class='line'>$endif$
+</span><span class='line'>
+</span><span class='line'>$if(title)$
+</span><span class='line'>\title{$title$}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(subtitle)$
+</span><span class='line'>\subtitle{$subtitle$}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(author)$
+</span><span class='line'>\author{$for(author)$$author$$sep$ \and $endfor$}
+</span><span class='line'>$endif$
+</span><span class='line'>$if(date)$
+</span><span class='line'>\date{$date$}
+</span><span class='line'>$endif$
+</span><span class='line'>$for(header-includes)$
+</span><span class='line'>$header-includes$
+</span><span class='line'>$endfor$
+</span><span class='line'>
+</span><span class='line'>\begin{document}
+</span><span class='line'>$if(title)$
+</span><span class='line'>\maketitle
+</span><span class='line'>$endif$
+</span><span class='line'>$if(abstract)$
+</span><span class='line'>\begin{abstract}
+</span><span class='line'>$abstract$
+</span><span class='line'>\end{abstract}
+</span><span class='line'>$endif$
+</span><span class='line'>
+</span><span class='line'>$for(include-before)$
+</span><span class='line'>$include-before$
+</span><span class='line'>
+</span><span class='line'>$endfor$
+</span><span class='line'>$if(toc)$
+</span><span class='line'>{
+</span><span class='line'>\hypersetup{linkcolor=black}
+</span><span class='line'>\setcounter{tocdepth}{$toc-depth$}
+</span><span class='line'>\tableofcontents
+</span><span class='line'>}
+</span><span class='line'>$endif$
+</span><span class='line'>$body$
+</span><span class='line'>
+</span><span class='line'>$if(natbib)$
+</span><span class='line'>$if(biblio-files)$
+</span><span class='line'>$if(biblio-title)$
+</span><span class='line'>$if(book-class)$
+</span><span class='line'>\renewcommand\bibname{$biblio-title$}
+</span><span class='line'>$else$
+</span><span class='line'>\renewcommand\refname{$biblio-title$}
+</span><span class='line'>$endif$
+</span><span class='line'>$endif$
+</span><span class='line'>\bibliography{$biblio-files$}
+</span><span class='line'>
+</span><span class='line'>$endif$
+</span><span class='line'>$endif$
+</span><span class='line'>$if(biblatex)$
+</span><span class='line'>\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+</span><span class='line'>
+</span><span class='line'>$endif$
+</span><span class='line'>$for(include-after)$
+</span><span class='line'>$include-after$
+</span><span class='line'>
+</span><span class='line'>$endfor$
+</span><span class='line'>\end{document}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>使用如下命令生成pdf文档：</p>
+
+<pre><code>pandoc test.md -o test.pdf --latex-engine=xelatex --template=/home/alex/template.tex
+</code></pre>
+
 <h2>参考文档</h2>
 
 <ol>
@@ -203,6 +634,8 @@ Output formats: asciidoc, beamer, context, docbook, docx, dzslides, epub, epub3,
 <li><a href="http://www.yangzhiping.com/tech/pandoc.html">Markdown写作进阶：Pandoc入门浅谈</a></li>
 <li><a href="http://johnmacfarlane.net/pandoc/demo/example3.html">Pandoc User’s Guide</a></li>
 <li><a href="http://stackoverflow.com/">stackoverflow</a></li>
+<li><a href="http://blog.csdn.net/phodal/article/details/23381821">pandoc 用markdown写毕业论文 markdown转pdf,docx</a></li>
+<li><a href="http://higrid.net/c-art-pandoc_command.htm">利用Pandoc转换markdown和HTML、LaTeX</a></li>
 </ol>
 
 </div>
