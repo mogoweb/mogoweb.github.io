@@ -7,7 +7,7 @@
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="公司决定以后使用markdown+pandoc书写文档，于是就研究了一下markdown的写作（补充一下：markdown是一种标记语言，而pandoc则是转化工具）。虽然使用word书写文档得到大多数程序员的鄙视，但不得不承认，Word书写文档最直观，门槛最低。使用markdown+ &hellip;">
+	<meta name="description" content="chromium项目可谓开源项目集大成者，里面使用的第三方开源库数目高达60+。为了应对庞大的代码库管理问题，chromium项目引入了gclient，一套开源的代码管理方案。gclient是一套python脚本，用来简化多个git/svn源码库的管理。本文不探讨gclient的使用、配置， &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -80,6 +80,52 @@
 		
 	
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/06/19/about-source-management-of-chromium-webview/">
+		
+			关于Chromium WebView项目的源代码管理</a>
+	</h2>
+	<div class="entry-content">
+		<p>chromium项目可谓开源项目集大成者，里面使用的第三方开源库数目高达60+。为了应对庞大的代码库管理问题，chromium项目引入了<a href="http://code.google.com/p/gclient/">gclient</a>，一套开源的代码管理方案。gclient是一套python脚本，用来简化多个git/svn源码库的管理。本文不探讨gclient的使用、配置，而是谈谈chromium webview项目是如何组织源码库的。</p>
+
+<p>由于历史原因，chromium项目本身及许多第三方开源库采用的是SVN源码管理系统。SVN采用的是集中式管理，不如git那样能否方便的clone代码库。虽然google后来使用了git-svn等手段，为chromium和所有第三方开源库都做了git镜像库，但是如果需要获取某个release分支的代码，还是需要走svn（google也在不断改进，期望不久的将来，可以通过git获取某个release版本的源码）。</p>
+
+
+		
+		<a href="/blog/2014/06/19/about-source-management-of-chromium-webview/" class="more-link">阅读全文 &rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-19T10:53:25+08:00" pubdate data-updated="true">Jun 19<span>th</span>, 2014</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2014/06/19/about-source-management-of-chromium-webview/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
 
 
     <article class="post">
