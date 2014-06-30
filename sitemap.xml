@@ -1,6 +1,16 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://mogoweb.github.io/blog/2013/10/24/translated-android-webview/</loc>
+        <lastmod>2014-06-30T19:55:04+08:00</lastmod>
+    </url>
+    <url>
+        <loc>
+            http://mogoweb.github.io/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/
+        </loc>
+        <lastmod>2014-06-30T19:31:37+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/</loc>
         <lastmod>2014-03-21T17:20:07+08:00</lastmod>
     </url>
@@ -12,7 +22,7 @@
         <loc>
             http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/
         </loc>
-        <lastmod>2014-06-22T23:06:39+08:00</lastmod>
+        <lastmod>2014-06-22T23:21:30+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/blog/2014/06/10/about-chromium-webview-project/</loc>
@@ -56,7 +66,7 @@
     </url>
     <url>
         <loc>http://mogoweb.github.io/</loc>
-        <lastmod>2014-06-22T23:13:43+08:00</lastmod>
+        <lastmod>2014-06-30T19:55:04+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/about/</loc>
@@ -64,6 +74,6 @@
     </url>
     <url>
         <loc>http://mogoweb.github.io/blog/archives/</loc>
-        <lastmod>2014-06-22T23:13:43+08:00</lastmod>
+        <lastmod>2014-06-30T19:55:04+08:00</lastmod>
     </url>
 </urlset>
