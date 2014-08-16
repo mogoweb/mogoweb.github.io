@@ -13,7 +13,9 @@ chromium项目可谓开源项目集大成者，里面使用的第三方开源库
 基于chromium的开源项目有三种组织源码方案：
 
 1. [CEF](http://code.google.com/p/chromiumembedded)开源项目本身没有放chromium源码，只是提供了一套脚本，从google的服务器上去获取对应的源码，对chromium所做的修改以patch提交，同样提供了脚本应用这些patch。有了自动化脚本，开发人员其实也不关心代码托管在何处，项目组也可以省掉同步chromium源码的工作。但这种方案对项目组人员要求较高，必须要有扎实的脚本语言开发功底，每次对chromium的修改都必须做patch，也很考研开发人员的细致与耐心程度。
-2. [Chromium Browser for Snapdragon Project](https://www.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/WebHome)开源项目为所有chromium及第三方开源库都做了git镜像，对chromium的修改直接提交到这些镜像库上。这种方案的优点是可控，非常适合企业内部开发（非开源），在企业内部部署，开发人员就无需每人都从外部下载，涉及到技术保密的提交也无需让外界知晓。但这种方案的缺点也是非常明显的，为60+个git库做镜像，有一定的工作量，还要定期同步，需要处理内部提交与外部提交合并问题。
+2. [Chromium Browser for Snapdragon Project](https://www.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/WebHome)开源项目为所有chromium及第三方开源库都做了git镜像，对chromium的修改直接提交到这些镜像库上。这种方案的优点是可控，非常适合企业内部开发，在企业内部部署，开发人员就无需每人都从外部下载，涉及到技术保密的提交也无需让外界知晓。但这种方案的缺点也是非常明显的，为60+个git库做镜像，有一定的工作量，还要定期同步，需要处理内部提交与外部提交合并问题。
 3. [crosswalk](https://crosswalk-project.org/)开源项目只镜像了chromium/blink/v8等少量几个会修改的开源库，其它的库则从google的网站上取。这种方案在维护与便捷之间做了最佳平衡，因为chromium项目使用了大量的第三方开源库，但我们极少有需要去修改这些第三方开源库，处于定制和优化的目的，我们通常也只在chromium/blink库上修改代码。
 
-Chromium WebView项目采用了第三种方案，由于chromium和blink这两个影响库太庞大，屡次上传到github都失败，于是改成从crosswalk项目clone相关的代码库。所以在我的名下多了chromium-crosswalk, blink-crosswalk, v8-crosswalk这几个库，其实它们都是为chromium webview项目服务的。
+Chromium WebView项目采用了第三种方案，由于chromium和blink这两个库太庞大，屡次上传到github都失败，于是改成从crosswalk项目clone相关的代码库。所以在我的名下多了chromium-crosswalk, blink-crosswalk, v8-crosswalk这几个库，其实它们都是为chromium webview项目服务的，里面包含了crosswalk项目的代码，可以忽略之。
+
+[注: 由于一些原因，在国内访问chromium的源码库不再顺畅了，免费的翻墙服务GAE也被屏蔽了，所以要同步代码，还需要购买商业的VPN，以保证网络是通畅的。您也可以从Chromium Browser for Snapdragon Project获取相关的git库，只要版本取的正确，可以同样使用。]
