@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | 放飞梦想]]></title>
   <link href="http://mogoweb.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-06-30T19:55:05+08:00</updated>
+  <updated>2014-08-16T17:23:47+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -29,12 +29,14 @@
 
 <ol>
 <li><a href="http://code.google.com/p/chromiumembedded">CEF</a>开源项目本身没有放chromium源码，只是提供了一套脚本，从google的服务器上去获取对应的源码，对chromium所做的修改以patch提交，同样提供了脚本应用这些patch。有了自动化脚本，开发人员其实也不关心代码托管在何处，项目组也可以省掉同步chromium源码的工作。但这种方案对项目组人员要求较高，必须要有扎实的脚本语言开发功底，每次对chromium的修改都必须做patch，也很考研开发人员的细致与耐心程度。</li>
-<li><a href="https://www.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/WebHome">Chromium Browser for Snapdragon Project</a>开源项目为所有chromium及第三方开源库都做了git镜像，对chromium的修改直接提交到这些镜像库上。这种方案的优点是可控，非常适合企业内部开发（非开源），在企业内部部署，开发人员就无需每人都从外部下载，涉及到技术保密的提交也无需让外界知晓。但这种方案的缺点也是非常明显的，为60+个git库做镜像，有一定的工作量，还要定期同步，需要处理内部提交与外部提交合并问题。</li>
+<li><a href="https://www.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/WebHome">Chromium Browser for Snapdragon Project</a>开源项目为所有chromium及第三方开源库都做了git镜像，对chromium的修改直接提交到这些镜像库上。这种方案的优点是可控，非常适合企业内部开发，在企业内部部署，开发人员就无需每人都从外部下载，涉及到技术保密的提交也无需让外界知晓。但这种方案的缺点也是非常明显的，为60+个git库做镜像，有一定的工作量，还要定期同步，需要处理内部提交与外部提交合并问题。</li>
 <li><a href="https://crosswalk-project.org/">crosswalk</a>开源项目只镜像了chromium/blink/v8等少量几个会修改的开源库，其它的库则从google的网站上取。这种方案在维护与便捷之间做了最佳平衡，因为chromium项目使用了大量的第三方开源库，但我们极少有需要去修改这些第三方开源库，处于定制和优化的目的，我们通常也只在chromium/blink库上修改代码。</li>
 </ol>
 
 
-<p>Chromium WebView项目采用了第三种方案，由于chromium和blink这两个影响库太庞大，屡次上传到github都失败，于是改成从crosswalk项目clone相关的代码库。所以在我的名下多了chromium-crosswalk, blink-crosswalk, v8-crosswalk这几个库，其实它们都是为chromium webview项目服务的。</p>
+<p>Chromium WebView项目采用了第三种方案，由于chromium和blink这两个库太庞大，屡次上传到github都失败，于是改成从crosswalk项目clone相关的代码库。所以在我的名下多了chromium-crosswalk, blink-crosswalk, v8-crosswalk这几个库，其实它们都是为chromium webview项目服务的，里面包含了crosswalk项目的代码，可以忽略之。</p>
+
+<p>[注: 由于一些原因，在国内访问chromium的源码库不再顺畅了，免费的翻墙服务GAE也被屏蔽了，所以要同步代码，还需要购买商业的VPN，以保证网络是通畅的。您也可以从Chromium Browser for Snapdragon Project获取相关的git库，只要版本取的正确，可以同样使用。]</p>
 ]]></content>
   </entry>
   
@@ -334,7 +336,7 @@
 
 <p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
 
-<p>Author: Ben Murdoch <a href="&#109;&#x61;&#x69;&#108;&#116;&#111;&#x3a;&#98;&#101;&#110;&#109;&#64;&#x67;&#111;&#x6f;&#x67;&#108;&#101;&#46;&#99;&#111;&#x6d;">&#98;&#101;&#110;&#x6d;&#64;&#x67;&#x6f;&#111;&#x67;&#x6c;&#101;&#46;&#x63;&#111;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#97;&#x69;&#108;&#x74;&#x6f;&#58;&#98;&#101;&#x6e;&#x6d;&#x40;&#x67;&#111;&#111;&#103;&#108;&#x65;&#x2e;&#99;&#x6f;&#109;">&#98;&#x65;&#110;&#109;&#64;&#103;&#x6f;&#x6f;&#103;&#x6c;&#101;&#46;&#x63;&#x6f;&#x6d;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
 
@@ -362,7 +364,7 @@
 
 <p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#97;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#98;&#x65;&#110;&#109;&#x40;&#103;&#x6f;&#x6f;&#x67;&#x6c;&#101;&#46;&#99;&#111;&#x6d;">&#x62;&#x65;&#110;&#x6d;&#x40;&#x67;&#111;&#x6f;&#103;&#x6c;&#x65;&#x2e;&#x63;&#111;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#58;&#x62;&#101;&#110;&#x6d;&#64;&#103;&#x6f;&#x6f;&#103;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#x6d;">&#x62;&#x65;&#x6e;&#109;&#x40;&#x67;&#x6f;&#111;&#103;&#108;&#x65;&#46;&#99;&#111;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
 
