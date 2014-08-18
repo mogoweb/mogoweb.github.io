@@ -13,4 +13,8 @@ footer: true
 
 目前主要从事嵌入式设备上的浏览器开发。喜好专研技术，热衷于知识分享。擅长于WebKit移植与优化，对软件架构设计有着浓厚的兴趣。您可以通过chen.zhengyong@gmail.com联系我。
 
+微信公众号: mogoweb, 您可以扫描下面的二维码订阅:
+
+![](http://mogoweb.qiniudn.com/weixin_2014_qrcode_for_mogoweb_wx.jpg)
+
 业余喜欢旅游、摄影，网易lofter空间: [摩高影像](http://mogoweb.lofter.com)
