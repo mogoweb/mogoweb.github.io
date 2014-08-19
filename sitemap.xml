@@ -2,78 +2,78 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://mogoweb.github.io/blog/2013/10/24/translated-android-webview/</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://mogoweb.github.io/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/
         </loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/blog/2014/04/03/chromium-loading-spped-research-1/</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/
         </loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/blog/2014/06/10/about-chromium-webview-project/</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://mogoweb.github.io/blog/2014/06/16/writing-document-with-pandoc-and-markdown/
         </loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>
             http://mogoweb.github.io/blog/2014/06/19/about-source-management-of-chromium-webview/
         </loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/blog/2014/06/22/reading-about-macktalk/</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://mogoweb.github.io/about/</loc>
-        <lastmod>2014-08-18T22:42:05+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://mogoweb.github.io/blog/archives/</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://mogoweb.github.io/</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://mogoweb.github.io/mogo-browser/</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://mogoweb.github.io/resources/</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/resources/mytestpage.html</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://mogoweb.github.io/resources/</loc>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/resources/select.html</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/robots.txt</loc>
-        <lastmod>2014-08-18T22:21:43+08:00</lastmod>
+        <lastmod>2014-03-19T17:41:46+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://mogoweb.github.io/mogo-browser/</loc>
+        <lastmod>2014-08-19T09:22:14+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://mogoweb.github.io/</loc>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://mogoweb.github.io/about/</loc>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://mogoweb.github.io/blog/archives/</loc>
+        <lastmod>2014-08-19T09:24:54+08:00</lastmod>
     </url>
 </urlset>
