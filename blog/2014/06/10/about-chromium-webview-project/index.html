@@ -128,8 +128,8 @@
 <p>Chromium WebView刚完成了初步的移植，问题还非常多，在后续的时间，将会继续完善。目前看来，仍然有几大难题难以解决：</p>
 
 <ol>
-<li>Android Library不支持包含资源，所以一些chromium资源，比如对话框等，必须手动的添加到主项目中，不太方便；</li>
-<li>光栅花位图的效率似乎比GraphicBuffer的效率低一些，长网页或复杂网页在快速滚动时，会出现短暂的白屏。</li>
+<li>由于渲染架构的原因，在Android 4.0 &amp; Android 4.0.3上还只能使用软件方式渲染；</li>
+<li>光栅化位图的效率似乎比GraphicBuffer的效率低一些，长网页或复杂网页在快速滚动时，会出现短暂的白屏。</li>
 </ol>
 
 
@@ -142,6 +142,12 @@
 <li>将开源浏览器TintBrowser改成使用Chromium WebView，证明基于WebView API的应用能够无缝迁移到Chromium WebView。</li>
 </ol>
 
+
+<h2>更新</h2>
+
+<p>2014-08-18</p>
+
+<p>完成TintBrowser在Chromium WebView上的适配，并修改了若干UI，命名为365浏览器，已经在腾讯开放平台上上架，你可以从<a href="http://android.myapp.com/myapp/detail.htm?apkName=com.mogoweb">这里</a>下载。</p>
 </div>
 
 

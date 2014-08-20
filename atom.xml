@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-08-19T09:26:18+08:00</updated>
+  <updated>2014-08-20T18:43:43+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -676,8 +676,8 @@ cabal install happy
 <p>Chromium WebView刚完成了初步的移植，问题还非常多，在后续的时间，将会继续完善。目前看来，仍然有几大难题难以解决：</p>
 
 <ol>
-<li>Android Library不支持包含资源，所以一些chromium资源，比如对话框等，必须手动的添加到主项目中，不太方便；</li>
-<li>光栅花位图的效率似乎比GraphicBuffer的效率低一些，长网页或复杂网页在快速滚动时，会出现短暂的白屏。</li>
+<li>由于渲染架构的原因，在Android 4.0 &amp; Android 4.0.3上还只能使用软件方式渲染；</li>
+<li>光栅化位图的效率似乎比GraphicBuffer的效率低一些，长网页或复杂网页在快速滚动时，会出现短暂的白屏。</li>
 </ol>
 
 
@@ -690,6 +690,12 @@ cabal install happy
 <li>将开源浏览器TintBrowser改成使用Chromium WebView，证明基于WebView API的应用能够无缝迁移到Chromium WebView。</li>
 </ol>
 
+
+<h2>更新</h2>
+
+<p>2014-08-18</p>
+
+<p>完成TintBrowser在Chromium WebView上的适配，并修改了若干UI，命名为365浏览器，已经在腾讯开放平台上上架，你可以从<a href="http://android.myapp.com/myapp/detail.htm?apkName=com.mogoweb">这里</a>下载。</p>
 ]]></content>
   </entry>
   
@@ -940,7 +946,7 @@ cabal install happy
 
 <p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
 
-<p>Author: Ben Murdoch <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#x62;&#x65;&#110;&#x6d;&#x40;&#x67;&#111;&#111;&#103;&#108;&#x65;&#x2e;&#99;&#111;&#x6d;">&#x62;&#x65;&#110;&#109;&#64;&#x67;&#x6f;&#x6f;&#x67;&#108;&#x65;&#46;&#x63;&#111;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#105;&#x6c;&#x74;&#111;&#58;&#x62;&#x65;&#110;&#x6d;&#x40;&#103;&#x6f;&#111;&#103;&#108;&#101;&#x2e;&#99;&#111;&#109;">&#98;&#101;&#110;&#109;&#x40;&#103;&#111;&#x6f;&#103;&#108;&#101;&#46;&#x63;&#x6f;&#x6d;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
 
@@ -968,7 +974,7 @@ cabal install happy
 
 <p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#x3a;&#98;&#x65;&#x6e;&#x6d;&#64;&#103;&#x6f;&#x6f;&#x67;&#108;&#101;&#x2e;&#99;&#111;&#109;">&#98;&#x65;&#110;&#109;&#64;&#103;&#x6f;&#x6f;&#103;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#58;&#x62;&#x65;&#110;&#x6d;&#x40;&#x67;&#x6f;&#111;&#x67;&#x6c;&#101;&#x2e;&#99;&#111;&#x6d;">&#98;&#x65;&#x6e;&#109;&#64;&#103;&#x6f;&#x6f;&#x67;&#x6c;&#101;&#x2e;&#99;&#111;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
 
