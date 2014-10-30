@@ -7,7 +7,7 @@
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="自从购入iMac后，这台水果机一直就是我的专属机。女人天生就对电脑这种科技产品心存畏惧，老婆一看这台电脑不是熟悉的Windows系统，就摸都不想摸。直到有一天，老婆拿了一个拷贝有儿子照片的U盘，要用这台iMac浏览一下照片，因为这台iMac的屏幕够大，显示效果也好。于是我就让位让她操作一下。 &hellip;">
+	<meta name="description" content="&lt;&lt;Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -80,6 +80,207 @@
 		
 	
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/10/24/my-macos-programming-life-1/">
+		
+			我的macos编程之旅-Objective C入门</a>
+	</h2>
+	<div class="entry-content">
+		<p>&lt;&lt;Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective C和C++的不同之处。</p>
+
+<p>Objective-C是在C语言的基础上添加面向对象特性发展而来，下面就看看Objective-C中的面向对象三大要素。</p>
+
+<h2>1. 封装</h2>
+
+<p>和C++、Java等面向对象语言不同，Objective-C中并没有定义private, protected, public关键字，所有数据成员（instance variable）
+都是私有的，无法直接访问。例如如下类定义中，x是不能直接被外部访问的。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="nc">NSObject</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">double</span> <span class="n">x</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span> <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Foo</span>
+</span><span class='line'><span class="k">@synthesize</span> <span class="n">y</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>要访问类的数据成员，必须通过类的成员方法，最常见的就是称之为getter和setter的方法。为了简化存取方法，Objective-C引入了property概念。比如上面的代码中:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>定义了属性y，并在实现文件中使用如下代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@synthesize</span> <span class="n">y</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的语句相当于为y定义了getter和setter方法，比如你可以通过y()返回属性值，setY()设置属性值。</p>
+
+<p>同样的，成员方法也没有共有私有之分，所有成员方法都可以被外部访问。上述代码中成员方法前的“-”表示这是一个实例方法，如果为“+”表示类方法，等价于C++中的静态成员函数。如果要为类定义一个方法，又不希望被外部调用，该如何做到呢？解决的方法是不在头文件(.h)中定义，直接在实现文件(.m)中加入成员函数。是的，没错，Objective-C并不要求在头文件中列出所有的成员方法。</p>
+
+<h2>2. 继承</h2>
+
+<p>和C++不同的是，Objective-C是单根继承体系，所有的类都直接或间接继承自NSObject（注：Objective-C语言规范并没有规定这个根类的名字），这一点和Java类似。同样的，Objective-C不支持多继承。和Java语言中的接口类似的东西在Objective-C中被称作协议(protocol)。协议是一个方法声明的列表，有些方法是必须实现的，有些方法可以定义为可选的。和类一样，协议可以继承其它的协议。一个Objective-C类可以实现多个协议。值得一提的是，协议的名字可以和类名一样，比如NSObject是一个类，同时还存在一个名为NSObject的协议。因为采用了不同的关键字，所以编译器能够区分。比如下面的代码中，Foo继承NSObject类，同时实现了NSObject协议：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在C++和Java中，父类可以控制成员方式是否被子类覆盖（通过virtual/final关键字)，在Objective-C中，只要子类的成员方法和父类完全一样（包括参数个数及类型），就会覆盖父类的成员方法。</p>
+
+<h2>3. 多态</h2>
+
+<p>Objective-C支持多态，而且不像C++那么复杂，比如C++中，如果使用栈变量实例，是无法达到多态效果的。关于Objective-C的多态，可通过下面的代码实例说明：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="nc">NSObject</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="n">name</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Person</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Person&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Student</span> : <span class="nc">Person</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Student</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Student&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">Person</span><span class="o">*</span> <span class="n">person</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Student</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">setName:</span><span class="s">@&quot;Student A&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4. 小结</h2>
+
+<p>Objective-C支持面向对象的编程，同时又没有C++的多继承、虚继承等复杂的概念，如果之前有过C++/Java等编程经验，会很容易就能理解Objective-C中的面向对象编程，学起来也会非常轻松。</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-10-24T08:48:13+08:00" pubdate data-updated="true">Oct 24<span>th</span>, 2014</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/macos/'>macos,</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2014/10/24/my-macos-programming-life-1/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
 
 
     <article class="post">
@@ -509,141 +710,10 @@
 </div>
 </article>
 
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2013/10/24/translated-android-webview/">
-		
-			[译]Android WebView</a>
-	</h2>
-	<div class="entry-content">
-		<p>原文地址：<a href="https://crosswalk-project.org/#wiki/android-webview">https://crosswalk-project.org/#wiki/android-webview</a></p>
-
-<ul>
-<li><p>架构&amp;组件</p>
-
-<ul>
-<li>AOSP中的Android WebView将基于AwContents，其位于Content API和Content View之上。</li>
-<li>与Content API不同，它还依赖于从最初的chrome browser分离出来的组件，组件位于components/下，包含auto_login_parser，navigation_interception，visitedlink_browser，visitedlink_renderer和web_contents_delegate_android，这些都是用于页面。</li>
-<li>无渲染进程（进程内渲染），无沙盒机制（sandbox机制）</li>
-<li>图形架构和Content Shell有很大的不同，且正在开发中，将支持软件和硬件输出。</li>
-</ul>
-</li>
-<li><p>API</p>
-
-<ul>
-<li>API类似于EFL WebView，不会暴露内部的browser/renderer/gpu进程。</li>
-<li>能够加载URL，接收加载过程中的事件和回调。</li>
-<li>可通过addJavaScriptInterface扩展JavaScript API，允许JavaScript调用Java代码，反之这不支持。</li>
-<li>提供了若干API接收页面状态改变通知和页面回调。</li>
-</ul>
-</li>
-<li><p>消息循环和事件处理</p>
-
-<ul>
-<li>整合利用Android消息处理</li>
-<li>native代码设置定时器到Java侧的消息循环</li>
-</ul>
-</li>
-<li><p>图形</p>
-
-<ul>
-<li>渲染使用chromium合成器，开启了硬件加速</li>
-<li>合成器输出支持软件和硬件Surface</li>
-<li>硬件加速的架构和content shell不同，和ChromeOS类似。现在还处在早期开发阶段，使用了UberCompositor，支持软件输出</li>
-</ul>
-</li>
-<li><p>WebAPI扩展</p>
-
-<ul>
-<li>API addJavaScriptInterface可用于JavaScript API扩展，但支持JavaScript调用Java代码。</li>
-<li>相反方向的调用（Java &ndash;> JavaScript）不支持</li>
-<li>addJavaScriptInterface通过NPObject机制（之前用于NPAPI插件）支持进程外访问，虽然在WebView中不再需要。</li>
-<li>来自Java侧的事件通知貌似还不支持</li>
-</ul>
-</li>
-<li><p>API细节和涵盖范围</p>
-
-<ul>
-<li>WebViewClient用于页面状态改变通知</li>
-<li>WebChromeClient包含参与渲染逻辑的回调</li>
-<li>原生代码/JS交互</li>
-<li>页面加载</li>
-<li>导航&amp;历史记录</li>
-<li>文字搜索</li>
-<li>事件处理</li>
-<li>轨迹球、触摸、键盘</li>
-<li>不支持鼠标事件</li>
-<li>设置：编码</li>
-<li>页面信息：标题、favicon</li>
-<li>HTTPS/SSL</li>
-<li>页面加载状态、缩放、重定向、URL重载，等等</li>
-</ul>
-</li>
-<li><p>源码</p>
-
-<ul>
-<li>src/android_webview
-
-<ul>
-<li>android_webview_java.jar, libwebviewchromium.so和webviewchromium.pak是本模块的编译目标.</li>
-</ul>
-</li>
-<li>Google的工程师正在Android开源项目里开发基于Chrome核心的新WebView.
-
-<ul>
-<li>官方 站点:
-<a href="https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/webkit/">https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/webkit/</a></li>
-<li>镜像:
-<a href="https://github.com/android/platform_frameworks_base/tree/master/core/java/android/webkit">https://github.com/android/platform_frameworks_base/tree/master/core/java/android/webkit</a></li>
-<li>第三方开发者也在基于android_webview模块开发ChromeView
-
-<ul>
-<li>ChromeView有着和Android Webview一样的API. <a href="https://github.com/pwnall/chromeview-src">https://github.com/pwnall/chromeview-src</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-24T15:27:02+08:00" pubdate data-updated="true">Oct 24<span>th</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2013/10/24/translated-android-webview/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
 <nav id="pagenavi">
     
+    
+        <a href="/blog/page/2/" class="next">Next</a>
     
     <div class="center"><a href="/blog/archives">Blog Archives</a></div>
 </nav></div>

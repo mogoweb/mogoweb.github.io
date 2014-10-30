@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-10-23T11:38:21+08:00</updated>
+  <updated>2014-10-30T09:43:50+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,173 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[我的macos编程之旅-Objective C入门]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/10/24/my-macos-programming-life-1/"/>
+    <updated>2014-10-24T08:48:13+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/10/24/my-macos-programming-life-1</id>
+    <content type="html"><![CDATA[<p>&lt;&lt;Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective C和C++的不同之处。</p>
+
+<p>Objective-C是在C语言的基础上添加面向对象特性发展而来，下面就看看Objective-C中的面向对象三大要素。</p>
+
+<h2>1. 封装</h2>
+
+<p>和C++、Java等面向对象语言不同，Objective-C中并没有定义private, protected, public关键字，所有数据成员（instance variable）
+都是私有的，无法直接访问。例如如下类定义中，x是不能直接被外部访问的。</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="nc">NSObject</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="kt">double</span> <span class="n">x</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@property</span> <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Foo</span>
+</span><span class='line'><span class="k">@synthesize</span> <span class="n">y</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>要访问类的数据成员，必须通过类的成员方法，最常见的就是称之为getter和setter的方法。为了简化存取方法，Objective-C引入了property概念。比如上面的代码中:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>定义了属性y，并在实现文件中使用如下代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@synthesize</span> <span class="n">y</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面的语句相当于为y定义了getter和setter方法，比如你可以通过y()返回属性值，setY()设置属性值。</p>
+
+<p>同样的，成员方法也没有共有私有之分，所有成员方法都可以被外部访问。上述代码中成员方法前的“-”表示这是一个实例方法，如果为“+”表示类方法，等价于C++中的静态成员函数。如果要为类定义一个方法，又不希望被外部调用，该如何做到呢？解决的方法是不在头文件(.h)中定义，直接在实现文件(.m)中加入成员函数。是的，没错，Objective-C并不要求在头文件中列出所有的成员方法。</p>
+
+<h2>2. 继承</h2>
+
+<p>和C++不同的是，Objective-C是单根继承体系，所有的类都直接或间接继承自NSObject（注：Objective-C语言规范并没有规定这个根类的名字），这一点和Java类似。同样的，Objective-C不支持多继承。和Java语言中的接口类似的东西在Objective-C中被称作协议(protocol)。协议是一个方法声明的列表，有些方法是必须实现的，有些方法可以定义为可选的。和类一样，协议可以继承其它的协议。一个Objective-C类可以实现多个协议。值得一提的是，协议的名字可以和类名一样，比如NSObject是一个类，同时还存在一个名为NSObject的协议。因为采用了不同的关键字，所以编译器能够区分。比如下面的代码中，Foo继承NSObject类，同时实现了NSObject协议：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在C++和Java中，父类可以控制成员方式是否被子类覆盖（通过virtual/final关键字)，在Objective-C中，只要子类的成员方法和父类完全一样（包括参数个数及类型），就会覆盖父类的成员方法。</p>
+
+<h2>3. 多态</h2>
+
+<p>Objective-C支持多态，而且不像C++那么复杂，比如C++中，如果使用栈变量实例，是无法达到多态效果的。关于Objective-C的多态，可通过下面的代码实例说明：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="nc">NSObject</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="n">name</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Person</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Person&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">Student</span> : <span class="nc">Person</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@implementation</span> <span class="nc">Student</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Student&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">Person</span><span class="o">*</span> <span class="n">person</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Student</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">setName:</span><span class="s">@&quot;Student A&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>4. 小结</h2>
+
+<p>Objective-C支持面向对象的编程，同时又没有C++的多继承、虚继承等复杂的概念，如果之前有过C++/Java等编程经验，会很容易就能理解Objective-C中的面向对象编程，学起来也会非常轻松。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅]]></title>
@@ -963,7 +1130,7 @@ cabal install happy
 
 <p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
 
-<p>Author: Ben Murdoch <a href="&#109;&#x61;&#105;&#x6c;&#116;&#111;&#58;&#98;&#101;&#x6e;&#x6d;&#64;&#103;&#111;&#111;&#x67;&#x6c;&#x65;&#46;&#x63;&#111;&#109;">&#98;&#101;&#110;&#109;&#64;&#x67;&#111;&#111;&#103;&#108;&#x65;&#46;&#99;&#x6f;&#109;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#98;&#101;&#110;&#x6d;&#x40;&#103;&#x6f;&#x6f;&#103;&#x6c;&#x65;&#46;&#99;&#x6f;&#109;">&#x62;&#x65;&#x6e;&#x6d;&#64;&#x67;&#111;&#x6f;&#103;&#108;&#101;&#x2e;&#99;&#111;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
 
@@ -991,7 +1158,7 @@ cabal install happy
 
 <p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
 
-<p>Author: Ben Murdoch <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#x3a;&#x62;&#101;&#x6e;&#109;&#x40;&#x67;&#111;&#x6f;&#103;&#108;&#x65;&#46;&#99;&#x6f;&#x6d;">&#x62;&#x65;&#x6e;&#x6d;&#64;&#x67;&#x6f;&#111;&#x67;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#111;&#58;&#x62;&#101;&#x6e;&#109;&#x40;&#x67;&#111;&#x6f;&#x67;&#x6c;&#101;&#x2e;&#99;&#111;&#109;">&#x62;&#x65;&#110;&#x6d;&#64;&#103;&#x6f;&#111;&#103;&#108;&#x65;&#x2e;&#99;&#x6f;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
 
