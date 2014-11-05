@@ -3,7 +3,7 @@ layout: post
 title: "我的macos编程之旅-Objective C入门"
 date: 2014-10-24 08:48:13 +0800
 comments: true
-categories: macos, objective-c
+categories: macos objective-c
 ---
 <<Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective C和C++的不同之处。
 
