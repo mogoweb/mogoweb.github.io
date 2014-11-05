@@ -485,7 +485,7 @@
 	<div class="tags">
 
 
-	<a class='category' href='/blog/categories/macos/'>macos,</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
+	<a class='category' href='/blog/categories/macos/'>macos</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
 
 
 </div>
@@ -536,150 +536,12 @@
 	<div class="tags">
 
 
-	<a class='category' href='/blog/categories/macos/'>macos,</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
+	<a class='category' href='/blog/categories/macos/'>macos</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
 
 
 </div>
 	
 	<div class="comments"><a href="/blog/2014/10/23/my-macos-programming-life/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/09/22/debugging-gpu-related-code/">
-		
-			调试GPU相关代码</a>
-	</h2>
-	<div class="entry-content">
-		<p>［注］本文译自［Debugging GPU related code］(<a href="http://www.chromium.org/developers/how-tos/debugging-gpu-related-code">http://www.chromium.org/developers/how-tos/debugging-gpu-related-code</a>)，一切以原文内容为准。</p>
-
-<p>chromium的GPU系统是多进程架构，这使得调试GPU相当困难，详情请看［GPU Command Buffer for some of the nitty gitty］(<a href="http://www.chromium.org/developers/design-documents/gpu-command-buffer">http://www.chromium.org/developers/design-documents/gpu-command-buffer</a>)。下面是一些有助于GPU调试的小技巧。</p>
-
-<h1>渲染进程代码</h1>
-
-<h2>&mdash;enable-gpu-client-logging</h2>
-
-<p>如果您要追踪的bug位于渲染进程(compositor, WebGL, skia/ganesh, aura)，请使用一个debug编译版本并给命令行参数加上&mdash;enable-gpu-client-logging，它将现实每一个&#8221;模拟&#8221;的GL调用。通过模拟，站在渲染进程的视角，其它进程对GL驱动的真实调用，将以OpenGL ES 2.0的调用呈现。</p>
-
-<p><del>
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(1026)] [.WebGLRenderingContext] glUseProgram(3)
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(401)] [.WebGLRenderingContext] glGenBuffers(1, 0x7fffc9e1269c)
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(416)]   0: 1
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(23)] [.WebGLRenderingContext] glBindBuffer(GL_ARRAY_BUFFER, 1)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(1313)] [.WebGLRenderingContext] glBufferData(GL_ARRAY_BUFFER, 36, 0x7fd268580120, GL_STATIC_DRAW)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(2480)] [.WebGLRenderingContext] glEnableVertexAttribArray(0)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(1140)] [.WebGLRenderingContext] glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0)
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(135)] [.WebGLRenderingContext] glClear(16640)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(2490)] [.WebGLRenderingContext] glDrawArrays(GL_TRIANGLES, 0, 3)
-</del></p>
-
-<h2>检查about:gpu</h2>
-
-<p>GPU进程将许多错误和警告记入日志，您可以通过about:gpu查看这些日志。日志显示在页面的底部，如果chromium在Linux，Mac系统上通过命令行启动，也可以在控制台上看到日志。而Window上，您则需要在调试器中运行，或者使用WinDbg及类似调试工具才能做到。</p>
-
-<p>注：如果about:gpu告诉您gpu被禁用且硬件加速不可用，这可能是gpu不被支持。您可以使用&mdash;ignore-gpu-blacklist命令行参数强行开启gpu支持。</p>
-
-<h2>终止于GL错误</h2>
-
-<p>在src/gpu/command_buffer/gles2_implementation.h文件有如下代码:</p>
-
-<p>~~~</p>
-
-<h1>if defined(GPU_CLIENT_DEBUG)</h1>
-
-<p>  // Set to 1 to have the client fail when a GL error is generated.
-  // This helps find bugs in the renderer since the debugger stops on the error.</p>
-
-<h1>if 0</h1>
-
-<h1>define GL_CLIENT_FAIL_GL_ERRORS</h1>
-
-<h1>endif</h1>
-
-<h1>endif</h1>
-
-<p>~~~</p>
-
-<p>将上面的&#8221;if 0&#8221;改成&#8221;if 1&#8221;，编译调试版本，并在调试器中运行，当渲染进程出现GL错误，调试器将终止应用，这时您可以回溯调用堆栈找出问题所在。</p>
-
-<h2>为自定义调用编号</h2>
-
-<p>所有的错误、警告和调试日志输出都带有前缀。您可以调用glPushGroupMarkerEXT, glPopGroupMarkerEXT和glInsertEventMarkerEXT设置该前缀。glPushGroupMarkerEXT在当前的日志前缀前添加字符串（类似于c++的命名空间），glPopGroupMarkerEXT则去掉最近添加的字符串。glInsertEventMarkerEXT则为当前字符串设置一个后缀。示例如下:</p>
-
-<p><del>
-glPushGroupMarkerEXT(0, &ldquo;Foo&rdquo;);        // &ndash;> log prefix = &ldquo;Foo&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;This&rdquo;);     // &ndash;> log prefix = &ldquo;Foo.This&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;That&rdquo;);     // &ndash;> log prefix = &ldquo;Foo.That&rdquo;
-glPushGroupMarkerEXT(0, &ldquo;Bar&rdquo;);        // &ndash;> log prefix = &ldquo;Foo.Bar&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;Orange&rdquo;);   // &ndash;> log prefix = &ldquo;Foo.Bar.Orange&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;Banana&rdquo;);   // &ndash;> log prefix = &ldquo;Foo.Bar.Banana&rdquo;
-glPopGroupMarkerEXT();                 // &ndash;> log prefix = &ldquo;Foo.That&rdquo;
-</del></p>
-
-<h2>写一个精简的测试用例</h2>
-
-<h2>调试渲染进程</h2>
-
-<p>假设Chrome启动了多个渲染进程</p>
-
-<p>在Linux上可使用以下命令</p>
-
-<p><del>
-out/Debug/chromium &mdash;no-sandbox &mdash;renderer-cmd-prefix=&ldquo;xterm -e gdb &mdash;args&rdquo; <a href="http://localhost:8000/page-to-repo.html">http://localhost:8000/page-to-repo.html</a>
-</del></p>
-
-<p>在OSX下可使用</p>
-
-<p><del>
-out/Debug/Chromium.app/Contents/MacOSX/Chromium &mdash;no-sandbox &mdash;renderer-cmd-prefix=&ldquo;xterm -e gdb &mdash;args&rdquo; <a href="http://localhost:8000/page-to-repo.html">http://localhost:8000/page-to-repo.html</a>
-</del></p>
-
-<p>在Windows上，则可以使用&mdash;renderer-startup-dialog，然后用调试器连接所列出的进程。</p>
-
-<p>注: 在Linux喝OSX上我使用的是cgdb，而不是gdb。</p>
-
-<h3>GPU进程代码</h3>
-
-<h3>&mdash;enable-gpu-service-logging</h3>
-
-<h3>&mdash;enable-gpu-debugging</h3>
-
-<h3>&mdash;enable-gpu-command-logging</h3>
-
-<h3></h3>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-09-22T21:21:58+08:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2014</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/chromium/'>chromium</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/09/22/debugging-gpu-related-code/#disqus_thread">Comments</a></div>
 	
 </div>
 </article>
@@ -961,6 +823,52 @@ out/Debug/Chromium.app/Contents/MacOSX/Chromium &mdash;no-sandbox &mdash;rendere
 </div>
 	
 	<div class="comments"><a href="/blog/2014/04/03/chromium-loading-spped-research-1/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/03/18/chromium-loading-speed-research-0/">
+		
+			Chromium网络加载速度研究(1)</a>
+	</h2>
+	<div class="entry-content">
+		<p>本文主要内容翻译自Google的文档<a href="https://developers.google.com/chrome/mobile/docs/data-compression?hl=zh-CN">Data Compression Proxy</a>，如果您觉得文章写的不明白，请参看原文。</p>
+
+<p>对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera、QQ浏览器都采用了服务器端加速技术。Chrome移动版从V33开始正式支持数据压缩代理。下面就分析一下Chrome for Android所采用的数据压缩技术。</p>
+
+
+		
+		<a href="/blog/2014/03/18/chromium-loading-speed-research-0/" class="more-link">阅读全文 &rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-18T16:22:09+08:00" pubdate data-updated="true">Mar 18<span>th</span>, 2014</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2014/03/18/chromium-loading-speed-research-0/#disqus_thread">Comments</a></div>
 	
 </div>
 </article>

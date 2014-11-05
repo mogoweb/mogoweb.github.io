@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-11-05T22:52:17+08:00</updated>
+  <updated>2014-11-05T23:00:00+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -373,110 +373,6 @@
 <p>Mac OS下开发，Objective-C是当仁不让的No.1，当然今年的兵器普上出现了新面孔Swift。考虑到我在C/C++圈子摸爬滚打了这么多年，估计用Objective C会更称手一些吧。而且Objective C发展了二十多年，一直由苹果独立支撑，竟然在编程语言兵器普上排在前几位，自然有其过人之处。好吧，就选它了。学习一门新的语言，一本经典的入门书籍那是必须的，经过大牛的推荐，我选择了&lt;&lt;Objective-C Programming &ndash; The Big Nerd Ranch Guide>>。</p>
 
 <p>下面就开始我的mac os编程之旅吧！</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[调试GPU相关代码]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/09/22/debugging-gpu-related-code/"/>
-    <updated>2014-09-22T21:21:58+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/09/22/debugging-gpu-related-code</id>
-    <content type="html"><![CDATA[<p>［注］本文译自［Debugging GPU related code］(<a href="http://www.chromium.org/developers/how-tos/debugging-gpu-related-code">http://www.chromium.org/developers/how-tos/debugging-gpu-related-code</a>)，一切以原文内容为准。</p>
-
-<p>chromium的GPU系统是多进程架构，这使得调试GPU相当困难，详情请看［GPU Command Buffer for some of the nitty gitty］(<a href="http://www.chromium.org/developers/design-documents/gpu-command-buffer">http://www.chromium.org/developers/design-documents/gpu-command-buffer</a>)。下面是一些有助于GPU调试的小技巧。</p>
-
-<h1>渲染进程代码</h1>
-
-<h2>&mdash;enable-gpu-client-logging</h2>
-
-<p>如果您要追踪的bug位于渲染进程(compositor, WebGL, skia/ganesh, aura)，请使用一个debug编译版本并给命令行参数加上&mdash;enable-gpu-client-logging，它将现实每一个&#8221;模拟&#8221;的GL调用。通过模拟，站在渲染进程的视角，其它进程对GL驱动的真实调用，将以OpenGL ES 2.0的调用呈现。</p>
-
-<p><del>
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(1026)] [.WebGLRenderingContext] glUseProgram(3)
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(401)] [.WebGLRenderingContext] glGenBuffers(1, 0x7fffc9e1269c)
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(416)]   0: 1
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(23)] [.WebGLRenderingContext] glBindBuffer(GL_ARRAY_BUFFER, 1)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(1313)] [.WebGLRenderingContext] glBufferData(GL_ARRAY_BUFFER, 36, 0x7fd268580120, GL_STATIC_DRAW)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(2480)] [.WebGLRenderingContext] glEnableVertexAttribArray(0)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(1140)] [.WebGLRenderingContext] glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0)
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(135)] [.WebGLRenderingContext] glClear(16640)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(2490)] [.WebGLRenderingContext] glDrawArrays(GL_TRIANGLES, 0, 3)
-</del></p>
-
-<h2>检查about:gpu</h2>
-
-<p>GPU进程将许多错误和警告记入日志，您可以通过about:gpu查看这些日志。日志显示在页面的底部，如果chromium在Linux，Mac系统上通过命令行启动，也可以在控制台上看到日志。而Window上，您则需要在调试器中运行，或者使用WinDbg及类似调试工具才能做到。</p>
-
-<p>注：如果about:gpu告诉您gpu被禁用且硬件加速不可用，这可能是gpu不被支持。您可以使用&mdash;ignore-gpu-blacklist命令行参数强行开启gpu支持。</p>
-
-<h2>终止于GL错误</h2>
-
-<p>在src/gpu/command_buffer/gles2_implementation.h文件有如下代码:</p>
-
-<p>~~~</p>
-
-<h1>if defined(GPU_CLIENT_DEBUG)</h1>
-
-<p>  // Set to 1 to have the client fail when a GL error is generated.
-  // This helps find bugs in the renderer since the debugger stops on the error.</p>
-
-<h1>if 0</h1>
-
-<h1>define GL_CLIENT_FAIL_GL_ERRORS</h1>
-
-<h1>endif</h1>
-
-<h1>endif</h1>
-
-<p>~~~</p>
-
-<p>将上面的&#8221;if 0&#8221;改成&#8221;if 1&#8221;，编译调试版本，并在调试器中运行，当渲染进程出现GL错误，调试器将终止应用，这时您可以回溯调用堆栈找出问题所在。</p>
-
-<h2>为自定义调用编号</h2>
-
-<p>所有的错误、警告和调试日志输出都带有前缀。您可以调用glPushGroupMarkerEXT, glPopGroupMarkerEXT和glInsertEventMarkerEXT设置该前缀。glPushGroupMarkerEXT在当前的日志前缀前添加字符串（类似于c++的命名空间），glPopGroupMarkerEXT则去掉最近添加的字符串。glInsertEventMarkerEXT则为当前字符串设置一个后缀。示例如下:</p>
-
-<p><del>
-glPushGroupMarkerEXT(0, &ldquo;Foo&rdquo;);        // &ndash;> log prefix = &ldquo;Foo&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;This&rdquo;);     // &ndash;> log prefix = &ldquo;Foo.This&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;That&rdquo;);     // &ndash;> log prefix = &ldquo;Foo.That&rdquo;
-glPushGroupMarkerEXT(0, &ldquo;Bar&rdquo;);        // &ndash;> log prefix = &ldquo;Foo.Bar&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;Orange&rdquo;);   // &ndash;> log prefix = &ldquo;Foo.Bar.Orange&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;Banana&rdquo;);   // &ndash;> log prefix = &ldquo;Foo.Bar.Banana&rdquo;
-glPopGroupMarkerEXT();                 // &ndash;> log prefix = &ldquo;Foo.That&rdquo;
-</del></p>
-
-<h2>写一个精简的测试用例</h2>
-
-<h2>调试渲染进程</h2>
-
-<p>假设Chrome启动了多个渲染进程</p>
-
-<p>在Linux上可使用以下命令</p>
-
-<p><del>
-out/Debug/chromium &mdash;no-sandbox &mdash;renderer-cmd-prefix=&ldquo;xterm -e gdb &mdash;args&rdquo; <a href="http://localhost:8000/page-to-repo.html">http://localhost:8000/page-to-repo.html</a>
-</del></p>
-
-<p>在OSX下可使用</p>
-
-<p><del>
-out/Debug/Chromium.app/Contents/MacOSX/Chromium &mdash;no-sandbox &mdash;renderer-cmd-prefix=&ldquo;xterm -e gdb &mdash;args&rdquo; <a href="http://localhost:8000/page-to-repo.html">http://localhost:8000/page-to-repo.html</a>
-</del></p>
-
-<p>在Windows上，则可以使用&mdash;renderer-startup-dialog，然后用调试器连接所列出的进程。</p>
-
-<p>注: 在Linux喝OSX上我使用的是cgdb，而不是gdb。</p>
-
-<h3>GPU进程代码</h3>
-
-<h3>&mdash;enable-gpu-service-logging</h3>
-
-<h3>&mdash;enable-gpu-debugging</h3>
-
-<h3>&mdash;enable-gpu-command-logging</h3>
-
-<h3></h3>
 ]]></content>
   </entry>
   
@@ -1413,7 +1309,7 @@ cabal install happy
 
 <p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#98;&#x65;&#x6e;&#x6d;&#x40;&#103;&#x6f;&#x6f;&#x67;&#108;&#x65;&#46;&#x63;&#111;&#x6d;">&#98;&#101;&#110;&#x6d;&#64;&#x67;&#x6f;&#111;&#x67;&#x6c;&#x65;&#46;&#99;&#x6f;&#109;</a></p>
+<p>Author: Ben Murdoch <a href="&#109;&#x61;&#105;&#108;&#x74;&#x6f;&#x3a;&#x62;&#101;&#110;&#x6d;&#x40;&#103;&#x6f;&#x6f;&#103;&#108;&#x65;&#x2e;&#99;&#x6f;&#x6d;">&#98;&#101;&#x6e;&#109;&#x40;&#x67;&#x6f;&#111;&#103;&#108;&#x65;&#46;&#99;&#111;&#x6d;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
 
@@ -1441,7 +1337,7 @@ cabal install happy
 
 <p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#111;&#x3a;&#98;&#x65;&#110;&#109;&#64;&#103;&#x6f;&#x6f;&#x67;&#108;&#x65;&#x2e;&#x63;&#x6f;&#109;">&#98;&#x65;&#110;&#x6d;&#64;&#103;&#x6f;&#x6f;&#103;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#109;&#x61;&#105;&#108;&#116;&#x6f;&#58;&#x62;&#x65;&#110;&#x6d;&#64;&#x67;&#x6f;&#x6f;&#103;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#x62;&#x65;&#x6e;&#x6d;&#64;&#103;&#111;&#111;&#x67;&#108;&#101;&#x2e;&#99;&#111;&#x6d;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
 

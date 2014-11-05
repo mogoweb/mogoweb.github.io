@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: chromium | 放飞梦想]]></title>
+  <title><![CDATA[Category: chromium, | 放飞梦想]]></title>
   <link href="http://mogoweb.github.io/blog/categories/chromium/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-11-05T22:52:17+08:00</updated>
+  <updated>2014-11-05T23:00:00+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -14,106 +14,404 @@
 
   
   <entry>
-    <title type="html"><![CDATA[调试GPU相关代码]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/09/22/debugging-gpu-related-code/"/>
-    <updated>2014-09-22T21:21:58+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/09/22/debugging-gpu-related-code</id>
-    <content type="html"><![CDATA[<p>［注］本文译自［Debugging GPU related code］(<a href="http://www.chromium.org/developers/how-tos/debugging-gpu-related-code">http://www.chromium.org/developers/how-tos/debugging-gpu-related-code</a>)，一切以原文内容为准。</p>
+    <title type="html"><![CDATA[关于Chromium WebView项目的源代码管理]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/06/19/about-source-management-of-chromium-webview/"/>
+    <updated>2014-06-19T10:53:25+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/06/19/about-source-management-of-chromium-webview</id>
+    <content type="html"><![CDATA[<p>chromium项目可谓开源项目集大成者，里面使用的第三方开源库数目高达60+。为了应对庞大的代码库管理问题，chromium项目引入了<a href="http://code.google.com/p/gclient/">gclient</a>，一套开源的代码管理方案。gclient是一套python脚本，用来简化多个git/svn源码库的管理。本文不探讨gclient的使用、配置，而是谈谈chromium webview项目是如何组织源码库的。</p>
 
-<p>chromium的GPU系统是多进程架构，这使得调试GPU相当困难，详情请看［GPU Command Buffer for some of the nitty gitty］(<a href="http://www.chromium.org/developers/design-documents/gpu-command-buffer">http://www.chromium.org/developers/design-documents/gpu-command-buffer</a>)。下面是一些有助于GPU调试的小技巧。</p>
+<p>由于历史原因，chromium项目本身及许多第三方开源库采用的是SVN源码管理系统。SVN采用的是集中式管理，不如git那样能否方便的clone代码库。虽然google后来使用了git-svn等手段，为chromium和所有第三方开源库都做了git镜像库，但是如果需要获取某个release分支的代码，还是需要走svn（google也在不断改进，期望不久的将来，可以通过git获取某个release版本的源码）。</p>
 
-<h1>渲染进程代码</h1>
+<!--more-->
 
-<h2>&mdash;enable-gpu-client-logging</h2>
 
-<p>如果您要追踪的bug位于渲染进程(compositor, WebGL, skia/ganesh, aura)，请使用一个debug编译版本并给命令行参数加上&mdash;enable-gpu-client-logging，它将现实每一个"模拟"的GL调用。通过模拟，站在渲染进程的视角，其它进程对GL驱动的真实调用，将以OpenGL ES 2.0的调用呈现。</p>
+<p>基于chromium的开源项目有三种组织源码方案：</p>
 
-<p><del>
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(1026)] [.WebGLRenderingContext] glUseProgram(3)
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(401)] [.WebGLRenderingContext] glGenBuffers(1, 0x7fffc9e1269c)
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(416)]   0: 1
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(23)] [.WebGLRenderingContext] glBindBuffer(GL_ARRAY_BUFFER, 1)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(1313)] [.WebGLRenderingContext] glBufferData(GL_ARRAY_BUFFER, 36, 0x7fd268580120, GL_STATIC_DRAW)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(2480)] [.WebGLRenderingContext] glEnableVertexAttribArray(0)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(1140)] [.WebGLRenderingContext] glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0)
-[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(135)] [.WebGLRenderingContext] glClear(16640)
-[4782:4782:1219/141706:INFO:gles2_implementation.cc(2490)] [.WebGLRenderingContext] glDrawArrays(GL_TRIANGLES, 0, 3)
-</del></p>
+<ol>
+<li><a href="http://code.google.com/p/chromiumembedded">CEF</a>开源项目本身没有放chromium源码，只是提供了一套脚本，从google的服务器上去获取对应的源码，对chromium所做的修改以patch提交，同样提供了脚本应用这些patch。有了自动化脚本，开发人员其实也不关心代码托管在何处，项目组也可以省掉同步chromium源码的工作。但这种方案对项目组人员要求较高，必须要有扎实的脚本语言开发功底，每次对chromium的修改都必须做patch，也很考研开发人员的细致与耐心程度。</li>
+<li><a href="https://www.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/WebHome">Chromium Browser for Snapdragon Project</a>开源项目为所有chromium及第三方开源库都做了git镜像，对chromium的修改直接提交到这些镜像库上。这种方案的优点是可控，非常适合企业内部开发，在企业内部部署，开发人员就无需每人都从外部下载，涉及到技术保密的提交也无需让外界知晓。但这种方案的缺点也是非常明显的，为60+个git库做镜像，有一定的工作量，还要定期同步，需要处理内部提交与外部提交合并问题。</li>
+<li><a href="https://crosswalk-project.org/">crosswalk</a>开源项目只镜像了chromium/blink/v8等少量几个会修改的开源库，其它的库则从google的网站上取。这种方案在维护与便捷之间做了最佳平衡，因为chromium项目使用了大量的第三方开源库，但我们极少有需要去修改这些第三方开源库，处于定制和优化的目的，我们通常也只在chromium/blink库上修改代码。</li>
+</ol>
 
-<h2>检查about:gpu</h2>
 
-<p>GPU进程将许多错误和警告记入日志，您可以通过about:gpu查看这些日志。日志显示在页面的底部，如果chromium在Linux，Mac系统上通过命令行启动，也可以在控制台上看到日志。而Window上，您则需要在调试器中运行，或者使用WinDbg及类似调试工具才能做到。</p>
+<p>Chromium WebView项目采用了第三种方案，由于chromium和blink这两个库太庞大，屡次上传到github都失败，于是改成从crosswalk项目clone相关的代码库。所以在我的名下多了chromium-crosswalk, blink-crosswalk, v8-crosswalk这几个库，其实它们都是为chromium webview项目服务的，里面包含了crosswalk项目的代码，可以忽略之。</p>
 
-<p>注：如果about:gpu告诉您gpu被禁用且硬件加速不可用，这可能是gpu不被支持。您可以使用&mdash;ignore-gpu-blacklist命令行参数强行开启gpu支持。</p>
+<p>[注: 由于一些原因，在国内访问chromium的源码库不再顺畅了，免费的翻墙服务GAE也被屏蔽了，所以要同步代码，还需要购买商业的VPN，以保证网络是通畅的。您也可以从Chromium Browser for Snapdragon Project获取相关的git库，只要版本取的正确，可以同样使用。]</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[关于chromium_webview项目]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/06/10/about-chromium-webview-project/"/>
+    <updated>2014-06-10T08:56:06+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/06/10/about-chromium-webview-project</id>
+    <content type="html"><![CDATA[<p>chromium_webview的目标是在chromium核心的基础上提供Android WebView API全兼容的接口，希望达到的效果是基于Android WebView API开发的应用程序，只需将android.webkit包名替换为com.mogoweb.chrome即可完成从WebKit内核到Chromium内核的迁移。目标支持平台为Android 4.0以上。项目地址：<a href="https://github.com/mogoweb/chromium_webview">https://github.com/mogoweb/chromium_webview</a>。</p>
 
-<h2>终止于GL错误</h2>
+<h2>项目的起源</h2>
 
-<p>在src/gpu/command_buffer/gles2_implementation.h文件有如下代码:</p>
+<p>从2011年开始，我转向从事chromium的定制化工作。2012年在移动手机平台上开发了一款浏览器Browser1.0，基于WebKit内核和Android WebView API。2012年下半年开始进行chromium的移植工作，其时google发布了Chrome for Android的第一个版本V0.16，还是beta版本。虽然浏览器的内核发生了很大的变化，但是我们期望上层的代码不需要做修改，于是在Content API的基础上，按照Android WebView API进行接口封装。最后做出来的浏览器美其名曰“双内核”，也就是WebKit加Chromium双内核。</p>
 
-<p>~~~</p>
+<!--more-->
 
-<h1>if defined(GPU_CLIENT_DEBUG)</h1>
 
-<p>  // Set to 1 to have the client fail when a GL error is generated.
-  // This helps find bugs in the renderer since the debugger stops on the error.</p>
+<p>由于Chromium渲染架构的缘故，在Content API之上封装的WebView API还存在问题：</p>
 
-<h1>if 0</h1>
+<ol>
+<li>为了启用硬件加速，chromium for android引入了SurfaceView，但SurfaceView动态添加会引起黑屏。所以SurfaceView必须在应用程序的初始化代码中添加，不能象Android WebView那样随心所欲的使用。</li>
+<li>采用了多进程架构，后果之一就是内存狂飙，更让人难以接受的是，访问新浪首页这样复杂的网页，还不如WebKit浏览器流畅。</li>
+</ol>
 
-<h1>define GL_CLIENT_FAIL_GL_ERRORS</h1>
 
-<h1>endif</h1>
+<p>在我们移植chromium的同时，google的工程师也没闲着，chromium代码下面开始出现android_webview的代码，接着代码越来越多，更新的也越来越频繁。有一天，在github上看到一个项目：<a href="https://github.com/pwnall/chromeview">ChromeView Project</a>。这正是我所需要的基于chromium的WebView API封装,但这哥们估计也没啥闲功夫，项目好久都没有更新。于是我就在github上创建了chromium_webview项目，早期的AwContents实现是软件渲染，所以效率低下。</p>
 
-<h1>endif</h1>
+<p>时间推到2013年11月，Android 4.4发布，其中很大的一个变化就是使用chromium替换了原来的webkit引擎。于是我又开始哼哧哼哧研究起AOSP中的Chromium WebView实现，研究了AOSP中的Chromium WebView实现后，定下了如下策略：</p>
 
-<p>~~~</p>
+<ol>
+<li>照搬WebViewChromium及相关代码，如果代码中使用了未公开的API，使用反射机制实现。</li>
+<li>启用光栅化位图，消除对GraphicBuffer的依赖，从而不依赖系统的未公开C++接口。</li>
+</ol>
 
-<p>将上面的"if 0"改成"if 1"，编译调试版本，并在调试器中运行，当渲染进程出现GL错误，调试器将终止应用，这时您可以回溯调用堆栈找出问题所在。</p>
 
-<h2>为自定义调用编号</h2>
+<p>经过一段时间的工作，chromium webview项目终于完整支持硬件加速。</p>
 
-<p>所有的错误、警告和调试日志输出都带有前缀。您可以调用glPushGroupMarkerEXT, glPopGroupMarkerEXT和glInsertEventMarkerEXT设置该前缀。glPushGroupMarkerEXT在当前的日志前缀前添加字符串（类似于c++的命名空间），glPopGroupMarkerEXT则去掉最近添加的字符串。glInsertEventMarkerEXT则为当前字符串设置一个后缀。示例如下:</p>
+<h2>Chromium WebView的应用场景</h2>
 
-<p><del>
-glPushGroupMarkerEXT(0, &ldquo;Foo&rdquo;);        // &ndash;> log prefix = &ldquo;Foo&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;This&rdquo;);     // &ndash;> log prefix = &ldquo;Foo.This&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;That&rdquo;);     // &ndash;> log prefix = &ldquo;Foo.That&rdquo;
-glPushGroupMarkerEXT(0, &ldquo;Bar&rdquo;);        // &ndash;> log prefix = &ldquo;Foo.Bar&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;Orange&rdquo;);   // &ndash;> log prefix = &ldquo;Foo.Bar.Orange&rdquo;
-glInsertEventMarkerEXT(0, &ldquo;Banana&rdquo;);   // &ndash;> log prefix = &ldquo;Foo.Bar.Banana&rdquo;
-glPopGroupMarkerEXT();                 // &ndash;> log prefix = &ldquo;Foo.That&rdquo;
-</del></p>
+<p>有人要说了，现在Android系统都已经采用chromium引擎了，你还费老大劲整出这玩意儿，是不是吃饱了撑了。的确，做这个事情没给我带来一毛钱经济上的收益，反而搭进了我的业余休息时间，我做这件事的动力来自：</p>
 
-<h2>写一个精简的测试用例</h2>
+<ol>
+<li>Android WebView采用chromium引擎不假，但那也得4.4及以上的版本。</li>
+<li>使用系统的WebView，失去了定制能力，比如要添加一个HTML标签就比较难。</li>
+<li>提高水平，结交朋友。</li>
+</ol>
 
-<h2>调试渲染进程</h2>
 
-<p>假设Chrome启动了多个渲染进程</p>
+<p>早些年做《无线城市》项目时，就发现Hybrid App还是有一些市场的。但使用系统的WebView可能存在性能低下、兼容性不良、无法定制的问题。所以chromium webview的最佳应用场景就是集成到APP作为渲染引擎，此外开发浏览器也是一个选择。</p>
 
-<p>在Linux上可使用以下命令</p>
+<h2>Chromium WebView存在的问题</h2>
 
-<p><del>
-out/Debug/chromium &mdash;no-sandbox &mdash;renderer-cmd-prefix=&ldquo;xterm -e gdb &mdash;args&rdquo; <a href="http://localhost:8000/page-to-repo.html">http://localhost:8000/page-to-repo.html</a>
-</del></p>
+<p>Chromium WebView刚完成了初步的移植，问题还非常多，在后续的时间，将会继续完善。目前看来，仍然有几大难题难以解决：</p>
 
-<p>在OSX下可使用</p>
+<ol>
+<li>由于渲染架构的原因，在Android 4.0 &amp; Android 4.0.3上还只能使用软件方式渲染；</li>
+<li>光栅化位图的效率似乎比GraphicBuffer的效率低一些，长网页或复杂网页在快速滚动时，会出现短暂的白屏。</li>
+</ol>
 
-<p><del>
-out/Debug/Chromium.app/Contents/MacOSX/Chromium &mdash;no-sandbox &mdash;renderer-cmd-prefix=&ldquo;xterm -e gdb &mdash;args&rdquo; <a href="http://localhost:8000/page-to-repo.html">http://localhost:8000/page-to-repo.html</a>
-</del></p>
 
-<p>在Windows上，则可以使用&mdash;renderer-startup-dialog，然后用调试器连接所列出的进程。</p>
+<h2>后续计划</h2>
 
-<p>注: 在Linux喝OSX上我使用的是cgdb，而不是gdb。</p>
+<ol>
+<li>完善Chromium WebView API，修复BUG</li>
+<li>开启WebGL支持</li>
+<li>精简内核，优化内存占用</li>
+<li>将开源浏览器TintBrowser改成使用Chromium WebView，证明基于WebView API的应用能够无缝迁移到Chromium WebView。</li>
+</ol>
 
-<h3>GPU进程代码</h3>
 
-<h3>&mdash;enable-gpu-service-logging</h3>
+<h2>更新</h2>
 
-<h3>&mdash;enable-gpu-debugging</h3>
+<p>2014-08-18</p>
 
-<h3>&mdash;enable-gpu-command-logging</h3>
+<p>完成TintBrowser在Chromium WebView上的适配，并修改了若干UI，命名为365浏览器，已经在腾讯开放平台上上架，你可以从<a href="http://android.myapp.com/myapp/detail.htm?apkName=com.mogoweb">这里</a>下载。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Chromium网络加载速度研究(2)]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/04/03/chromium-loading-spped-research-1/"/>
+    <updated>2014-04-03T18:10:06+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/04/03/chromium-loading-spped-research-1</id>
+    <content type="html"><![CDATA[<p>本文主要内容翻译自chromium的文档<a href="http://www.chromium.org/developers/design-documents/network-stack/netlog">NetLog: Chrome’s network logging system</a>，如果您觉得文章写的不明白，请参看原文。</p>
 
-<h3></h3>
+<p>通过&lt;&lt;<a href="http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/">Chromium网络加载速度研究(1)</a>>>这篇文章的分析，可以得出结论，云端加速是高富帅的玩法。对于个人开发者和小公司而言，是没有那个实力去部署强大的数据中心的。所以接下来还得继续研究，看看有没有其它的途径提高网页加载速度。在着手优化之前，我们需要一个profiling手段找出瓶颈，有目的的优化。另一方面，也需要考虑如何评估优化的效果。如果没有一个客观的评估，优化方案是否有效心中就没有底。谈到Profiling，大多数人估计都会想到log大法，就是在程序的一些关键位置打上log。log通常包括时间、事件、状态等。在chromium中，开发人员早就预料了此类需求，设计了一套强大的NetLog。下面就分析一下chromium中NetLog的设计、实现及其用法。</p>
+
+<!--more-->
+
+
+<h2>概述</h2>
+
+<p>NetLog是一套为Chrome网络栈而设计的事件日志机制，帮助调试问题和分析性能。它遵照"抓取->转储->分析"的工作流程，这点和某些工具，如tcpdump有些相像。</p>
+
+<p>典型的使用场景为：</p>
+
+<ol>
+<li> 用户启用网络日志</li>
+<li> 用户重现问题</li>
+<li> 用户将日志上传到BUG报告系统</li>
+<li> 开发人员分析日志，定位问题</li>
+</ol>
+
+
+<p>在chrome网络栈内部，在一些关键位置都加入了日志机制，产生事件。观察者监控事件流，对数据进行处理。Chrome中已有的观察者有：</p>
+
+<ul>
+<li>(net_log_logger.cc) 将事件流序列化到文件</li>
+<li>(net_internals_ui.cc) 将事件传递到Javascript应用程序chrome://net-internals,改应用程序可以将数据可视化展现，也可以导出到文件</li>
+</ul>
+
+
+<h2>NetLog的设计理念：</h2>
+
+<ul>
+<li>NetLog缺省关闭</li>
+<li>NetLog关闭时不会影响性能</li>
+<li>Chrome官方发行版本支持NetLog</li>
+<li>事件容易序列化/反序列化到磁盘</li>
+<li>NetLog仅仅用作记录日志</li>
+</ul>
+
+
+<p>也就是说，日志如何序列化，如何分析并非NetLog需要关心的事情。此外，不要通过NetLog获取内部网络信息，比如为NetLog增加一个观察者得到内部网络状态信息。正确的做法是为NetworkDelegate增加接口，进行充分的测试，然后增加文档进行说明。</p>
+
+<h2>NetLog事件的结构定义</h2>
+
+<p>C++中NetLog事件用net::NetLog::Entry定义，这是在内存中的表示，非常容易序列化到JSON。</p>
+
+<p>不到必要的时候，NetLog事件并不会序列化到JSON。在需要序列化事件时，JSON格式如下：</p>
+
+<table>
+<thead>
+<tr>
+<th align="center"> 字段 </th>
+<th align="center"> 类型 </th>
+<th align="left"> 描述 </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center"> time </td>
+<td align="center"> string </td>
+<td align="left">事件发生的时间（毫秒)，这是时间滴答数而不是unix时间戳. 尽管这是一个数字域，使用字符串表示是避免精度损失</td>
+</tr>
+<tr>
+<td align="center"> type </td>
+<td align="center"> number </td>
+<td align="left">事件类型的ID，枚举值定义在<a href="http://src.chromium.org/viewvc/chrome/trunk/src/net/base/net_log_event_type_list.h?view=markup">net_log_event_type_list.h</a></td>
+</tr>
+<tr>
+<td align="center"> source </td>
+<td align="center"> object </td>
+<td align="left">产生事件的实例，比如可以标识出某个特定的URLRequest</td>
+</tr>
+<tr>
+<td align="center"> phase </td>
+<td align="center"> number </td>
+<td align="left">BEGIN, END, NONE三个枚举值之一</td>
+</tr>
+<tr>
+<td align="center"> params </td>
+<td align="center"> object </td>
+<td align="left">可选字段 </td>
+</tr>
+</tbody>
+</table>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Chromium网络加载速度研究(1)]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/"/>
+    <updated>2014-03-18T16:22:09+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0</id>
+    <content type="html"><![CDATA[<p>本文主要内容翻译自Google的文档<a href="https://developers.google.com/chrome/mobile/docs/data-compression?hl=zh-CN">Data Compression Proxy</a>，如果您觉得文章写的不明白，请参看原文。</p>
+
+<p>对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera、QQ浏览器都采用了服务器端加速技术。Chrome移动版从V33开始正式支持数据压缩代理。下面就分析一下Chrome for Android所采用的数据压缩技术。</p>
+
+<!--more-->
+
+
+<h2>数据压缩代理</h2>
+
+<p>最新的Chrome for Android支持数据压缩代理，通过Google部署的代理服务器优化网站内容，可以极大的减少数据流量。有数据表明，采用这一特性可以减少web页面大小的50%。要启用这一功能，进入Chrome浏览器的菜单"设置->带宽管理->减少数据流量消耗"，然后打开即可。</p>
+
+<h2>实现原理</h2>
+
+<p>最核心的优化，减少数据大小，是由Google服务器实现的。当开启了"数据压缩代理"特性时，Chrome在手机和运行于Google数据中心的服务器之间建立连接，所有非加密的HTTP请求都通过该连接中转。</p>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_compression-proxy.png" alt="Data Compression Proxy" /></p>
+
+<p>代理服务器收到手机发起的请求后，向目标网站发起请求，对每个回应进行优化，再回给手机。内容优化是通过Google的开源库<a href="https://developers.google.com/speed/pagespeed/">PageSpeed</a>实现的，该库针对Chrome移动浏览器进行了特别的微调。网页的渲染、JavaScript执行，是由手机上的Chrome浏览器完成的。</p>
+
+<ul>
+<li>HTTPS连接不通过数据压缩代理</li>
+<li>使用数据压缩代理不需要Google账号</li>
+<li>匿名窗口中的浏览不经过数据压缩代理</li>
+</ul>
+
+
+<p>如果您对压缩代理节省的带宽表示怀疑，可以进入到浏览器设置中查看浏览器接收数据的原始大小和优化大小的对比图。如下图所示，带宽节省增长很快。</p>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_bandwidth-usage.png" alt="bandwidth usage" /></p>
+
+<p>让我们近距离观察一下压缩代理进行了那些特别的优化。</p>
+
+<h3>SPDY</h3>
+
+<p>从手机到代理服务器会尽力采用SPDY, 这是一个针对Web优化的协议，得到了Chrome/Firefox和Opera的支持，也是即将到来的HTTP/2.0标准的基础。如果SPDY连接无法创建，则会建立一个普通的HTTP/1.1代理连接。</p>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_http-https.png" alt="http-https" /></p>
+
+<p>使用SPDY协议，代理服务器可以在一个TCP连接上同时复用多个请求和回应，这样做有很大的好处：它可以分摊多个请求的TCP握手开销。去掉每个请求的TCP慢速启动阶段，提高吞吐量，还能在数据流上智能的定义请求和回应优先级。事实上，研究表明仅仅使用SPDY可以减少移动网络下23%的页面加载时间，这还没有将内容优化算在内。</p>
+
+<p>此外，使用数据压缩代理还有许多其它的好处：</p>
+
+<ul>
+<li>DNS延迟绑定：DNS查找由代理服务器执行，而不是由手机，这样查找过程可以快很多。</li>
+<li>更少的网络活动和更快的加载速度意味着移动射频活动期更短（减少电量消耗）</li>
+</ul>
+
+
+<h3>内容优化</h3>
+
+<p>悲剧的是，大多数网站并没有对移动终端进行优化，导致内容加载低效和渲染慢。PageSpeed的经验表明，许多内容的优化可以自动完成，就如同数据压缩代理所做的。</p>
+
+<p><em>图片转码:</em> 平均下来，每个页面60%的传输数据是图片。为此，代理服务器特别对此进行优化，将所有的图片都转码为<a href="https://developers.google.com/speed/webp/">WebP</a>格式。WebP比当前流行的格式，如JPEG和PNG，数据量更小。代理支持最新的WebP无损格式，并根据设备分辨率和像素密度对每个图像进行优化。综合各种方法，图像大小可以减少80%。</p>
+
+<p><em>内容压缩:</em> 代理智能的压缩和缩减HTML、JavaScript和CSS资源，通过移除不必要的空格、注释以及其它与页面渲染无关的元数据，再加上对所有资源启用gzip压缩，可以极大的节约带宽。</p>
+
+<p><em>安全浏览:</em> 代理实现了移动Chrome浏览器上的<a href="http://blog.chromium.org/2012/01/all-about-safe-browsing.html">安全浏览</a>，当您访问恶意或者钓鱼网站时会告之浏览器，浏览器会显示一个警告页面。恶意网站列表由代理持续更新。</p>
+
+<h2>该采用云加速技术吗？</h2>
+
+<p>通过前面的分析，采用数据压缩代理似乎是个不错的方案，但是从图1可以看出，所有的数据都需要通过数据压缩代理中转，这就要求：</p>
+
+<ul>
+<li>拥有强大的服务器，快速的进行数据压缩</li>
+<li>拥有强大的数据中心，否则瓶颈会存在于数据压缩代理</li>
+<li>拥有强大的分布式计算能力，浏览器终端需要能够就近连接数据压缩代理</li>
+</ul>
+
+
+<p>在中国，Chrome for Android如果开启数据压缩代理功能，速度反而更慢，其原因就在于Google在中国并没有部署服务器。对于个人开发者和中小企业，一来无法部署强大的数据中心，二来也无法使用Google的服务，所以服务器端加速方案不具备可行性。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Android 4.4 WebView实现分析]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/"/>
+    <updated>2014-01-16T19:22:09+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/01/16/analysis-of-android-4-4-webview-implementation</id>
+    <content type="html"><![CDATA[<p>随着Android4.4的发布，Android WebView改成由Chromium驱动了。浏览Android4.4源代码，可以看到之前版本中的external/WebKit目录被移除掉了，取而代之的是chromium_org。也就是说chromium已经完全取代了之前的WebKit for Android。虽然chromium完全取代了以前的WebKit for Android，但Android WebView的API接口并没有变，与老的版本完全兼容。这样带来的好处是基于WebView构建的APP，无需做任何修改，就能享受chromium内核的高效与强大。下面就Android 4.4中WebView的实现进行分析。</p>
+
+<p>先来看看frameworks/base/core/java/android/webkit下的文件，里面有我们熟悉的WebView、WebSettings、WebViewClient等类，其中最主要的就是WebView了，相关的类关系如下：</p>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_android_4_4_webview_classes_diagram.png" alt="" /></p>
+
+<p>从图中可以看出，设计者抽象出了一个WebViewProvider接口，WebView本身并不做事，所有的处理就是交给WebViewProvider。而WebViewProvider只是一个接口，由实现者决定采用哪种引擎。从Android4.1开始，就采用了这种设计架构，开始为chromium核心的WebView做准备。在Android 4.4之前的版本，由WebViewClassic实现WebViewProvider接口。在Android4.4中，则是WebViewChromium实现WebViewProvider接口。WebViewFactory也采用了相似的结构，决定了如何实例化WebViewFactoryProvider，WebViewFactoryProvider有一个关键的接口createWebView，创建具体的WebViewProvider。（注：AOSP master源码基于WebKit的实现仍然保留，但在Android4.4中已经移除，由于采用了灵活的架构，所以在两种核心之间非常容易切换）</p>
+
+<!--more-->
+
+
+<p>目前的代码结构如下图所示，在ContentAPI之上，Chromium的WebView实现封装了一个新的类AwContents，该类主要基于ContentViewCore类的实现，不同的是，AwContents需要基于一个原来存在于“chrome/”目录下的模块（图中的BrowserComponents），但是AwContents不应该依赖该目录，所以，将chrome中的一些所谓的浏览器模块化是Chromium的一个方向。目前，一些模块以及从chrome中抽取出来了，参见“components/”。</p>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_android_4_4_webview_awcontents.png" alt="" /></p>
+
+<p>AwContents提供的不是WebView的API，所以，需要一层桥接部分，将AwContents桥接到WebView，这就是图中的桥接模块，该模块位于Android源代码中的frameworks/webview/chromium/java/com/android/webview/chromium/目录下，WebViewChromium和WebViewChromiumFactory类作为WebView的具体实现，依赖于Chromium项目的AwContents模块，整体模块图如下：</p>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_androd_4_4_webview_components.png" alt="" /></p>
+
+<p>AwContents基于Content之上，专门针对Android WebView需求而进行的一个封装，这个封装只针对Android平台。</p>
+
+<p>WebView同样也是基于ContentAPI(web contents, ContentViewCore等)，在这点上来说，它同Content Shell和Chromium浏览器没有大的不同，区别在于它们对很多Delegate类的实现不同，这是ContentAPI用于让使用者参与内部逻辑和实现的过程。具体来说，它主要有以下两个方面的不同：</p>
+
+<ol>
+<li>渲染机制</li>
+</ol>
+
+
+<p>因为WebView提供的是一个View控件，那么View控件的容器可能接受储存在CPU中的结构（如bitmap），也可能是储存在GPU内存中的结构（如surface），所以它需要提供两种不同的输出结果。</p>
+
+<p>Chromium引入了一种新的合成器UberCompositor++，该合成器支持输出到GPU和CPU内存两种方式。对于Compositor的结果输出到给定View的GPU内存这种方式，关键点在于实现AwContents.InternalAccessDelegate接口的requestDrawGL方法。与requestDrawGL实现有关的代码不多，只涉及到DrawGLFunctor.java和GraphicsUtils.java，以及与之关联的native实现draw_gl_functor.cpp, graphic_buffer_impl.cpp和graphics_utils.cpp，naitve代码位于frameworks/webview/chromium/plat_support目录下。这部分代码不多，但牵涉到了Android源码，并不是只使用了Android SDK和NDK的API。</p>
+
+<ol>
+<li>进程</li>
+</ol>
+
+
+<p>目前WebView只支持单进程方式，未来不排除支持多进程方式。单进程意味了没有办法使用Android的isolated UID机制，因此，某种程度上来讲，安全性降低了，而且页面的渲染崩溃会导致使用WebView的应用程序崩溃。</p>
+
+<h4>Android 4.4中的chromium</h4>
+
+<p>Android 4.4代码树中的chromium源码位于external/chromium_org，而不是external/chromium, external/chromium是一个老版本的chromium，主要提供chromium net网络栈。external/chromium_org下的chromium版本为r227252，对应的Chromium发行版本为30.0.1599.101， Blink版本为r159105。</p>
+
+<p>AOSP源码中的默认浏览器基于chromium核心，但Browser代码和之前的版本并没有差别，这也看出WebView API的兼容性相当好。而google官方则宣布以后android系统中不再提供浏览器，只有Chrome for Android。</p>
+
+<h4>Android4.4中的chromium移植分析</h4>
+
+<p>从Android4.4的chromium_org git库log可以看到，从chromium源码获取分支后，只cherry-pick了两个提交，而且cherry-pick的代码也是来自chromium项目，信息如下：</p>
+
+<p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
+
+<p>Author: Ben Murdoch <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#98;&#x65;&#x6e;&#109;&#x40;&#x67;&#111;&#x6f;&#103;&#x6c;&#x65;&#46;&#x63;&#x6f;&#109;">&#98;&#x65;&#x6e;&#109;&#x40;&#103;&#111;&#x6f;&#x67;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;</a></p>
+
+<p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
+
+<p>&#160;&#160;&#160; Cherry pick&#160; [Android] MediaPlayerBridge should pass Bridge to getAllowedOperations</p>
+
+<p>&#160;&#160;&#160; Cherry pick of <a href="https://codereview.chromium.org/32213003/">https://codereview.chromium.org/32213003/</a></p>
+
+<p>&#160;&#160;&#160; Bug: 11311417</p>
+
+<p>&#160;&#160;&#160; Original description:</p>
+
+<p>&#160;&#160;&#160; [Android] MediaPlayerBridge should pass Bridge to getAllowedOperations</p>
+
+<p>&#160;&#160;&#160; Right now the Java side is expecting a MediaPlayer object to be passed</p>
+
+<p>&#160;&#160;&#160; to the MediaPlayerBridge.getAllowedOperations function, but native</p>
+
+<p>&#160;&#160;&#160; is actually passing it a MediaPlayerBridge. Update the code to be</p>
+
+<p>&#160;&#160;&#160; consistent &#8211; Java now expects the MediaPlayerBrdige and uses it to</p>
+
+<p>&#160;&#160;&#160; extract a MediaPlayer.</p>
+
+<p>&#160;&#160;&#160; Change-Id: I5ac618c833c6c3ff015d43405a9a4d507fce9ba5</p>
+
+<p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
+
+<p>Author: Ben Murdoch <a href="&#109;&#97;&#x69;&#x6c;&#x74;&#111;&#x3a;&#x62;&#101;&#x6e;&#109;&#x40;&#x67;&#x6f;&#111;&#x67;&#108;&#x65;&#x2e;&#99;&#111;&#x6d;">&#x62;&#x65;&#110;&#109;&#64;&#103;&#x6f;&#x6f;&#103;&#x6c;&#x65;&#x2e;&#x63;&#111;&#x6d;</a></p>
+
+<p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
+
+<p>&#160;&#160;&#160; Cherry pick android: fix base::Time::FromLocalExploded() crash.</p>
+
+<p>&#160;&#160;&#160; Cherry pick of <a href="https://codereview.chromium.org/27472003/">https://codereview.chromium.org/27472003/</a></p>
+
+<p>&#160;&#160;&#160; Bug: 11313033</p>
+
+<p>&#160;&#160;&#160; Original description:</p>
+
+<p>&#160;&#160;&#160; android: fix base::Time::FromLocalExploded() crash.</p>
+
+<p>&#8230;skipping&#8230;</p>
+
+<p>&#160;&#160;&#160; Record Chromium merge at DEPS revision 30.0.1599.101</p>
+
+<p>&#160;&#160;&#160; This commit was generated by merge_to_master.py.</p>
+
+<p>&#160;&#160;&#160; Change-Id: Ie9e9e034f3e5d9a3fe3edf87595c7be467d3136b</p>
+
+<p>结合前面的分析，可以得出如下结论：</p>
+
+<p>1）AwContents都是基于Android SDK/NDK开发，并没有使用Android Source里面的未公开API和库。</p>
+
+<p>2）Android 4.4中使用的chromium，直接取自chromium开源项目，虽然它使用了自己的git库：<a href="https://android.googlesource.com/platform/external/chromium_org">https://android.googlesource.com/platform/external/chromium_org</a></p>
+
+<p>3）Android4.4中的chromium并没有针对android平台做一些特殊修改，和chromium开源项目的代码一致</p>
+
+<p>4）与Android source密切相关的代码位于ChromiumWebView。</p>
+
+<p>如前面所述，在实现reqeustDrawGL时，使用到了Frameworks 未公开的API，native部分代码也用到了Android source中的代码。所涉及的类和Android Source如下：</p>
+
+<pre><code>1. HardwareCanvas
+2. ViewRootImpl
+3. DrawGlInfo.h
+4. GraphicBuffer.h
+5. GraphicsJNI.h
+</code></pre>
+
+<p>5）整个chromium移植代码中，与android source密切相关的代码极少，绝大部分都是基于SDK和NDK而开发。</p>
 ]]></content>
   </entry>
   
