@@ -4,7 +4,7 @@
   <title><![CDATA[Category: objective-c | 放飞梦想]]></title>
   <link href="http://mogoweb.github.io/blog/categories/objective-c/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-10-30T09:43:50+08:00</updated>
+  <updated>2014-11-05T22:52:17+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,123 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[我的macos编程之旅-应用程序关联]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/11/05/my-macos-programming-life-2/"/>
+    <updated>2014-11-05T08:55:21+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/11/05/my-macos-programming-life-2</id>
+    <content type="html"><![CDATA[<p>对objective-c做了基础的入门之后，我就开始了<strong>365看图</strong>的开发。我个人偏好通过实战来掌握新知识，碰到问题后再来阅读相关的资料并解决问题。从苹果开发者网站找到了一个<a href="https://developer.apple.com/library/mac/samplecode/IKImageViewDemo/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004049">IKImageViewDemo</a>示例，这个例子足够简单，也满足我要开发的<strong>365看图</strong>的基本功能。以IKImageViewDemo作为模板，<strong>365看图</strong>就有了显示、放大、缩小、旋转图片等功能。接下来需要实现一个功能：关联应用程序到图片类型。简单的说，就是在Finder中鼠标右键点击图片文件，能够选择<strong>365看图</strong>打开图片，或者将图片文件拖拽到<strong>365看图</strong>即打开。</p>
+
+<h3>注册文档类型</h3>
+
+<p>在Windows系统中，有一个叫做注册表的东东来集中管理文档类型和能够打开文档的应用程序列表，在Mac系统中，则是通过应用程序包中的info.plist。在info.plist中，声明应用程序能够处理的文档类型(通过文件名后缀)。在<strong>365看图</strong>项目中有一个ImageViewer-Info.plist的文件，内容如下:</p>
+
+<p>```xml
+&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
+&lt;!DOCTYPE plist PUBLIC &ldquo;&ndash;//Apple//DTD PLIST 1.0//EN&rdquo; &ldquo;<a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">http://www.apple.com/DTDs/PropertyList-1.0.dtd</a>&rdquo;>
+<plist version="1.0">
+<dict></p>
+
+<pre><code>&lt;key&gt;CFBundleDevelopmentRegion&lt;/key&gt;
+&lt;string&gt;zh_CN&lt;/string&gt;
+&lt;key&gt;CFBundleDocumentTypes&lt;/key&gt;
+&lt;array&gt;
+    &lt;dict&gt;
+        &lt;key&gt;CFBundleTypeExtensions&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;jpg&lt;/string&gt;
+            &lt;string&gt;png&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;CFBundleTypeIconFile&lt;/key&gt;
+        &lt;string&gt;&lt;/string&gt;
+        &lt;key&gt;CFBundleTypeRole&lt;/key&gt;
+        &lt;string&gt;Viewer&lt;/string&gt;
+    &lt;/dict&gt;
+&lt;/array&gt;
+&lt;key&gt;CFBundleExecutable&lt;/key&gt;
+&lt;string&gt;${EXECUTABLE_NAME}&lt;/string&gt;
+&lt;key&gt;CFBundleIconFile&lt;/key&gt;
+&lt;string&gt;&lt;/string&gt;
+&lt;key&gt;CFBundleIdentifier&lt;/key&gt;
+&lt;string&gt;com.mogoweb.${PRODUCT_NAME:rfc1034identifier}&lt;/string&gt;
+&lt;key&gt;CFBundleInfoDictionaryVersion&lt;/key&gt;
+&lt;string&gt;6.0&lt;/string&gt;
+&lt;key&gt;CFBundleName&lt;/key&gt;
+&lt;string&gt;${PRODUCT_NAME}&lt;/string&gt;
+&lt;key&gt;CFBundlePackageType&lt;/key&gt;
+&lt;string&gt;APPL&lt;/string&gt;
+&lt;key&gt;CFBundleShortVersionString&lt;/key&gt;
+&lt;string&gt;1.0&lt;/string&gt;
+&lt;key&gt;CFBundleSignature&lt;/key&gt;
+&lt;string&gt;????&lt;/string&gt;
+&lt;key&gt;CFBundleVersion&lt;/key&gt;
+&lt;string&gt;1&lt;/string&gt;
+&lt;key&gt;LSApplicationCategoryType&lt;/key&gt;
+&lt;string&gt;public.app-category.photography&lt;/string&gt;
+&lt;key&gt;LSMinimumSystemVersion&lt;/key&gt;
+&lt;string&gt;${MACOSX_DEPLOYMENT_TARGET}&lt;/string&gt;
+&lt;key&gt;NSHumanReadableCopyright&lt;/key&gt;
+&lt;string&gt;Copyright © 2014年 mogoweb. All rights reserved.&lt;/string&gt;
+&lt;key&gt;NSMainNibFile&lt;/key&gt;
+&lt;string&gt;MainMenu&lt;/string&gt;
+&lt;key&gt;NSPrincipalClass&lt;/key&gt;
+&lt;string&gt;NSApplication&lt;/string&gt;
+</code></pre>
+
+<p></dict>
+</plist>
+```</p>
+
+<p>其中关键的地方在于:</p>
+
+<p>```xml
+<key>CFBundleDocumentTypes</key></p>
+
+<pre><code>&lt;array&gt;
+    &lt;dict&gt;
+        &lt;key&gt;CFBundleTypeExtensions&lt;/key&gt;
+        &lt;array&gt;
+            &lt;string&gt;jpg&lt;/string&gt;
+            &lt;string&gt;png&lt;/string&gt;
+        &lt;/array&gt;
+        &lt;key&gt;CFBundleTypeIconFile&lt;/key&gt;
+        &lt;string&gt;&lt;/string&gt;
+        &lt;key&gt;CFBundleTypeRole&lt;/key&gt;
+        &lt;string&gt;Viewer&lt;/string&gt;
+    &lt;/dict&gt;
+&lt;/array&gt;
+</code></pre>
+
+<p>```
+指明了应用程序能够处理jpg, png为后缀的文件。</p>
+
+<h3>获取文件名</h3>
+
+<p>通过右键点击开启应用程序，app是如何得到这个文件名呢？请看下面的代码:
+```objc
+&ndash; (BOOL) application : (NSApplication<em>) sender openFile : (NSString</em>) pathname
+{</p>
+
+<pre><code>NSLog(@"application is asking to open %@", pathname);
+return YES;
+</code></pre>
+
+<p>}
+```</p>
+
+<h3>调试技巧</h3>
+
+<p>通过拖拽打开应用程序如何调试(比如在application:openFile中打断点)呢？方法如下：</p>
+
+<ol>
+<li>在Xcode中点击菜单 <strong>Product > Scheme > Edit Scheme</strong> ，在 <strong>Info</strong> 页修改 <strong>Lauch</strong> 选项为：<strong>Wait for executable to be launched</strong></li>
+<li>在 application:openFile 方法中设置断点。</li>
+<li>打开 <strong>Finder</strong>, 将图片文件拖拽到您的应用程序上。［注：您可以在XCode的<strong>Project Navigator</strong>中右键点击Porducts节点下的xxx.app，然后点击<strong>Show in Finder</strong>菜单项来定位你的app可执行文件的位置］</li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅-Objective C入门]]></title>

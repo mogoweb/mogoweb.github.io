@@ -7,8 +7,7 @@
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="原文地址：https://crosswalk-project.org/#wiki/android-webview 架构&amp;组件 AOSP中的Android WebView将基于AwContents，其位于Content API和Content View之上。
-与Content API不同， &hellip;">
+	<meta name="description" content="本文主要内容翻译自Google的文档Data Compression Proxy，如果您觉得文章写的不明白，请参看原文。 对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -81,6 +80,102 @@
 		
 	
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/03/18/chromium-loading-speed-research-0/">
+		
+			Chromium网络加载速度研究(1)</a>
+	</h2>
+	<div class="entry-content">
+		<p>本文主要内容翻译自Google的文档<a href="https://developers.google.com/chrome/mobile/docs/data-compression?hl=zh-CN">Data Compression Proxy</a>，如果您觉得文章写的不明白，请参看原文。</p>
+
+<p>对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera、QQ浏览器都采用了服务器端加速技术。Chrome移动版从V33开始正式支持数据压缩代理。下面就分析一下Chrome for Android所采用的数据压缩技术。</p>
+
+
+		
+		<a href="/blog/2014/03/18/chromium-loading-speed-research-0/" class="more-link">阅读全文 &rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-18T16:22:09+08:00" pubdate data-updated="true">Mar 18<span>th</span>, 2014</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2014/03/18/chromium-loading-speed-research-0/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/">
+		
+			Android 4.4 WebView实现分析</a>
+	</h2>
+	<div class="entry-content">
+		<p>随着Android4.4的发布，Android WebView改成由Chromium驱动了。浏览Android4.4源代码，可以看到之前版本中的external/WebKit目录被移除掉了，取而代之的是chromium_org。也就是说chromium已经完全取代了之前的WebKit for Android。虽然chromium完全取代了以前的WebKit for Android，但Android WebView的API接口并没有变，与老的版本完全兼容。这样带来的好处是基于WebView构建的APP，无需做任何修改，就能享受chromium内核的高效与强大。下面就Android 4.4中WebView的实现进行分析。</p>
+
+<p>先来看看frameworks/base/core/java/android/webkit下的文件，里面有我们熟悉的WebView、WebSettings、WebViewClient等类，其中最主要的就是WebView了，相关的类关系如下：</p>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_android_4_4_webview_classes_diagram.png" alt="" /></p>
+
+<p>从图中可以看出，设计者抽象出了一个WebViewProvider接口，WebView本身并不做事，所有的处理就是交给WebViewProvider。而WebViewProvider只是一个接口，由实现者决定采用哪种引擎。从Android4.1开始，就采用了这种设计架构，开始为chromium核心的WebView做准备。在Android 4.4之前的版本，由WebViewClassic实现WebViewProvider接口。在Android4.4中，则是WebViewChromium实现WebViewProvider接口。WebViewFactory也采用了相似的结构，决定了如何实例化WebViewFactoryProvider，WebViewFactoryProvider有一个关键的接口createWebView，创建具体的WebViewProvider。（注：AOSP master源码基于WebKit的实现仍然保留，但在Android4.4中已经移除，由于采用了灵活的架构，所以在两种核心之间非常容易切换）</p>
+
+
+		
+		<a href="/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/" class="more-link">阅读全文 &rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-16T19:22:09+08:00" pubdate data-updated="true">Jan 16<span>th</span>, 2014</time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
 
 
     <article class="post">

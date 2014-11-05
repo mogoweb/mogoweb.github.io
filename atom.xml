@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-10-30T09:43:50+08:00</updated>
+  <updated>2014-11-05T22:52:17+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,185 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[我的macos编程之旅-应用程序关联]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/11/05/my-macos-programming-life-2/"/>
+    <updated>2014-11-05T08:55:21+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/11/05/my-macos-programming-life-2</id>
+    <content type="html"><![CDATA[<p>对objective-c做了基础的入门之后，我就开始了<strong>365看图</strong>的开发。我个人偏好通过实战来掌握新知识，碰到问题后再来阅读相关的资料并解决问题。从苹果开发者网站找到了一个<a href="https://developer.apple.com/library/mac/samplecode/IKImageViewDemo/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004049">IKImageViewDemo</a>示例，这个例子足够简单，也满足我要开发的<strong>365看图</strong>的基本功能。以IKImageViewDemo作为模板，<strong>365看图</strong>就有了显示、放大、缩小、旋转图片等功能。接下来需要实现一个功能：关联应用程序到图片类型。简单的说，就是在Finder中鼠标右键点击图片文件，能够选择<strong>365看图</strong>打开图片，或者将图片文件拖拽到<strong>365看图</strong>即打开。</p>
+
+<h3>注册文档类型</h3>
+
+<p>在Windows系统中，有一个叫做注册表的东东来集中管理文档类型和能够打开文档的应用程序列表，在Mac系统中，则是通过应用程序包中的info.plist。在info.plist中，声明应用程序能够处理的文档类型(通过文件名后缀)。在<strong>365看图</strong>项目中有一个ImageViewer-Info.plist的文件，内容如下:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleDevelopmentRegion<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>zh_CN<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;key&gt;</span>CFBundleDocumentTypes<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeExtensions<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;string&gt;</span>jpg<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;string&gt;</span>png<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeIconFile<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;string&gt;&lt;/string&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeRole<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;string&gt;</span>Viewer<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleExecutable<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>${EXECUTABLE_NAME}<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleIconFile<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleIdentifier<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>com.mogoweb.${PRODUCT_NAME:rfc1034identifier}<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleInfoDictionaryVersion<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>6.0<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleName<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>${PRODUCT_NAME}<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundlePackageType<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>APPL<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleShortVersionString<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>1.0<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleSignature<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>????<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleVersion<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>1<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>LSApplicationCategoryType<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>public.app-category.photography<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>LSMinimumSystemVersion<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>${MACOSX_DEPLOYMENT_TARGET}<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>NSHumanReadableCopyright<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>Copyright © 2014年 mogoweb. All rights reserved.<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>NSMainNibFile<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>MainMenu<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;key&gt;</span>NSPrincipalClass<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>  <span class="nt">&lt;string&gt;</span>NSApplication<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中关键的地方在于:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>CFBundleDocumentTypes<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;dict&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeExtensions<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;array&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;string&gt;</span>jpg<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>                <span class="nt">&lt;string&gt;</span>png<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;/array&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeIconFile<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;string&gt;&lt;/string&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeRole<span class="nt">&lt;/key&gt;</span>
+</span><span class='line'>            <span class="nt">&lt;string&gt;</span>Viewer<span class="nt">&lt;/string&gt;</span>
+</span><span class='line'>        <span class="nt">&lt;/dict&gt;</span>
+</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>指明了应用程序能够处理jpg, png为后缀的文件。</p>
+
+<h3>获取文件名</h3>
+
+<p>通过右键点击开启应用程序，app是如何得到这个文件名呢？请看下面的代码:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span> <span class="nf">application</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSApplication</span><span class="o">*</span><span class="p">)</span> <span class="n">sender</span> <span class="n">openFile</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span> <span class="n">pathname</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;application is asking to open %@&quot;</span><span class="p">,</span> <span class="n">pathname</span><span class="p">);</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>调试技巧</h3>
+
+<p>通过拖拽打开应用程序如何调试(比如在application:openFile中打断点)呢？方法如下：</p>
+
+<ol>
+<li>在Xcode中点击菜单 <strong>Product > Scheme > Edit Scheme</strong> ，在 <strong>Info</strong> 页修改 <strong>Lauch</strong> 选项为：<strong>Wait for executable to be launched</strong></li>
+<li>在 application:openFile 方法中设置断点。</li>
+<li>打开 <strong>Finder</strong>, 将图片文件拖拽到您的应用程序上。［注：您可以在XCode的<strong>Project Navigator</strong>中右键点击Porducts节点下的xxx.app，然后点击<strong>Show in Finder</strong>菜单项来定位你的app可执行文件的位置］</li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅-Objective C入门]]></title>
@@ -194,6 +373,110 @@
 <p>Mac OS下开发，Objective-C是当仁不让的No.1，当然今年的兵器普上出现了新面孔Swift。考虑到我在C/C++圈子摸爬滚打了这么多年，估计用Objective C会更称手一些吧。而且Objective C发展了二十多年，一直由苹果独立支撑，竟然在编程语言兵器普上排在前几位，自然有其过人之处。好吧，就选它了。学习一门新的语言，一本经典的入门书籍那是必须的，经过大牛的推荐，我选择了&lt;&lt;Objective-C Programming &ndash; The Big Nerd Ranch Guide>>。</p>
 
 <p>下面就开始我的mac os编程之旅吧！</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[调试GPU相关代码]]></title>
+    <link href="http://mogoweb.github.io/blog/2014/09/22/debugging-gpu-related-code/"/>
+    <updated>2014-09-22T21:21:58+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2014/09/22/debugging-gpu-related-code</id>
+    <content type="html"><![CDATA[<p>［注］本文译自［Debugging GPU related code］(<a href="http://www.chromium.org/developers/how-tos/debugging-gpu-related-code">http://www.chromium.org/developers/how-tos/debugging-gpu-related-code</a>)，一切以原文内容为准。</p>
+
+<p>chromium的GPU系统是多进程架构，这使得调试GPU相当困难，详情请看［GPU Command Buffer for some of the nitty gitty］(<a href="http://www.chromium.org/developers/design-documents/gpu-command-buffer">http://www.chromium.org/developers/design-documents/gpu-command-buffer</a>)。下面是一些有助于GPU调试的小技巧。</p>
+
+<h1>渲染进程代码</h1>
+
+<h2>&mdash;enable-gpu-client-logging</h2>
+
+<p>如果您要追踪的bug位于渲染进程(compositor, WebGL, skia/ganesh, aura)，请使用一个debug编译版本并给命令行参数加上&mdash;enable-gpu-client-logging，它将现实每一个&#8221;模拟&#8221;的GL调用。通过模拟，站在渲染进程的视角，其它进程对GL驱动的真实调用，将以OpenGL ES 2.0的调用呈现。</p>
+
+<p><del>
+[4782:4782:1219/141706:INFO:gles2_implementation.cc(1026)] [.WebGLRenderingContext] glUseProgram(3)
+[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(401)] [.WebGLRenderingContext] glGenBuffers(1, 0x7fffc9e1269c)
+[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(416)]   0: 1
+[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(23)] [.WebGLRenderingContext] glBindBuffer(GL_ARRAY_BUFFER, 1)
+[4782:4782:1219/141706:INFO:gles2_implementation.cc(1313)] [.WebGLRenderingContext] glBufferData(GL_ARRAY_BUFFER, 36, 0x7fd268580120, GL_STATIC_DRAW)
+[4782:4782:1219/141706:INFO:gles2_implementation.cc(2480)] [.WebGLRenderingContext] glEnableVertexAttribArray(0)
+[4782:4782:1219/141706:INFO:gles2_implementation.cc(1140)] [.WebGLRenderingContext] glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0)
+[4782:4782:1219/141706:INFO:gles2_implementation_impl_autogen.h(135)] [.WebGLRenderingContext] glClear(16640)
+[4782:4782:1219/141706:INFO:gles2_implementation.cc(2490)] [.WebGLRenderingContext] glDrawArrays(GL_TRIANGLES, 0, 3)
+</del></p>
+
+<h2>检查about:gpu</h2>
+
+<p>GPU进程将许多错误和警告记入日志，您可以通过about:gpu查看这些日志。日志显示在页面的底部，如果chromium在Linux，Mac系统上通过命令行启动，也可以在控制台上看到日志。而Window上，您则需要在调试器中运行，或者使用WinDbg及类似调试工具才能做到。</p>
+
+<p>注：如果about:gpu告诉您gpu被禁用且硬件加速不可用，这可能是gpu不被支持。您可以使用&mdash;ignore-gpu-blacklist命令行参数强行开启gpu支持。</p>
+
+<h2>终止于GL错误</h2>
+
+<p>在src/gpu/command_buffer/gles2_implementation.h文件有如下代码:</p>
+
+<p>~~~</p>
+
+<h1>if defined(GPU_CLIENT_DEBUG)</h1>
+
+<p>  // Set to 1 to have the client fail when a GL error is generated.
+  // This helps find bugs in the renderer since the debugger stops on the error.</p>
+
+<h1>if 0</h1>
+
+<h1>define GL_CLIENT_FAIL_GL_ERRORS</h1>
+
+<h1>endif</h1>
+
+<h1>endif</h1>
+
+<p>~~~</p>
+
+<p>将上面的&#8221;if 0&#8221;改成&#8221;if 1&#8221;，编译调试版本，并在调试器中运行，当渲染进程出现GL错误，调试器将终止应用，这时您可以回溯调用堆栈找出问题所在。</p>
+
+<h2>为自定义调用编号</h2>
+
+<p>所有的错误、警告和调试日志输出都带有前缀。您可以调用glPushGroupMarkerEXT, glPopGroupMarkerEXT和glInsertEventMarkerEXT设置该前缀。glPushGroupMarkerEXT在当前的日志前缀前添加字符串（类似于c++的命名空间），glPopGroupMarkerEXT则去掉最近添加的字符串。glInsertEventMarkerEXT则为当前字符串设置一个后缀。示例如下:</p>
+
+<p><del>
+glPushGroupMarkerEXT(0, &ldquo;Foo&rdquo;);        // &ndash;> log prefix = &ldquo;Foo&rdquo;
+glInsertEventMarkerEXT(0, &ldquo;This&rdquo;);     // &ndash;> log prefix = &ldquo;Foo.This&rdquo;
+glInsertEventMarkerEXT(0, &ldquo;That&rdquo;);     // &ndash;> log prefix = &ldquo;Foo.That&rdquo;
+glPushGroupMarkerEXT(0, &ldquo;Bar&rdquo;);        // &ndash;> log prefix = &ldquo;Foo.Bar&rdquo;
+glInsertEventMarkerEXT(0, &ldquo;Orange&rdquo;);   // &ndash;> log prefix = &ldquo;Foo.Bar.Orange&rdquo;
+glInsertEventMarkerEXT(0, &ldquo;Banana&rdquo;);   // &ndash;> log prefix = &ldquo;Foo.Bar.Banana&rdquo;
+glPopGroupMarkerEXT();                 // &ndash;> log prefix = &ldquo;Foo.That&rdquo;
+</del></p>
+
+<h2>写一个精简的测试用例</h2>
+
+<h2>调试渲染进程</h2>
+
+<p>假设Chrome启动了多个渲染进程</p>
+
+<p>在Linux上可使用以下命令</p>
+
+<p><del>
+out/Debug/chromium &mdash;no-sandbox &mdash;renderer-cmd-prefix=&ldquo;xterm -e gdb &mdash;args&rdquo; <a href="http://localhost:8000/page-to-repo.html">http://localhost:8000/page-to-repo.html</a>
+</del></p>
+
+<p>在OSX下可使用</p>
+
+<p><del>
+out/Debug/Chromium.app/Contents/MacOSX/Chromium &mdash;no-sandbox &mdash;renderer-cmd-prefix=&ldquo;xterm -e gdb &mdash;args&rdquo; <a href="http://localhost:8000/page-to-repo.html">http://localhost:8000/page-to-repo.html</a>
+</del></p>
+
+<p>在Windows上，则可以使用&mdash;renderer-startup-dialog，然后用调试器连接所列出的进程。</p>
+
+<p>注: 在Linux喝OSX上我使用的是cgdb，而不是gdb。</p>
+
+<h3>GPU进程代码</h3>
+
+<h3>&mdash;enable-gpu-service-logging</h3>
+
+<h3>&mdash;enable-gpu-debugging</h3>
+
+<h3>&mdash;enable-gpu-command-logging</h3>
+
+<h3></h3>
 ]]></content>
   </entry>
   
@@ -1130,7 +1413,7 @@ cabal install happy
 
 <p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#x3a;&#98;&#101;&#110;&#x6d;&#x40;&#103;&#x6f;&#x6f;&#103;&#x6c;&#x65;&#46;&#99;&#x6f;&#109;">&#x62;&#x65;&#x6e;&#x6d;&#64;&#x67;&#111;&#x6f;&#103;&#108;&#101;&#x2e;&#99;&#111;&#109;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#98;&#x65;&#x6e;&#x6d;&#x40;&#103;&#x6f;&#x6f;&#x67;&#108;&#x65;&#46;&#x63;&#111;&#x6d;">&#98;&#101;&#110;&#x6d;&#64;&#x67;&#x6f;&#111;&#x67;&#x6c;&#x65;&#46;&#99;&#x6f;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
 
@@ -1158,7 +1441,7 @@ cabal install happy
 
 <p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#111;&#58;&#x62;&#101;&#x6e;&#109;&#x40;&#x67;&#111;&#x6f;&#x67;&#x6c;&#101;&#x2e;&#99;&#111;&#109;">&#x62;&#x65;&#110;&#x6d;&#64;&#103;&#x6f;&#111;&#103;&#108;&#x65;&#x2e;&#99;&#x6f;&#109;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#111;&#x3a;&#98;&#x65;&#110;&#109;&#64;&#103;&#x6f;&#x6f;&#x67;&#108;&#x65;&#x2e;&#x63;&#x6f;&#109;">&#98;&#x65;&#110;&#x6d;&#64;&#103;&#x6f;&#x6f;&#103;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
 
