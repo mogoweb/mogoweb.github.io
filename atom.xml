@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2014-11-12T09:11:24+08:00</updated>
+  <updated>2014-11-26T19:53:23+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -1346,7 +1346,7 @@ cabal install happy
 
 <p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
 
-<p>Author: Ben Murdoch <a href="&#109;&#x61;&#105;&#108;&#x74;&#x6f;&#58;&#x62;&#101;&#x6e;&#109;&#x40;&#103;&#111;&#x6f;&#103;&#108;&#101;&#46;&#99;&#111;&#x6d;">&#98;&#101;&#110;&#109;&#64;&#x67;&#111;&#111;&#x67;&#108;&#x65;&#46;&#99;&#x6f;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#105;&#108;&#116;&#111;&#x3a;&#98;&#101;&#x6e;&#x6d;&#x40;&#103;&#x6f;&#x6f;&#x67;&#108;&#x65;&#x2e;&#x63;&#111;&#109;">&#x62;&#x65;&#x6e;&#109;&#x40;&#103;&#111;&#x6f;&#103;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#x6d;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
 
@@ -1374,7 +1374,7 @@ cabal install happy
 
 <p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
 
-<p>Author: Ben Murdoch <a href="&#109;&#97;&#105;&#108;&#116;&#x6f;&#58;&#98;&#101;&#110;&#109;&#x40;&#103;&#111;&#x6f;&#x67;&#x6c;&#x65;&#46;&#x63;&#x6f;&#x6d;">&#x62;&#101;&#x6e;&#x6d;&#x40;&#x67;&#x6f;&#111;&#103;&#108;&#101;&#46;&#99;&#111;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#111;&#x3a;&#x62;&#x65;&#110;&#x6d;&#x40;&#103;&#x6f;&#x6f;&#103;&#108;&#101;&#x2e;&#x63;&#111;&#x6d;">&#x62;&#x65;&#x6e;&#x6d;&#64;&#103;&#111;&#x6f;&#x67;&#x6c;&#101;&#46;&#99;&#111;&#x6d;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
 
@@ -1515,6 +1515,83 @@ cabal install happy
 </li>
 </ul>
 
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[SublimeText配置]]></title>
+    <link href="http://mogoweb.github.io/blog/2013/08/10/sublime-text-config/"/>
+    <updated>2013-08-10T21:27:02+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2013/08/10/sublime-text-config</id>
+    <content type="html"><![CDATA[<p>在我的一台开发机上在ubuntu系统下使用eclipse，经常会出现死机，不得不寻求其它的代码编辑器。windows下大名鼎鼎的source insight放到linux下就状况不断。后看到chromium项目推荐了sublime text这款编辑器，用起来感觉还不错。下面记录一下使用过程中的一些设置，网上各种资料比较凌乱，所以就稍微整理一下，供自己今后翻阅。</p>
+
+<h3>1. 过滤不相关的文件</h3>
+
+<p>可以针对某个特定的工程，进入菜单<strong>project | Edit Project</strong>，编辑当前工程的sublime-project文件，加入两个过滤器，<em>folder_exclude_patterns</em>和<em>file_exclude_patterns</em>，如下所示:</p>
+
+<pre>"folders":
+[
+    {
+        "path":"/home/alex/android/source/android4.2",
+        "file_exclude_patterns":
+        [
+            "*.o"
+        ],
+        "folder_exclude_pattern":
+        [
+            ".repo"
+        ]
+    }
+]</pre>
+
+
+<h3>2. 模拟eclipse的快捷键</h3>
+
+<p>在eclipse中，有几个快捷键用的非常多，分别为：</p>
+
+<pre>CTRL+TAB 头文件和c/c++文件之间切换
+CTRL+SHIFT+R 对话框中输入文件名（有联想功能），快速打开文件
+CTRL+o 输入方法（函数）名，可快速定位到方法（函数）
+CTRL+l 输入行号，快速定位到指定行
+CTRL+h 打开文件搜索对话框</pre>
+
+
+<p>可以修改sublime text的Key Bindings达到模拟eclipse快捷键的效果，有两个配置项可以修改，一个是Key Bindings-Default，一个是Key Bindings-User，最好修改后一个配置文件。进入菜单Preferences | Key Bindings &#8211; User，加入如下行：</p>
+
+<pre>[
+{ "keys": ["ctrl+shift+r"], "command": "show_overlay", "args": {"overlay": "goto", "show_files": true} },
+{ "keys": ["ctrl+o"], "command": "show_overlay", "args": {"overlay": "goto", "text": "@"} },
+{ "keys": ["ctrl+l"], "command": "show_overlay", "args": {"overlay": "goto", "text": ":"} },
+{ "keys": ["ctrl+t"], "command": "show_overlay", "args": {"overlay": "goto", "text": "#"} },
+{ "keys": ["ctrl+tab"], "command": "switch_file", "args": {"extensions": ["cpp", "cxx", "cc", "c", "hpp", "hxx", "h", "ipp", "inl", "m", "mm"]} }
+]</pre>
+
+
+<h3>3. 针对项目的代码风格设置</h3>
+
+<p>chromium的项目的代码缩进为两个空格，而其它项目的代码缩进一般为4个空格，所以我就希望针对特定的项目进行代码风格设置，方法是编辑当前工程的sublime-project文件，加入如下行（和folders项平级）：</p>
+
+<pre>"settings":
+{
+"tab_size": 2,
+"translate_tabs_to_spaces": true,
+"trim_trailing_white_space_on_save": true,
+"draw_white_space": "all"
+}</pre>
+
+
+<h3> 4. 插件集合</h3>
+
+<p>sublime_text的插件扩展机制非常强大，已经有很多人出于不同的需求，开发出各种插件。首先说一下插件的安装。</p>
+
+<p>要安装插件，最好是先安装插件包管理器，最简单的方法是在sublime_text控制台(可以通过<strong>ctrl+`</strong>快捷键或View > Show Console菜单打开)，在控制台中粘贴如下python代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">urllib2</span><span class="o">,</span><span class="nn">os</span><span class="o">,</span><span class="nn">hashlib</span><span class="p">;</span> <span class="n">h</span> <span class="o">=</span> <span class="s">&#39;7183a2d3e96f11eeadd761d777e62404&#39;</span> <span class="o">+</span> <span class="s">&#39;e330c659d4bb41d3bdf022e94cab3cd0&#39;</span><span class="p">;</span> <span class="n">pf</span> <span class="o">=</span> <span class="s">&#39;Package Control.sublime-package&#39;</span><span class="p">;</span> <span class="n">ipp</span> <span class="o">=</span> <span class="n">sublime</span><span class="o">.</span><span class="n">installed_packages_path</span><span class="p">();</span> <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span> <span class="n">ipp</span> <span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ipp</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span><span class="p">;</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">install_opener</span><span class="p">(</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">build_opener</span><span class="p">(</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">ProxyHandler</span><span class="p">())</span> <span class="p">);</span> <span class="n">by</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span> <span class="s">&#39;http://sublime.wbond.net/&#39;</span> <span class="o">+</span> <span class="n">pf</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="s">&#39;%20&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">();</span> <span class="n">dh</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">();</span> <span class="nb">open</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">ipp</span><span class="p">,</span> <span class="n">pf</span><span class="p">),</span> <span class="s">&#39;wb&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">by</span><span class="p">)</span> <span class="k">if</span> <span class="n">dh</span> <span class="o">==</span> <span class="n">h</span> <span class="k">else</span> <span class="bp">None</span><span class="p">;</span> <span class="k">print</span><span class="p">(</span><span class="s">&#39;Error validating download (got </span><span class="si">%s</span><span class="s"> instead of </span><span class="si">%s</span><span class="s">), please try manual install&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dh</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="k">if</span> <span class="n">dh</span> <span class="o">!=</span> <span class="n">h</span> <span class="k">else</span> <span class="s">&#39;Please restart Sublime Text to finish installation&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，接着就会出现插件列表，选择你所需要的插件即可。</p>
 ]]></content>
   </entry>
   

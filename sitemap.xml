@@ -1,6 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
+        <loc>http://mogoweb.github.io/blog/2013/08/10/sublime-text-config/</loc>
+        <lastmod>2014-11-26T19:53:21+08:00</lastmod>
+    </url>
+    <url>
         <loc>http://mogoweb.github.io/blog/2013/10/24/translated-android-webview/</loc>
         <lastmod>2014-08-29T09:13:28+08:00</lastmod>
     </url>
@@ -82,7 +86,7 @@
     </url>
     <url>
         <loc>http://mogoweb.github.io/</loc>
-        <lastmod>2014-11-12T09:11:24+08:00</lastmod>
+        <lastmod>2014-11-26T19:53:21+08:00</lastmod>
     </url>
     <url>
         <loc>http://mogoweb.github.io/about/</loc>
@@ -90,6 +94,6 @@
     </url>
     <url>
         <loc>http://mogoweb.github.io/blog/archives/</loc>
-        <lastmod>2014-11-12T09:11:24+08:00</lastmod>
+        <lastmod>2014-11-26T19:53:21+08:00</lastmod>
     </url>
 </urlset>

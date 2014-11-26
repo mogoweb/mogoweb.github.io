@@ -3,11 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>放飞梦想</title>
+	<title>SublimeText配置 - 放飞梦想</title>
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="本文主要内容翻译自Google的文档Data Compression Proxy，如果您觉得文章写的不明白，请参看原文。 对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera &hellip;">
+	<meta name="description" content="在我的一台开发机上在ubuntu系统下使用eclipse，经常会出现死机，不得不寻求其它的代码编辑器。windows下大名鼎鼎的source insight放到linux下就状况不断。后看到chromium项目推荐了sublime text这款编辑器，用起来感觉还不错。 &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -79,247 +79,9 @@
 	
 		
 	
-	<div id="content" class="inner">
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/03/18/chromium-loading-speed-research-0/">
-		
-			Chromium网络加载速度研究(1)</a>
-	</h2>
-	<div class="entry-content">
-		<p>本文主要内容翻译自Google的文档<a href="https://developers.google.com/chrome/mobile/docs/data-compression?hl=zh-CN">Data Compression Proxy</a>，如果您觉得文章写的不明白，请参看原文。</p>
-
-<p>对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera、QQ浏览器都采用了服务器端加速技术。Chrome移动版从V33开始正式支持数据压缩代理。下面就分析一下Chrome for Android所采用的数据压缩技术。</p>
-
-
-		
-		<a href="/blog/2014/03/18/chromium-loading-speed-research-0/" class="more-link">阅读全文 &rarr;</a>
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-18T16:22:09+08:00" pubdate data-updated="true">Mar 18<span>th</span>, 2014</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/03/18/chromium-loading-speed-research-0/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/">
-		
-			Android 4.4 WebView实现分析</a>
-	</h2>
-	<div class="entry-content">
-		<p>随着Android4.4的发布，Android WebView改成由Chromium驱动了。浏览Android4.4源代码，可以看到之前版本中的external/WebKit目录被移除掉了，取而代之的是chromium_org。也就是说chromium已经完全取代了之前的WebKit for Android。虽然chromium完全取代了以前的WebKit for Android，但Android WebView的API接口并没有变，与老的版本完全兼容。这样带来的好处是基于WebView构建的APP，无需做任何修改，就能享受chromium内核的高效与强大。下面就Android 4.4中WebView的实现进行分析。</p>
-
-<p>先来看看frameworks/base/core/java/android/webkit下的文件，里面有我们熟悉的WebView、WebSettings、WebViewClient等类，其中最主要的就是WebView了，相关的类关系如下：</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_android_4_4_webview_classes_diagram.png" alt="" /></p>
-
-<p>从图中可以看出，设计者抽象出了一个WebViewProvider接口，WebView本身并不做事，所有的处理就是交给WebViewProvider。而WebViewProvider只是一个接口，由实现者决定采用哪种引擎。从Android4.1开始，就采用了这种设计架构，开始为chromium核心的WebView做准备。在Android 4.4之前的版本，由WebViewClassic实现WebViewProvider接口。在Android4.4中，则是WebViewChromium实现WebViewProvider接口。WebViewFactory也采用了相似的结构，决定了如何实例化WebViewFactoryProvider，WebViewFactoryProvider有一个关键的接口createWebView，创建具体的WebViewProvider。（注：AOSP master源码基于WebKit的实现仍然保留，但在Android4.4中已经移除，由于采用了灵活的架构，所以在两种核心之间非常容易切换）</p>
-
-
-		
-		<a href="/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/" class="more-link">阅读全文 &rarr;</a>
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-16T19:22:09+08:00" pubdate data-updated="true">Jan 16<span>th</span>, 2014</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2013/10/24/translated-android-webview/">
-		
-			[译]Android WebView</a>
-	</h2>
-	<div class="entry-content">
-		<p>原文地址：<a href="https://crosswalk-project.org/#wiki/android-webview">https://crosswalk-project.org/#wiki/android-webview</a></p>
-
-<ul>
-<li><p>架构&amp;组件</p>
-
-<ul>
-<li>AOSP中的Android WebView将基于AwContents，其位于Content API和Content View之上。</li>
-<li>与Content API不同，它还依赖于从最初的chrome browser分离出来的组件，组件位于components/下，包含auto_login_parser，navigation_interception，visitedlink_browser，visitedlink_renderer和web_contents_delegate_android，这些都是用于页面。</li>
-<li>无渲染进程（进程内渲染），无沙盒机制（sandbox机制）</li>
-<li>图形架构和Content Shell有很大的不同，且正在开发中，将支持软件和硬件输出。</li>
-</ul>
-</li>
-<li><p>API</p>
-
-<ul>
-<li>API类似于EFL WebView，不会暴露内部的browser/renderer/gpu进程。</li>
-<li>能够加载URL，接收加载过程中的事件和回调。</li>
-<li>可通过addJavaScriptInterface扩展JavaScript API，允许JavaScript调用Java代码，反之这不支持。</li>
-<li>提供了若干API接收页面状态改变通知和页面回调。</li>
-</ul>
-</li>
-<li><p>消息循环和事件处理</p>
-
-<ul>
-<li>整合利用Android消息处理</li>
-<li>native代码设置定时器到Java侧的消息循环</li>
-</ul>
-</li>
-<li><p>图形</p>
-
-<ul>
-<li>渲染使用chromium合成器，开启了硬件加速</li>
-<li>合成器输出支持软件和硬件Surface</li>
-<li>硬件加速的架构和content shell不同，和ChromeOS类似。现在还处在早期开发阶段，使用了UberCompositor，支持软件输出</li>
-</ul>
-</li>
-<li><p>WebAPI扩展</p>
-
-<ul>
-<li>API addJavaScriptInterface可用于JavaScript API扩展，但支持JavaScript调用Java代码。</li>
-<li>相反方向的调用（Java &ndash;> JavaScript）不支持</li>
-<li>addJavaScriptInterface通过NPObject机制（之前用于NPAPI插件）支持进程外访问，虽然在WebView中不再需要。</li>
-<li>来自Java侧的事件通知貌似还不支持</li>
-</ul>
-</li>
-<li><p>API细节和涵盖范围</p>
-
-<ul>
-<li>WebViewClient用于页面状态改变通知</li>
-<li>WebChromeClient包含参与渲染逻辑的回调</li>
-<li>原生代码/JS交互</li>
-<li>页面加载</li>
-<li>导航&amp;历史记录</li>
-<li>文字搜索</li>
-<li>事件处理</li>
-<li>轨迹球、触摸、键盘</li>
-<li>不支持鼠标事件</li>
-<li>设置：编码</li>
-<li>页面信息：标题、favicon</li>
-<li>HTTPS/SSL</li>
-<li>页面加载状态、缩放、重定向、URL重载，等等</li>
-</ul>
-</li>
-<li><p>源码</p>
-
-<ul>
-<li>src/android_webview
-
-<ul>
-<li>android_webview_java.jar, libwebviewchromium.so和webviewchromium.pak是本模块的编译目标.</li>
-</ul>
-</li>
-<li>Google的工程师正在Android开源项目里开发基于Chrome核心的新WebView.
-
-<ul>
-<li>官方 站点:
-<a href="https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/webkit/">https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/webkit/</a></li>
-<li>镜像:
-<a href="https://github.com/android/platform_frameworks_base/tree/master/core/java/android/webkit">https://github.com/android/platform_frameworks_base/tree/master/core/java/android/webkit</a></li>
-<li>第三方开发者也在基于android_webview模块开发ChromeView
-
-<ul>
-<li>ChromeView有着和Android Webview一样的API. <a href="https://github.com/pwnall/chromeview-src">https://github.com/pwnall/chromeview-src</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-24T15:27:02+08:00" pubdate data-updated="true">Oct 24<span>th</span>, 2013</time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2013/10/24/translated-android-webview/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2013/08/10/sublime-text-config/">
-		
-			SublimeText配置</a>
-	</h2>
-	<div class="entry-content">
-		<p>在我的一台开发机上在ubuntu系统下使用eclipse，经常会出现死机，不得不寻求其它的代码编辑器。windows下大名鼎鼎的source insight放到linux下就状况不断。后看到chromium项目推荐了sublime text这款编辑器，用起来感觉还不错。下面记录一下使用过程中的一些设置，网上各种资料比较凌乱，所以就稍微整理一下，供自己今后翻阅。</p>
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">SublimeText配置</h2>
+	<div class="entry-content"><p>在我的一台开发机上在ubuntu系统下使用eclipse，经常会出现死机，不得不寻求其它的代码编辑器。windows下大名鼎鼎的source insight放到linux下就状况不断。后看到chromium项目推荐了sublime text这款编辑器，用起来感觉还不错。下面记录一下使用过程中的一些设置，网上各种资料比较凌乱，所以就稍微整理一下，供自己今后翻阅。</p>
 
 <h3>1. 过滤不相关的文件</h3>
 
@@ -388,10 +150,7 @@ CTRL+h 打开文件搜索对话框</pre>
 
 
 <p>按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，接着就会出现插件列表，选择你所需要的插件即可。</p>
-
-		
-		
-	</div>
+</div>
 
 
 <div class="meta">
@@ -416,18 +175,25 @@ CTRL+h 打开文件搜索对话框</pre>
 
 </div>
 	
-	<div class="comments"><a href="/blog/2013/08/10/sublime-text-config/#disqus_thread">Comments</a></div>
+	<div class="comments"><a href="#disqus_thread">Comments</a></div>
 	
 </div>
 </article>
 
-<nav id="pagenavi">
-    
-        <a href="/" class="prev">Prev</a>
-    
-    
-    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
-</nav></div>
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+</div>
 	<footer id="footer" class="inner">Copyright &copy; 2014
 
     mogoweb
