@@ -3,7 +3,7 @@ layout: post
 title: "Ubuntu 14.04 VirtualBox启动问题之解决"
 date: 2015-03-11 08:54:49 +0800
 comments: true
-categories:Linux 
+categories: Ubuntu
 ---
 
 开发机上的Ubuntu从12.10升级到14.04后，发现VirtualBox无法启动，有如下提示
