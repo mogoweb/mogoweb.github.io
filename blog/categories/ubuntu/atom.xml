@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: chromium | 放飞梦想]]></title>
-  <link href="http://mogoweb.github.io/blog/categories/chromium/atom.xml" rel="self"/>
+  <title><![CDATA[Category: ubuntu | 放飞梦想]]></title>
+  <link href="http://mogoweb.github.io/blog/categories/ubuntu/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
   <updated>2015-03-11T16:22:14+08:00</updated>
   <id>http://mogoweb.github.io/</id>
@@ -12,43 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[关于Ubuntu菜单项中的%U参数]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry/"/>
-    <updated>2015-03-11T16:05:57+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry</id>
-    <content type="html"><![CDATA[<p>今天在研究chromium deb打包的时候，发现Google Chrome deb包中的/usr/share/applications/google-chrome.desktop文件定义入口为：
-<code>
-Exec=/usr/bin/google-chrome-stable %U
-</code>
-这个%U参数是做什么用的呢？查找了一下资料，有如下描述：
-```
-%u A single URL. Local files may either be passed as file: URLs or as file path.</p>
-
-<p>%U A list of URLs. Each URL is passed as a separate argument to the executable program. Local files may either be passed as file: URLs or as file path.
-```
-也就是说，加入了%U参数，可以传递多个URL给Chrome浏览器，浏览器会依次打开各URL。比如您在文件管理器中选择了多个html文件，然后在鼠标右键菜单中点击"Open with Google Chrome"，Chrome浏览器就会依次打开所选的网页。</p>
-
-<p>以下是Exec支持的参数说明，来自<a href="http://standards.freedesktop.org/desktop-entry-spec/latest/ar01s06.html">http://standards.freedesktop.org/desktop-entry-spec/latest/ar01s06.html</a>:
-<code>
-Code    Description
-%f  A single file name, even if multiple files are selected. The system reading the desktop entry should recognize that the program in question cannot handle multiple file arguments, and it should should probably spawn and execute multiple copies of a program for each selected file if the program is not able to handle additional file arguments. If files are not on the local file system (i.e. are on HTTP or FTP locations), the files will be copied to the local file system and %f will be expanded to point at the temporary file. Used for programs that do not understand the URL syntax.
-%F  A list of files. Use for apps that can open several local files at once. Each file is passed as a separate argument to the executable program.
-%u  A single URL. Local files may either be passed as file: URLs or as file path.
-%U  A list of URLs. Each URL is passed as a separate argument to the executable program. Local files may either be passed as file: URLs or as file path.
-%d  Deprecated.
-%D  Deprecated.
-%n  Deprecated.
-%N  Deprecated.
-%i  The Icon key of the desktop entry expanded as two arguments, first --icon and then the value of the Icon key. Should not expand to any arguments if the Icon key is empty or missing.
-%c  The translated name of the application as listed in the appropriate Name key in the desktop entry.
-%k  The location of the desktop file as either a URI (if for example gotten from the vfolder system) or a local filename or empty if no location is known.
-%v  Deprecated.
-%m  Deprecated.
-</code></p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Ubuntu上从源码编译chromium浏览器]]></title>
@@ -186,21 +149,6 @@ deb [arch=amd64] file:/var/cache/apt-build/repository apt-build main
 <p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2014_chromium_ubuntu_source_info.png" alt="" /></p>
 
 <p>从上图中可以看到源码包的大小只有200多M，而我们从chromium开源项目下的源码通常有7、8个G，主要原因是这里下的源码是不带git和svn信息的，是纯粹的源代码。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在本地服务器上建立chromium镜像]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/12/09/mirror-chromium-to-local-server/"/>
-    <updated>2014-12-09T21:59:27+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/12/09/mirror-chromium-to-local-server</id>
-    <content type="html"><![CDATA[<p>Android 5.0发布了好长时间，一直都没有来得及研究。前两周终于将android 5.0源码下载了下来，大致看了一下代码。我所关注的并非Material Design，而是Android 5.0的web引擎。从Android 4.4开始，采用了chromium/blink内核，Android 5.0自然也不例外，只是chromium的版本升级到了37.0.2062.116。想到我的chromium webview项目，仍然采用的是34.0.1847，因此打算也将chromium版本进行一次升级。</p>
-
-<p>因为可恶的GFW，下载代码及其不顺利，虽然有VPN，但是对于几十G的chromium下载量，下载速度太慢，而且git不支持断点续传。在折腾了两三个星期之后，决定在公司的服务器上建立chromium的镜像。不知道从哪个版本开始，gclient开始全面转向git。由于git的天然的分布式特点，这为完全镜像chromium源码库提供了便利。</p>
-
-<p>chromium源码库是由chromium本身加上一堆第三方开源库组成，极其庞大。为此我写了一个脚本，放到了github上，有兴趣的可以访问<a href="https://github.com/mogoweb/chromium_mirror_script">chromium_mirror_script</a>项目，其中chromium_git_list.txt为所有的源码库列表，来自<a href="https://chromium.googlesource.com/">https://chromium.googlesource.com/</a>，随着时间的推移，这个列表也可能发生变化。</p>
-
-<p>有了内部的chromium镜像后，我们可以修改.DEPS.git文件，将其中的git_url值替换为本地git地址，这样通过gclient下载，就是从本地镜像服务器上获取代码了。</p>
 ]]></content>
   </entry>
   
