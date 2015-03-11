@@ -102,8 +102,8 @@ Running module version sanity check.
 depmod....
 
 DKMS: install completed.
- * Stopping VirtualBox kernel modules         [ OK ] 
- * Starting VirtualBox kernel modules         [ OK ] 
+ * Stopping VirtualBox kernel modules         [ OK ]
+ * Starting VirtualBox kernel modules         [ OK ]
 Setting up virtualbox-qt (4.3.10-dfsg-1ubuntu3) ...
 ```
 这个时候virtualbox可以启动了。但是建立了虚拟机后，启动虚拟系统时提示：
