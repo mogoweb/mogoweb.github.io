@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2015-03-20T09:11:55+08:00</updated>
+  <updated>2015-03-20T16:34:18+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -1876,7 +1876,7 @@ cabal install happy
 
 <p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
 
-<p>Author: Ben Murdoch <a href="&#109;&#x61;&#105;&#108;&#116;&#111;&#58;&#98;&#101;&#110;&#x6d;&#64;&#x67;&#x6f;&#x6f;&#x67;&#108;&#x65;&#x2e;&#99;&#x6f;&#109;">&#x62;&#x65;&#110;&#x6d;&#x40;&#103;&#111;&#111;&#x67;&#108;&#x65;&#x2e;&#99;&#111;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#98;&#101;&#110;&#x6d;&#64;&#x67;&#x6f;&#111;&#x67;&#x6c;&#101;&#x2e;&#x63;&#111;&#x6d;">&#x62;&#101;&#110;&#109;&#64;&#x67;&#111;&#111;&#103;&#108;&#x65;&#46;&#x63;&#x6f;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
 
@@ -1904,7 +1904,7 @@ cabal install happy
 
 <p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#58;&#98;&#101;&#x6e;&#x6d;&#x40;&#103;&#x6f;&#111;&#x67;&#x6c;&#x65;&#x2e;&#99;&#x6f;&#x6d;">&#98;&#x65;&#110;&#109;&#x40;&#x67;&#x6f;&#x6f;&#103;&#108;&#x65;&#x2e;&#x63;&#x6f;&#109;</a></p>
+<p>Author: Ben Murdoch <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#58;&#x62;&#101;&#x6e;&#109;&#x40;&#103;&#x6f;&#x6f;&#x67;&#108;&#101;&#x2e;&#99;&#111;&#x6d;">&#x62;&#x65;&#x6e;&#x6d;&#64;&#x67;&#111;&#x6f;&#x67;&#108;&#x65;&#46;&#x63;&#x6f;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
 
@@ -2122,6 +2122,15 @@ CTRL+h 打开文件搜索对话框</pre>
 
 
 <p>按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，接着就会出现插件列表，选择你所需要的插件即可。</p>
+
+<h4>4.1 GBK编码支持</h4>
+
+<ol>
+<li>按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，待列表获取完成再输入GBK Encoding Support，等安装完毕就可以了。</li>
+<li>按照上述方法安装Codecs26和ConvertToUTF8</li>
+<li>重启sublime_text，打开文件后，选择菜单 <strong> File | Reopen with Encoding | UTF-8 </strong> 即可</li>
+</ol>
+
 ]]></content>
   </entry>
   

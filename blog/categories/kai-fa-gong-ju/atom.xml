@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 开发工具 | 放飞梦想]]></title>
   <link href="http://mogoweb.github.io/blog/categories/kai-fa-gong-ju/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2015-03-20T09:11:55+08:00</updated>
+  <updated>2015-03-20T16:34:18+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -86,6 +86,15 @@ import urllib2,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4b
 </code></p>
 
 <p>按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，接着就会出现插件列表，选择你所需要的插件即可。</p>
+
+<h4>4.1 GBK编码支持</h4>
+
+<ol>
+<li>按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，待列表获取完成再输入GBK Encoding Support，等安装完毕就可以了。</li>
+<li>按照上述方法安装Codecs26和ConvertToUTF8</li>
+<li>重启sublime_text，打开文件后，选择菜单 <strong> File | Reopen with Encoding | UTF-8 </strong> 即可</li>
+</ol>
+
 ]]></content>
   </entry>
   
