@@ -68,3 +68,9 @@ import urllib2,os,hashlib; h = '7183a2d3e96f11eeadd761d777e62404' + 'e330c659d4b
 ```
 
 按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，接着就会出现插件列表，选择你所需要的插件即可。
+
+#### 4.1 GBK编码支持
+
+1. 按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，待列表获取完成再输入GBK Encoding Support，等安装完毕就可以了。
+2. 按照上述方法安装Codecs26和ConvertToUTF8
+3. 重启sublime_text，打开文件后，选择菜单 ** File | Reopen with Encoding | UTF-8 ** 即可
