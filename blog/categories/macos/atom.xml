@@ -4,7 +4,7 @@
   <title><![CDATA[Category: macos | 放飞梦想]]></title>
   <link href="http://mogoweb.github.io/blog/categories/macos/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2015-03-20T16:34:18+08:00</updated>
+  <updated>2015-04-02T15:53:07+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -38,7 +38,7 @@
 
 <p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_mac_autolayout_trailing_2x.png" alt="autolayout" /></p>
 
-<p>如上图中，您可以根据需要选择"保持在容器垂直方向的中央“，也可以选择”尾部与容器保持一定的距离“。</p>
+<p>如上图中，您可以根据需要选择&#8221;保持在容器垂直方向的中央“，也可以选择”尾部与容器保持一定的距离“。</p>
 
 <p>在<strong>365看图</strong>中，我选择将IKImageView的四边与容器保持一定的距离，这样，当窗口放大和缩小时，IKImageView就能同步放大与缩小。</p>
 
@@ -61,98 +61,88 @@
 
 <p>在Windows系统中，有一个叫做注册表的东东来集中管理文档类型和能够打开文档的应用程序列表，在Mac系统中，则是通过应用程序包中的info.plist。在info.plist中，声明应用程序能够处理的文档类型(通过文件名后缀)。在<strong>365看图</strong>项目中有一个ImageViewer-Info.plist的文件，内容如下:</p>
 
-<p>```xml
-&lt;?xml version=&ldquo;1.0&rdquo; encoding=&ldquo;UTF-8&rdquo;?>
-&lt;!DOCTYPE plist PUBLIC &ldquo;&ndash;//Apple//DTD PLIST 1.0//EN&rdquo; &ldquo;<a href="http://www.apple.com/DTDs/PropertyList-1.0.dtd">http://www.apple.com/DTDs/PropertyList-1.0.dtd</a>&rdquo;>
-<plist version="1.0">
-<dict></p>
-
-<pre><code>&lt;key&gt;CFBundleDevelopmentRegion&lt;/key&gt;
-&lt;string&gt;zh_CN&lt;/string&gt;
-&lt;key&gt;CFBundleDocumentTypes&lt;/key&gt;
-&lt;array&gt;
-    &lt;dict&gt;
-        &lt;key&gt;CFBundleTypeExtensions&lt;/key&gt;
-        &lt;array&gt;
-            &lt;string&gt;jpg&lt;/string&gt;
-            &lt;string&gt;png&lt;/string&gt;
-        &lt;/array&gt;
-        &lt;key&gt;CFBundleTypeIconFile&lt;/key&gt;
-        &lt;string&gt;&lt;/string&gt;
-        &lt;key&gt;CFBundleTypeRole&lt;/key&gt;
-        &lt;string&gt;Viewer&lt;/string&gt;
-    &lt;/dict&gt;
-&lt;/array&gt;
-&lt;key&gt;CFBundleExecutable&lt;/key&gt;
-&lt;string&gt;${EXECUTABLE_NAME}&lt;/string&gt;
-&lt;key&gt;CFBundleIconFile&lt;/key&gt;
-&lt;string&gt;&lt;/string&gt;
-&lt;key&gt;CFBundleIdentifier&lt;/key&gt;
-&lt;string&gt;com.mogoweb.${PRODUCT_NAME:rfc1034identifier}&lt;/string&gt;
-&lt;key&gt;CFBundleInfoDictionaryVersion&lt;/key&gt;
-&lt;string&gt;6.0&lt;/string&gt;
-&lt;key&gt;CFBundleName&lt;/key&gt;
-&lt;string&gt;${PRODUCT_NAME}&lt;/string&gt;
-&lt;key&gt;CFBundlePackageType&lt;/key&gt;
-&lt;string&gt;APPL&lt;/string&gt;
-&lt;key&gt;CFBundleShortVersionString&lt;/key&gt;
-&lt;string&gt;1.0&lt;/string&gt;
-&lt;key&gt;CFBundleSignature&lt;/key&gt;
-&lt;string&gt;????&lt;/string&gt;
-&lt;key&gt;CFBundleVersion&lt;/key&gt;
-&lt;string&gt;1&lt;/string&gt;
-&lt;key&gt;LSApplicationCategoryType&lt;/key&gt;
-&lt;string&gt;public.app-category.photography&lt;/string&gt;
-&lt;key&gt;LSMinimumSystemVersion&lt;/key&gt;
-&lt;string&gt;${MACOSX_DEPLOYMENT_TARGET}&lt;/string&gt;
-&lt;key&gt;NSHumanReadableCopyright&lt;/key&gt;
-&lt;string&gt;Copyright © 2014年 mogoweb. All rights reserved.&lt;/string&gt;
-&lt;key&gt;NSMainNibFile&lt;/key&gt;
-&lt;string&gt;MainMenu&lt;/string&gt;
-&lt;key&gt;NSPrincipalClass&lt;/key&gt;
-&lt;string&gt;NSApplication&lt;/string&gt;
+<pre><code class="xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+&lt;plist version="1.0"&gt;
+&lt;dict&gt;
+    &lt;key&gt;CFBundleDevelopmentRegion&lt;/key&gt;
+    &lt;string&gt;zh_CN&lt;/string&gt;
+    &lt;key&gt;CFBundleDocumentTypes&lt;/key&gt;
+    &lt;array&gt;
+        &lt;dict&gt;
+            &lt;key&gt;CFBundleTypeExtensions&lt;/key&gt;
+            &lt;array&gt;
+                &lt;string&gt;jpg&lt;/string&gt;
+                &lt;string&gt;png&lt;/string&gt;
+            &lt;/array&gt;
+            &lt;key&gt;CFBundleTypeIconFile&lt;/key&gt;
+            &lt;string&gt;&lt;/string&gt;
+            &lt;key&gt;CFBundleTypeRole&lt;/key&gt;
+            &lt;string&gt;Viewer&lt;/string&gt;
+        &lt;/dict&gt;
+    &lt;/array&gt;
+    &lt;key&gt;CFBundleExecutable&lt;/key&gt;
+    &lt;string&gt;${EXECUTABLE_NAME}&lt;/string&gt;
+    &lt;key&gt;CFBundleIconFile&lt;/key&gt;
+    &lt;string&gt;&lt;/string&gt;
+    &lt;key&gt;CFBundleIdentifier&lt;/key&gt;
+    &lt;string&gt;com.mogoweb.${PRODUCT_NAME:rfc1034identifier}&lt;/string&gt;
+    &lt;key&gt;CFBundleInfoDictionaryVersion&lt;/key&gt;
+    &lt;string&gt;6.0&lt;/string&gt;
+    &lt;key&gt;CFBundleName&lt;/key&gt;
+    &lt;string&gt;${PRODUCT_NAME}&lt;/string&gt;
+    &lt;key&gt;CFBundlePackageType&lt;/key&gt;
+    &lt;string&gt;APPL&lt;/string&gt;
+    &lt;key&gt;CFBundleShortVersionString&lt;/key&gt;
+    &lt;string&gt;1.0&lt;/string&gt;
+    &lt;key&gt;CFBundleSignature&lt;/key&gt;
+    &lt;string&gt;????&lt;/string&gt;
+    &lt;key&gt;CFBundleVersion&lt;/key&gt;
+    &lt;string&gt;1&lt;/string&gt;
+    &lt;key&gt;LSApplicationCategoryType&lt;/key&gt;
+    &lt;string&gt;public.app-category.photography&lt;/string&gt;
+    &lt;key&gt;LSMinimumSystemVersion&lt;/key&gt;
+    &lt;string&gt;${MACOSX_DEPLOYMENT_TARGET}&lt;/string&gt;
+    &lt;key&gt;NSHumanReadableCopyright&lt;/key&gt;
+    &lt;string&gt;Copyright © 2014年 mogoweb. All rights reserved.&lt;/string&gt;
+    &lt;key&gt;NSMainNibFile&lt;/key&gt;
+    &lt;string&gt;MainMenu&lt;/string&gt;
+    &lt;key&gt;NSPrincipalClass&lt;/key&gt;
+    &lt;string&gt;NSApplication&lt;/string&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
 </code></pre>
-
-<p></dict>
-</plist>
-```</p>
 
 <p>其中关键的地方在于:</p>
 
-<p>```xml
-<key>CFBundleDocumentTypes</key></p>
-
-<pre><code>&lt;array&gt;
-    &lt;dict&gt;
-        &lt;key&gt;CFBundleTypeExtensions&lt;/key&gt;
-        &lt;array&gt;
-            &lt;string&gt;jpg&lt;/string&gt;
-            &lt;string&gt;png&lt;/string&gt;
-        &lt;/array&gt;
-        &lt;key&gt;CFBundleTypeIconFile&lt;/key&gt;
-        &lt;string&gt;&lt;/string&gt;
-        &lt;key&gt;CFBundleTypeRole&lt;/key&gt;
-        &lt;string&gt;Viewer&lt;/string&gt;
-    &lt;/dict&gt;
-&lt;/array&gt;
+<pre><code class="xml">&lt;key&gt;CFBundleDocumentTypes&lt;/key&gt;
+    &lt;array&gt;
+        &lt;dict&gt;
+            &lt;key&gt;CFBundleTypeExtensions&lt;/key&gt;
+            &lt;array&gt;
+                &lt;string&gt;jpg&lt;/string&gt;
+                &lt;string&gt;png&lt;/string&gt;
+            &lt;/array&gt;
+            &lt;key&gt;CFBundleTypeIconFile&lt;/key&gt;
+            &lt;string&gt;&lt;/string&gt;
+            &lt;key&gt;CFBundleTypeRole&lt;/key&gt;
+            &lt;string&gt;Viewer&lt;/string&gt;
+        &lt;/dict&gt;
+    &lt;/array&gt;
 </code></pre>
 
-<p>```
-指明了应用程序能够处理jpg, png为后缀的文件。</p>
+<p>指明了应用程序能够处理jpg, png为后缀的文件。</p>
 
 <h3>获取文件名</h3>
 
 <p>通过右键点击开启应用程序，app是如何得到这个文件名呢？请看下面的代码:
-```objc
-&ndash; (BOOL) application : (NSApplication<em>) sender openFile : (NSString</em>) pathname
-{</p>
-
-<pre><code>NSLog(@"application is asking to open %@", pathname);
-return YES;
-</code></pre>
-
-<p>}
-```</p>
+<code>objc
+- (BOOL) application : (NSApplication*) sender openFile : (NSString*) pathname
+{
+    NSLog(@"application is asking to open %@", pathname);
+    return YES;
+}
+</code></p>
 
 <h3>调试技巧</h3>
 
@@ -172,7 +162,7 @@ return YES;
     <link href="http://mogoweb.github.io/blog/2014/10/24/my-macos-programming-life-1/"/>
     <updated>2014-10-24T08:48:13+08:00</updated>
     <id>http://mogoweb.github.io/blog/2014/10/24/my-macos-programming-life-1</id>
-    <content type="html"><![CDATA[<p>&lt;&lt;Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective C和C++的不同之处。</p>
+    <content type="html"><![CDATA[<p>&lt;<Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective C和C++的不同之处。</p>
 
 <p>Objective-C是在C语言的基础上添加面向对象特性发展而来，下面就看看Objective-C中的面向对象三大要素。</p>
 
@@ -181,40 +171,37 @@ return YES;
 <p>和C++、Java等面向对象语言不同，Objective-C中并没有定义private, protected, public关键字，所有数据成员（instance variable）
 都是私有的，无法直接访问。例如如下类定义中，x是不能直接被外部访问的。</p>
 
-<p>```objc
-@interface Foo : NSObject
-{</p>
+<pre><code class="objc">@interface Foo : NSObject
+{
+    double x;
+}
 
-<pre><code>double x;
+@property int y;
+
+-(int) f:(int)x;
+-(int) g:(int)x:(int)y;
+
+@end
+
+@implementation Foo
+@synthesize y;
+-(int) f:(int)x
+{
+}
+
+-(int) g:(int)x:(int)y
+{
+}
+
+@end
 </code></pre>
 
-<p>}</p>
+<p>要访问类的数据成员，必须通过类的成员方法，最常见的就是称之为getter和setter的方法。为了简化存取方法，Objective-C引入了property概念。比如上面的代码中:</p>
 
-<p>@property int y;</p>
+<pre><code class="objc">@property int y;
+</code></pre>
 
-<p>&ndash;(int) f:(int)x;
-&ndash;(int) g:(int)x:(int)y;</p>
-
-<p>@end</p>
-
-<p>@implementation Foo
-@synthesize y;
-&ndash;(int) f:(int)x
-{
-}</p>
-
-<p>&ndash;(int) g:(int)x:(int)y
-{
-}</p>
-
-<p>@end
-```
-要访问类的数据成员，必须通过类的成员方法，最常见的就是称之为getter和setter的方法。为了简化存取方法，Objective-C引入了property概念。比如上面的代码中:</p>
-
-<p><code>objc
-@property int y;
-</code>
-定义了属性y，并在实现文件中使用如下代码:
+<p>定义了属性y，并在实现文件中使用如下代码:
 <code>objc
 @synthesize y;
 </code></p>
@@ -227,60 +214,47 @@ return YES;
 
 <p>和C++不同的是，Objective-C是单根继承体系，所有的类都直接或间接继承自NSObject（注：Objective-C语言规范并没有规定这个根类的名字），这一点和Java类似。同样的，Objective-C不支持多继承。和Java语言中的接口类似的东西在Objective-C中被称作协议(protocol)。协议是一个方法声明的列表，有些方法是必须实现的，有些方法可以定义为可选的。和类一样，协议可以继承其它的协议。一个Objective-C类可以实现多个协议。值得一提的是，协议的名字可以和类名一样，比如NSObject是一个类，同时还存在一个名为NSObject的协议。因为采用了不同的关键字，所以编译器能够区分。比如下面的代码中，Foo继承NSObject类，同时实现了NSObject协议：</p>
 
-<p><code>objc
-@interface Foo : NSObject &lt;NSObject&gt;
-</code>
-在C++和Java中，父类可以控制成员方式是否被子类覆盖（通过virtual/final关键字)，在Objective-C中，只要子类的成员方法和父类完全一样（包括参数个数及类型），就会覆盖父类的成员方法。</p>
+<pre><code class="objc">@interface Foo : NSObject &lt;NSObject&gt;
+</code></pre>
+
+<p>在C++和Java中，父类可以控制成员方式是否被子类覆盖（通过virtual/final关键字)，在Objective-C中，只要子类的成员方法和父类完全一样（包括参数个数及类型），就会覆盖父类的成员方法。</p>
 
 <h2>3. 多态</h2>
 
 <p>Objective-C支持多态，而且不像C++那么复杂，比如C++中，如果使用栈变量实例，是无法达到多态效果的。关于Objective-C的多态，可通过下面的代码实例说明：</p>
 
-<p>```objc
-@interface Person : NSObject {</p>
-
-<pre><code>NSString *name;
-</code></pre>
-
-<p>}
-&ndash;(void)setName:(NSString*)name;
-@end</p>
-
-<p>@implementation Person
-&ndash;(void)setName:(NSString*)nameValue {</p>
-
-<pre><code>name = nameValue;
-NSLog(@"Person's name:%@", name);
-</code></pre>
-
-<p>}
-@end</p>
-
-<p>@interface Student : Person
-@end</p>
-
-<p>@implementation Student
-&ndash;(void)setName:(NSString*)nameValue {</p>
-
-<pre><code>name = nameValue;
-NSLog(@"Student's name:%@", name);
-</code></pre>
-
-<p>}
-@end</p>
-
-<p>int main(int argc, const char* argv[]) {</p>
-
-<pre><code>@autoreleasepool {
-    Person* person = [[Student alloc]init];
-    [person setName:@"Student A"];
+<pre><code class="objc">@interface Person : NSObject {
+    NSString *name;
 }
+-(void)setName:(NSString*)name;
+@end
 
-return 0;
+@implementation Person
+-(void)setName:(NSString*)nameValue {
+    name = nameValue;
+    NSLog(@"Person's name:%@", name);
+}
+@end
+
+@interface Student : Person
+@end
+
+@implementation Student
+-(void)setName:(NSString*)nameValue {
+    name = nameValue;
+    NSLog(@"Student's name:%@", name);
+}
+@end
+
+int main(int argc, const char* argv[]) {
+    @autoreleasepool {
+        Person* person = [[Student alloc]init];
+        [person setName:@"Student A"];
+    }
+
+    return 0;
+}
 </code></pre>
-
-<p>}
-```</p>
 
 <h2>4. 小结</h2>
 
@@ -299,7 +273,7 @@ return 0;
 
 <p>我有点不服气，mac下的软件那么多，总有一款适合Mac新手，于是到mac appstore上去找图形图像类软件。本来苹果电脑就是以优秀的图形处理能力见长，所以各种图像处理软件琳琅满目，但很遗憾没找到一款功能足够简单，满足我的需求的软件。我在windows下常用的“光影看图”也没出Mac版。作为一个多年的程序员，当然不满足于这样一种结果。既然找不到这样的软件，就自己动手，风衣足食，好歹自己也是写程序维生的。某位国外大神级人物曾经有一个惊人的论调：每半年就要学习一门新的语言。对此我很惭愧，已经有多年围着C++/Java打转，没有去尝试学一门新的语言了。正好以此为契机，开始掌握一门新的技能吧。</p>
 
-<p>Mac OS下开发，Objective-C是当仁不让的No.1，当然今年的兵器普上出现了新面孔Swift。考虑到我在C/C++圈子摸爬滚打了这么多年，估计用Objective C会更称手一些吧。而且Objective C发展了二十多年，一直由苹果独立支撑，竟然在编程语言兵器普上排在前几位，自然有其过人之处。好吧，就选它了。学习一门新的语言，一本经典的入门书籍那是必须的，经过大牛的推荐，我选择了&lt;&lt;Objective-C Programming &ndash; The Big Nerd Ranch Guide>>。</p>
+<p>Mac OS下开发，Objective-C是当仁不让的No.1，当然今年的兵器普上出现了新面孔Swift。考虑到我在C/C++圈子摸爬滚打了这么多年，估计用Objective C会更称手一些吧。而且Objective C发展了二十多年，一直由苹果独立支撑，竟然在编程语言兵器普上排在前几位，自然有其过人之处。好吧，就选它了。学习一门新的语言，一本经典的入门书籍那是必须的，经过大牛的推荐，我选择了&lt;<Objective-C Programming - The Big Nerd Ranch Guide>>。</p>
 
 <p>下面就开始我的mac os编程之旅吧！</p>
 ]]></content>

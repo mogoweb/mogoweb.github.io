@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2015-03-20T16:34:18+08:00</updated>
+  <updated>2015-04-02T15:53:07+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -764,7 +764,7 @@
     <link href="http://mogoweb.github.io/blog/2014/10/24/my-macos-programming-life-1/"/>
     <updated>2014-10-24T08:48:13+08:00</updated>
     <id>http://mogoweb.github.io/blog/2014/10/24/my-macos-programming-life-1</id>
-    <content type="html"><![CDATA[<p>&lt;&lt;Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective C和C++的不同之处。</p>
+    <content type="html"><![CDATA[<p>&lt;<Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective C和C++的不同之处。</p>
 
 <p>Objective-C是在C语言的基础上添加面向对象特性发展而来，下面就看看Objective-C中的面向对象三大要素。</p>
 
@@ -937,7 +937,7 @@
 
 <p>我有点不服气，mac下的软件那么多，总有一款适合Mac新手，于是到mac appstore上去找图形图像类软件。本来苹果电脑就是以优秀的图形处理能力见长，所以各种图像处理软件琳琅满目，但很遗憾没找到一款功能足够简单，满足我的需求的软件。我在windows下常用的“光影看图”也没出Mac版。作为一个多年的程序员，当然不满足于这样一种结果。既然找不到这样的软件，就自己动手，风衣足食，好歹自己也是写程序维生的。某位国外大神级人物曾经有一个惊人的论调：每半年就要学习一门新的语言。对此我很惭愧，已经有多年围着C++/Java打转，没有去尝试学一门新的语言了。正好以此为契机，开始掌握一门新的技能吧。</p>
 
-<p>Mac OS下开发，Objective-C是当仁不让的No.1，当然今年的兵器普上出现了新面孔Swift。考虑到我在C/C++圈子摸爬滚打了这么多年，估计用Objective C会更称手一些吧。而且Objective C发展了二十多年，一直由苹果独立支撑，竟然在编程语言兵器普上排在前几位，自然有其过人之处。好吧，就选它了。学习一门新的语言，一本经典的入门书籍那是必须的，经过大牛的推荐，我选择了&lt;&lt;Objective-C Programming &ndash; The Big Nerd Ranch Guide>>。</p>
+<p>Mac OS下开发，Objective-C是当仁不让的No.1，当然今年的兵器普上出现了新面孔Swift。考虑到我在C/C++圈子摸爬滚打了这么多年，估计用Objective C会更称手一些吧。而且Objective C发展了二十多年，一直由苹果独立支撑，竟然在编程语言兵器普上排在前几位，自然有其过人之处。好吧，就选它了。学习一门新的语言，一本经典的入门书籍那是必须的，经过大牛的推荐，我选择了&lt;<Objective-C Programming - The Big Nerd Ranch Guide>>。</p>
 
 <p>下面就开始我的mac os编程之旅吧！</p>
 ]]></content>
@@ -1668,10 +1668,10 @@ cabal install happy
 <p>典型的使用场景为：</p>
 
 <ol>
-<li> 用户启用网络日志</li>
-<li> 用户重现问题</li>
-<li> 用户将日志上传到BUG报告系统</li>
-<li> 开发人员分析日志，定位问题</li>
+<li>用户启用网络日志</li>
+<li>用户重现问题</li>
+<li>用户将日志上传到BUG报告系统</li>
+<li>开发人员分析日志，定位问题</li>
 </ol>
 
 
@@ -1705,36 +1705,36 @@ cabal install happy
 <table>
 <thead>
 <tr>
-<th align="center"> 字段 </th>
-<th align="center"> 类型 </th>
-<th align="left"> 描述 </th>
+<th style="text-align:center;">字段 </th>
+<th style="text-align:center;"> 类型 </th>
+<th style="text-align:left;"> 描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center"> time </td>
-<td align="center"> string </td>
-<td align="left">事件发生的时间（毫秒)，这是时间滴答数而不是unix时间戳. 尽管这是一个数字域，使用字符串表示是避免精度损失</td>
+<td style="text-align:center;">time </td>
+<td style="text-align:center;"> string </td>
+<td style="text-align:left;">事件发生的时间（毫秒)，这是时间滴答数而不是unix时间戳. 尽管这是一个数字域，使用字符串表示是避免精度损失</td>
 </tr>
 <tr>
-<td align="center"> type </td>
-<td align="center"> number </td>
-<td align="left">事件类型的ID，枚举值定义在<a href="http://src.chromium.org/viewvc/chrome/trunk/src/net/base/net_log_event_type_list.h?view=markup">net_log_event_type_list.h</a></td>
+<td style="text-align:center;">type </td>
+<td style="text-align:center;"> number </td>
+<td style="text-align:left;">事件类型的ID，枚举值定义在<a href="http://src.chromium.org/viewvc/chrome/trunk/src/net/base/net_log_event_type_list.h?view=markup">net_log_event_type_list.h</a></td>
 </tr>
 <tr>
-<td align="center"> source </td>
-<td align="center"> object </td>
-<td align="left">产生事件的实例，比如可以标识出某个特定的URLRequest</td>
+<td style="text-align:center;">source </td>
+<td style="text-align:center;"> object </td>
+<td style="text-align:left;">产生事件的实例，比如可以标识出某个特定的URLRequest</td>
 </tr>
 <tr>
-<td align="center"> phase </td>
-<td align="center"> number </td>
-<td align="left">BEGIN, END, NONE三个枚举值之一</td>
+<td style="text-align:center;">phase </td>
+<td style="text-align:center;"> number </td>
+<td style="text-align:left;">BEGIN, END, NONE三个枚举值之一</td>
 </tr>
 <tr>
-<td align="center"> params </td>
-<td align="center"> object </td>
-<td align="left">可选字段 </td>
+<td style="text-align:center;">params </td>
+<td style="text-align:center;"> object </td>
+<td style="text-align:left;">可选字段</td>
 </tr>
 </tbody>
 </table>
@@ -1876,7 +1876,7 @@ cabal install happy
 
 <p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#98;&#101;&#110;&#x6d;&#64;&#x67;&#x6f;&#111;&#x67;&#x6c;&#101;&#x2e;&#x63;&#111;&#x6d;">&#x62;&#101;&#110;&#109;&#64;&#x67;&#111;&#111;&#103;&#108;&#x65;&#46;&#x63;&#x6f;&#109;</a></p>
+<p>Author: Ben Murdoch <a href="&#109;&#97;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#x62;&#x65;&#x6e;&#x6d;&#64;&#x67;&#111;&#x6f;&#x67;&#108;&#101;&#46;&#x63;&#111;&#x6d;">&#98;&#x65;&#110;&#x6d;&#64;&#x67;&#x6f;&#x6f;&#103;&#x6c;&#101;&#46;&#x63;&#x6f;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
 
@@ -1904,7 +1904,7 @@ cabal install happy
 
 <p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
 
-<p>Author: Ben Murdoch <a href="&#109;&#97;&#105;&#x6c;&#x74;&#111;&#58;&#x62;&#101;&#x6e;&#109;&#x40;&#103;&#x6f;&#x6f;&#x67;&#108;&#101;&#x2e;&#99;&#111;&#x6d;">&#x62;&#x65;&#x6e;&#x6d;&#64;&#x67;&#111;&#x6f;&#x67;&#108;&#x65;&#46;&#x63;&#x6f;&#109;</a></p>
+<p>Author: Ben Murdoch <a href="&#109;&#x61;&#x69;&#x6c;&#116;&#x6f;&#x3a;&#98;&#x65;&#110;&#109;&#x40;&#103;&#x6f;&#x6f;&#x67;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#109;">&#98;&#101;&#110;&#109;&#64;&#x67;&#x6f;&#111;&#x67;&#x6c;&#x65;&#46;&#99;&#x6f;&#x6d;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
 
@@ -1994,7 +1994,7 @@ cabal install happy
 
 <ul>
 <li>API addJavaScriptInterface可用于JavaScript API扩展，但支持JavaScript调用Java代码。</li>
-<li>相反方向的调用（Java &ndash;> JavaScript）不支持</li>
+<li>相反方向的调用（Java -> JavaScript）不支持</li>
 <li>addJavaScriptInterface通过NPObject机制（之前用于NPAPI插件）支持进程外访问，虽然在WebView中不再需要。</li>
 <li>来自Java侧的事件通知貌似还不支持</li>
 </ul>

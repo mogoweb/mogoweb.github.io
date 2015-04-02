@@ -4,7 +4,7 @@
   <title><![CDATA[Category: chromium | 放飞梦想]]></title>
   <link href="http://mogoweb.github.io/blog/categories/chromium/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2015-03-20T16:34:18+08:00</updated>
+  <updated>2015-04-02T15:53:07+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -23,12 +23,13 @@
 Exec=/usr/bin/google-chrome-stable %U
 </code>
 这个%U参数是做什么用的呢？查找了一下资料，有如下描述：
-```
-%u A single URL. Local files may either be passed as file: URLs or as file path.</p>
-
-<p>%U A list of URLs. Each URL is passed as a separate argument to the executable program. Local files may either be passed as file: URLs or as file path.
-```
-也就是说，加入了%U参数，可以传递多个URL给Chrome浏览器，浏览器会依次打开各URL。比如您在文件管理器中选择了多个html文件，然后在鼠标右键菜单中点击"Open with Google Chrome"，Chrome浏览器就会依次打开所选的网页。</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>%u A single URL. Local files may either be passed as file: URLs or as file path.&lt;/p&gt;
+</span><span class='line'>
+</span><span class='line'>&lt;p&gt;%U A list of URLs. Each URL is passed as a separate argument to the executable program. Local files may either be passed as file: URLs or as file path.</span></code></pre></td></tr></table></div></figure>
+也就是说，加入了%U参数，可以传递多个URL给Chrome浏览器，浏览器会依次打开各URL。比如您在文件管理器中选择了多个html文件，然后在鼠标右键菜单中点击&#8221;Open with Google Chrome&#8221;，Chrome浏览器就会依次打开所选的网页。</p>
 
 <p>以下是Exec支持的参数说明，来自<a href="http://standards.freedesktop.org/desktop-entry-spec/latest/ar01s06.html">http://standards.freedesktop.org/desktop-entry-spec/latest/ar01s06.html</a>:
 <code>
@@ -59,20 +60,17 @@ Code    Description
 
 <p>要从ubuntu的仓库下载源码并编译软件包，最方便的就是使用apt-build实用工具。在ubuntu的发布版本中，该实用工具并没有安装，您可以用如下命令安装:</p>
 
-<p><code>
-sudo apt-get install apt-build
-</code></p>
+<pre><code>sudo apt-get install apt-build
+</code></pre>
 
 <p>接下来就可以使用如下命令下载并build chromium browser了:</p>
 
-<p><code>
-sudo apt-build install chromium-browser
-</code></p>
+<pre><code>sudo apt-build install chromium-browser
+</code></pre>
 
 <p>因为我的ubuntu是64位系统(ubuntu 11.04 LTS 64bit)，所以出现了如下错误:</p>
 
-<p><code>
-E: There are problems and -y was used without --force-yes
+<pre><code>E: There are problems and -y was used without --force-yes
 E: Failed to process build dependencies
 -----&gt; Updating package lists &lt;-----
 Ign file: apt-build Release.gpg
@@ -163,19 +161,17 @@ Hit http://cn.archive.ubuntu.com precise/restricted Translation-en
 Ign http://ppa.launchpad.net precise/main Translation-en                                                                                             
 Fetched 1,576 B in 10s (147 B/s)                                                                                                                     
 W: Failed to fetch file:/var/cache/apt-build/repository/dists/apt-build/main/binary-i386/Packages  File not found
-</code></p>
+</code></pre>
 
 <p>从网上找到了答案，解决方法就是指定配置文件中的架构：修改<em>/etc/apt/sources.list.d/apt-build.list</em>文件，将其中的</p>
 
-<p><code>
-deb file:/var/cache/apt-build/repository apt-build main
-</code></p>
+<pre><code>deb file:/var/cache/apt-build/repository apt-build main
+</code></pre>
 
 <p>替换为:</p>
 
-<p><code>
-deb [arch=amd64] file:/var/cache/apt-build/repository apt-build main
-</code></p>
+<pre><code>deb [arch=amd64] file:/var/cache/apt-build/repository apt-build main
+</code></pre>
 
 <p>接下来就是下载源码，再经过漫长的build过程，生成并安装Chromium Web Browser。版本信息如下图:</p>
 

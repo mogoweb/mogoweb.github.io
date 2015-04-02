@@ -7,7 +7,7 @@
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="本文主要内容翻译自chromium的文档NetLog: Chrome’s network logging system，如果您觉得文章写的不明白，请参看原文。 通过&lt;&lt;Chromium网络加载速度研究(1)>>这篇文章的分析，可以得出结论，云端加速是高富帅的玩法。 &hellip;">
+	<meta name="description" content="本文主要内容翻译自chromium的文档NetLog: Chrome’s network logging system，如果您觉得文章写的不明白，请参看原文。 通过&lt;&lt;Chromium网络加载速度研究(1)>>这篇文章的分析，可以得出结论，云端加速是高富帅的玩法。 &hellip;&#8221;>
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -16,8 +16,7 @@
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<!--<script async="true" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
-    <script async="true" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
+	<script async="true" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 	
 </head>
 
@@ -96,10 +95,10 @@
 <p>典型的使用场景为：</p>
 
 <ol>
-<li> 用户启用网络日志</li>
-<li> 用户重现问题</li>
-<li> 用户将日志上传到BUG报告系统</li>
-<li> 开发人员分析日志，定位问题</li>
+<li>用户启用网络日志</li>
+<li>用户重现问题</li>
+<li>用户将日志上传到BUG报告系统</li>
+<li>开发人员分析日志，定位问题</li>
 </ol>
 
 
@@ -133,36 +132,36 @@
 <table>
 <thead>
 <tr>
-<th align="center"> 字段 </th>
-<th align="center"> 类型 </th>
-<th align="left"> 描述 </th>
+<th style="text-align:center;">字段 </th>
+<th style="text-align:center;"> 类型 </th>
+<th style="text-align:left;"> 描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center"> time </td>
-<td align="center"> string </td>
-<td align="left">事件发生的时间（毫秒)，这是时间滴答数而不是unix时间戳. 尽管这是一个数字域，使用字符串表示是避免精度损失</td>
+<td style="text-align:center;">time </td>
+<td style="text-align:center;"> string </td>
+<td style="text-align:left;">事件发生的时间（毫秒)，这是时间滴答数而不是unix时间戳. 尽管这是一个数字域，使用字符串表示是避免精度损失</td>
 </tr>
 <tr>
-<td align="center"> type </td>
-<td align="center"> number </td>
-<td align="left">事件类型的ID，枚举值定义在<a href="http://src.chromium.org/viewvc/chrome/trunk/src/net/base/net_log_event_type_list.h?view=markup">net_log_event_type_list.h</a></td>
+<td style="text-align:center;">type </td>
+<td style="text-align:center;"> number </td>
+<td style="text-align:left;">事件类型的ID，枚举值定义在<a href="http://src.chromium.org/viewvc/chrome/trunk/src/net/base/net_log_event_type_list.h?view=markup">net_log_event_type_list.h</a></td>
 </tr>
 <tr>
-<td align="center"> source </td>
-<td align="center"> object </td>
-<td align="left">产生事件的实例，比如可以标识出某个特定的URLRequest</td>
+<td style="text-align:center;">source </td>
+<td style="text-align:center;"> object </td>
+<td style="text-align:left;">产生事件的实例，比如可以标识出某个特定的URLRequest</td>
 </tr>
 <tr>
-<td align="center"> phase </td>
-<td align="center"> number </td>
-<td align="left">BEGIN, END, NONE三个枚举值之一</td>
+<td style="text-align:center;">phase </td>
+<td style="text-align:center;"> number </td>
+<td style="text-align:left;">BEGIN, END, NONE三个枚举值之一</td>
 </tr>
 <tr>
-<td align="center"> params </td>
-<td align="center"> object </td>
-<td align="left">可选字段 </td>
+<td style="text-align:center;">params </td>
+<td style="text-align:center;"> object </td>
+<td style="text-align:left;">可选字段</td>
 </tr>
 </tbody>
 </table>
@@ -183,7 +182,7 @@
   
 
 
-<time datetime="2014-04-03T18:10:06+08:00" pubdate data-updated="true">Apr 3<span>rd</span>, 2014</time></div>
+<time datetime="2014-04-03T18:10:06+08:00" pubdate data-updated="true"></time></div>
 	<div class="tags">
 
 

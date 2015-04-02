@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 瞎折腾 | 放飞梦想]]></title>
   <link href="http://mogoweb.github.io/blog/categories/xia-zhe-teng/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2015-03-20T16:34:18+08:00</updated>
+  <updated>2015-04-02T15:53:07+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -125,7 +125,7 @@ cabal install happy
 
 <h3>安装中文字体</h3>
 
-<p>可以用“fc-list"命令查看已安装字体。如果没有中文字体，或者缺少某些中文字体，使用如下命令安装gnome中文字体。</p>
+<p>可以用“fc-list&#8221;命令查看已安装字体。如果没有中文字体，或者缺少某些中文字体，使用如下命令安装gnome中文字体。</p>
 
 <pre><code>apt-get install apt-get install language-pack-gnome-zh*
 </code></pre>
@@ -143,8 +143,7 @@ cabal install happy
 
 <p>使用前一步骤生成的pdf文件，边界过大，中文换行也存在问题，这时需要pandoc模板上场了。其实系统中已经存在针对不同格式转换的模板了，位于$HOME/.cabal/share/pandoc-1.12.4.2/data/templates下，针对lextex的模板为default.latex。可以修改这个系统模板，也可以自己创建一个，然后在执行pandoc时指定模板。建议采用自定义模板的方式，针对不同的格式要求定义模板。以下就是我定义的模板文件template.tex:</p>
 
-<p>```
-\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
+<pre><code>\documentclass[$if(fontsize)$$fontsize$,$endif$$if(lang)$$lang$,$endif$$if(papersize)$$papersize$,$endif$$for(classoption)$$classoption$$sep$,$endfor$]{$documentclass$}
 \usepackage{geometry}       % 設定邊界
 \geometry{
   top=1in,
@@ -180,41 +179,26 @@ $endif$
   \setromanfont{Droid Serif}    % 字型
   \setmonofont{Droid Sans Mono}
   \linespread{1.2}\selectfont   % 行距
-  \XeTeXlinebreaklocale &ldquo;zh&rdquo;    % 針對中文自動換行
+  \XeTeXlinebreaklocale "zh"    % 針對中文自動換行
   \XeTeXlinebreakskip = 0pt plus 1pt % 字與字之間加入0pt至1pt的間距，確保左右對整齊
   \parindent 0em        % 段落縮進
   \setlength{\parskip}{20pt}    % 段落之間的距離
-  \ifxetex</p>
-
-<pre><code>\usepackage{xltxtra,xunicode}
-</code></pre>
-
-<p>  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
+  \ifxetex
+    \usepackage{xltxtra,xunicode}
+  \defaultfontfeatures{Mapping=tex-text,Scale=MatchLowercase}
   \newcommand{\euro}{€}
-$if(mainfont)$</p>
-
-<pre><code>\setmainfont{$mainfont$}
-</code></pre>
-
-<p>$endif$
-$if(sansfont)$</p>
-
-<pre><code>\setsansfont{$sansfont$}
-</code></pre>
-
-<p>$endif$
-$if(monofont)$</p>
-
-<pre><code>\setmonofont[Mapping=tex-ansi]{$monofont$}
-</code></pre>
-
-<p>$endif$
-$if(mathfont)$</p>
-
-<pre><code>\setmathfont(Digits,Latin,Greek){$mathfont$}
-</code></pre>
-
-<p>$endif$
+$if(mainfont)$
+    \setmainfont{$mainfont$}
+$endif$
+$if(sansfont)$
+    \setsansfont{$sansfont$}
+$endif$
+$if(monofont)$
+    \setmonofont[Mapping=tex-ansi]{$monofont$}
+$endif$
+$if(mathfont)$
+    \setmathfont(Digits,Latin,Greek){$mathfont$}
+$endif$
 \fi
 % use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -251,40 +235,34 @@ $endif$
 $if(graphics)$
 \usepackage{graphicx}
 \makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
-\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\def\maxwidth{\ifdim\Gin@nat@width&gt;\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height&gt;\textheight\textheight\else\Gin@nat@height\fi}
 \makeatother
 % Scale images if necessary, so that they will not overflow the page
 % margins by default, and it is still possible to overwrite the defaults
-% using explicit options in \includegraphics[width, height, &hellip;]{}
+% using explicit options in \includegraphics[width, height, ...]{}
 \setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
 $endif$
 \ifxetex
-  \usepackage[setpagesize=false, % page size defined by xetex</p>
-
-<pre><code>          unicode=false, % unicode breaks when used with xetex
-          xetex]{hyperref}
-</code></pre>
-
-<p>\else
+  \usepackage[setpagesize=false, % page size defined by xetex
+              unicode=false, % unicode breaks when used with xetex
+              xetex]{hyperref}
+\else
   \usepackage[unicode=true]{hyperref}
 \fi
-\hypersetup{breaklinks=true,</p>
-
-<pre><code>        bookmarks=true,
-        pdfauthor={$author-meta$},
-        pdftitle={$title-meta$},
-        colorlinks=true,
-        citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
-        urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
-        linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,
-        pdfborder={0 0 0}}
-</code></pre>
-
-<p>\urlstyle{same}  % don&rsquo;t use monospace font for urls
+\hypersetup{breaklinks=true,
+            bookmarks=true,
+            pdfauthor={$author-meta$},
+            pdftitle={$title-meta$},
+            colorlinks=true,
+            citecolor=$if(citecolor)$$citecolor$$else$blue$endif$,
+            urlcolor=$if(urlcolor)$$urlcolor$$else$blue$endif$,
+            linkcolor=$if(linkcolor)$$linkcolor$$else$magenta$endif$,
+            pdfborder={0 0 0}}
+\urlstyle{same}  % don't use monospace font for urls
 $if(links-as-notes)$
 % Make links footnotes instead of hotlinks:
-\renewcommand{\href}<a href="http://daringfireball.net/projects/markdown/syntax">2</a>{#2\footnote{\url{#1}}}
+\renewcommand{\href}[2]{#2\footnote{\url{#1}}}
 $endif$
 $if(strikeout)$
 \usepackage[normalem]{ulem}
@@ -309,9 +287,9 @@ $if(lang)$
 \else
   \usepackage[$lang$]{babel}
 \fi
-$endif$</p>
+$endif$
 
-<p>$if(title)$
+$if(title)$
 \title{$title$}
 $endif$
 $if(subtitle)$
@@ -325,9 +303,9 @@ $if(date)$
 $endif$
 $for(header-includes)$
 $header-includes$
-$endfor$</p>
+$endfor$
 
-<p>\begin{document}
+\begin{document}
 $if(title)$
 \maketitle
 $endif$
@@ -335,12 +313,12 @@ $if(abstract)$
 \begin{abstract}
 $abstract$
 \end{abstract}
-$endif$</p>
+$endif$
 
-<p>$for(include-before)$
-$include-before$</p>
+$for(include-before)$
+$include-before$
 
-<p>$endfor$
+$endfor$
 $if(toc)$
 {
 \hypersetup{linkcolor=black}
@@ -348,9 +326,9 @@ $if(toc)$
 \tableofcontents
 }
 $endif$
-$body$</p>
+$body$
 
-<p>$if(natbib)$
+$if(natbib)$
 $if(biblio-files)$
 $if(biblio-title)$
 $if(book-class)$
@@ -359,20 +337,20 @@ $else$
 \renewcommand\refname{$biblio-title$}
 $endif$
 $endif$
-\bibliography{$biblio-files$}</p>
+\bibliography{$biblio-files$}
 
-<p>$endif$
+$endif$
 $endif$
 $if(biblatex)$
-\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$</p>
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
 
-<p>$endif$
+$endif$
 $for(include-after)$
-$include-after$</p>
+$include-after$
 
-<p>$endfor$
+$endfor$
 \end{document}
-```</p>
+</code></pre>
 
 <p>使用如下命令生成pdf文档：</p>
 
