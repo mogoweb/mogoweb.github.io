@@ -1,0 +1,377 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>WebKit的JavaScript对象扩展 - 放飞梦想</title>
+	<meta name="author" content="mogoweb">
+
+	
+	<meta name="description" content="本文的内容主要参考网上收集的资料，不过在Android 4.0 webkit上做扩展时，碰到一些问题，觉得有必要记录下来。 所谓扩展JavaScript对象，就是增加一个JS对象，但它并没有定义在标准的JS对象集合中。如果网页中包含了扩展的JS对象，使用普通的浏览器就会报JS错误。 &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="放飞梦想" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script async="true" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">放飞梦想</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:mogoweb.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		
+    
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+    
+	</div>
+	<form class="search" action="https://www.google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:mogoweb.github.io">
+	</form>
+</nav>
+
+</header>
+	
+		
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">WebKit的JavaScript对象扩展</h2>
+	<div class="entry-content"><p>本文的内容主要参考网上收集的资料，不过在Android 4.0 webkit上做扩展时，碰到一些问题，觉得有必要记录下来。</p>
+
+<p>所谓扩展JavaScript对象，就是增加一个JS对象，但它并没有定义在标准的JS对象集合中。如果网页中包含了扩展的JS对象，使用普通的浏览器就会报JS错误。</p>
+
+<p>下面以添加HelloObject对象为例说明具体步骤，该对象具有description属性：</p>
+
+<ul>
+<li>添加HelloObject.h, HelloObject.cpp, HelloObject.idl文件，简单起见，将这三个文件放到Source/WebCore/page目录下。</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#ifndef HelloObject_h   </span>
+</span><span class='line'><span class="cp">#define HelloObject_h </span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &lt;wtf/PassRefPtr.h&gt;  </span>
+</span><span class='line'><span class="cp">#include &lt;wtf/RefCounted.h&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#include &quot;PlatformString.h&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">namespace</span> <span class="n">WebCore</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">class</span> <span class="nc">HelloObject</span> <span class="o">:</span> <span class="k">public</span> <span class="n">RefCounted</span><span class="o">&lt;</span><span class="n">HelloObject</span><span class="o">&gt;</span> <span class="p">{</span>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="k">static</span> <span class="n">PassRefPtr</span><span class="o">&lt;</span><span class="n">HelloObject</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">adoptRef</span><span class="p">(</span><span class="k">new</span> <span class="n">HelloObject</span><span class="p">());</span> <span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">String</span> <span class="n">description</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">HelloObject</span><span class="p">();</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span> <span class="c1">// namespace WebCore</span>
+</span><span class='line'>
+</span><span class='line'><span class="cp">#endif </span><span class="c1">// HelloObject_h</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><font>HelloObject.h</font></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &quot;config.h&quot;</span>
+</span><span class='line'><span class="cp">#include &quot;HelloObject.h&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">namespace</span> <span class="n">WebCore</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">HelloObject</span><span class="o">::</span><span class="n">HelloObject</span><span class="p">()</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">String</span> <span class="n">HelloObject</span><span class="o">::</span><span class="n">description</span><span class="p">()</span> <span class="k">const</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;Hello Object&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span> <span class="c1">// namespace WebCore</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><font>HelloObject.cpp</font></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='idl'><span class='line'>module <span class="nb">window</span> {
+</span><span class='line'>
+</span><span class='line'>    interface [OmitConstructor] HelloObject {
+</span><span class='line'>        readonly attribute DOMString description;
+</span><span class='line'>    };
+</span><span class='line'>}
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><font>HelloObject.idl</font></p>
+
+<ul>
+<li>修改Source/WebCore/page/下的DOMWindow.h文件，添加如下声明：</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">HelloObject</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">public</span><span class="o">:</span>
+</span><span class='line'>    <span class="n">HelloObject</span><span class="o">*</span> <span class="n">helloObject</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">HelloObject</span><span class="o">*</span> <span class="nf">optionalHelloObject</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_helloObject</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+</span><span class='line'><span class="k">private</span><span class="o">:</span>
+</span><span class='line'>    <span class="k">mutable</span> <span class="n">RefPtr</span><span class="o">&lt;</span><span class="n">HelloObject</span><span class="o">&gt;</span> <span class="n">m_helloObject</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>修改Source/WebCore/page/下的DOMWindow.cpp文件，添加接口实现:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">HelloObject</span><span class="o">*</span> <span class="n">DOMWindow</span><span class="o">::</span><span class="n">helloObject</span><span class="p">()</span> <span class="k">const</span>
+</span><span class='line'><span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">m_helloObject</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">m_helloObject</span> <span class="o">=</span> <span class="n">HelloObject</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">m_helloObject</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><font>在DOMWindow::clear()函数中添加一行语句：</font></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">m_helloObject</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>修改DOMWindow.idl文件，添加:</li>
+</ul>
+
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='idl'><span class='line'>attribute [Replaceable] HelloObject helloObject;
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>接下来需要修改编译系统，让android编译系统编译新增的文件：</li>
+</ul>
+
+
+<p>首先修改Source/WebCore/Android.mk，增加page/HelloObject.cpp到<strong>LOCAL_SRC_FILES</strong>变量，其次需要修改Source/WebCore/Android.derived.v8bindings.mk，增加
+$(intermediates)/bindings/V8HelloObject.h到<strong>GEN</strong>变量。（注：这个是必须的，否则就不会根据HelloObject.idl生成V8HelloObject.h文件，在编译时会出错，这也
+是折腾了半天得出的成果）</p>
+
+<p>至此，工作基本上完成，待webkit重新编译后，可以用如下的网页进行验证：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;html&gt;</span>
+</span><span class='line'><span class="nt">&lt;body&gt;</span>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s2">&quot;&lt;pThis is from HelloObject: &quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">helloObject</span><span class="p">.</span><span class="nx">description</span> <span class="o">+</span> <span class="s2">&quot;&lt;/p&gt;&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'><span class="nt">&lt;/body&gt;</span>
+</span><span class='line'><span class="nt">&lt;/html&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>[参考资料]</p>
+
+<ol>
+<li><p><a href="http://blog.csdn.net/perfectpdl/article/details/7051129">webkit的js对象扩展（一）——binding方式创建自定义对象（单实例）</a></p></li>
+<li><p><a href="http://blog.csdn.net/perfectpdl/article/details/7058084">android 上 webkit js 本地扩展之全局本地对象实现步骤</a></p></li>
+</ol>
+
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-12T08:59:29+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android,</a>, <a class='category' href='/blog/categories/webkit/'>webkit</a>
+
+
+</div>
+	
+	<div class="comments"><a href="#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2015
+
+    mogoweb
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'mogoweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mogoweb.github.io/blog/2012/01/12/add-javascript-extend-object-for-webkit/';
+        var disqus_url = 'http://mogoweb.github.io/blog/2012/01/12/add-javascript-extend-object-for-webkit/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//go.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+</body>
+</html>
