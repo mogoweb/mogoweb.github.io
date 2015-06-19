@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | 放飞梦想]]></title>
   <link href="http://mogoweb.github.io/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2015-04-23T09:56:00+08:00</updated>
+  <updated>2015-06-19T23:05:27+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,76 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[在Chromium for Android中能否用TextureView替代SurfaceView]]></title>
+    <link href="http://mogoweb.github.io/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android/"/>
+    <updated>2015-06-19T19:26:45+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android</id>
+    <content type="html"><![CDATA[<p>在开发Browser 2.0时，碰到一个非常头疼的问题，往布局上添加SurfaceView时，会引起黑屏闪一下。为了解决这个问题，我们不得不在初始化阶段就把SurfaceView添加好，之后也不能调整大小、移动位置。当时就考虑是不是能够用TextureView替代SurfaceView，不过由于计划上的调整，没有做进一步的尝试。今天在网上看到<a href="https://github.com/crosswalk-project/crosswalk-website/wiki/Android-SurfaceView-vs-TextureView">这篇文章</a>，正好解答了我的疑问，在此把文章翻译过来，供参考。</p>
+
+<blockquote><h1>Android SurfaceView和textureView</h1>
+
+<p>本文将简要介绍SurfaceView和TextureView的不同之处</p>
+
+<h2>SurfaceView和TextureView</h2>
+
+<p>SurfaceView和TextureView都继承自android.view.View类，他们都可以在另一个独立线程中绘制和渲染，这是和其它View的最大不同。Crosswalk采用这一分离绘制特性，独立的GPU线程显著提高了渲染效率。</p>
+
+<p>SurfaceView提供一个嵌入在视图层次上的专用绘制表面，您可以控制该表面（Surface）的格式和尺寸。SurfaceView负责将表面放置在屏幕上正确的位置。它的行为多少有些类似于传统桌面系统上的onscreen窗口，比如，X11系统中的XWindow可以是无边框的，嵌入在另一个XWindow中。</p>
+
+<p>SurfaceView存在如下两个缺点：</p>
+
+<ul>
+<li>不能应用动画、变换和缩放</li>
+<li>不能叠加（Overlay）两个SurfaceView</li>
+</ul>
+
+
+<p>TextureView看似更像一个通用的View，可以应用动画、变换和缩放，就如同TextView。TextureView只能用在硬件加速的窗口。但是，TextureView比SurfaceView更耗内存，而且可能会有1～3帧的延迟，请参考讨论<a href="https://groups.google.com/a/chromium.org/forum/#!topic/graphics-dev/Z0yE-PWQXc4">3</a>。</p>
+
+<h2>使用可以动画的XWalkView</h2>
+
+<p>Crosswalk Embedding API for Android很好的支持了SurfaceView和TextureView。XWalkView缺省使用SurfaceView，也允许您在以下情况下使用TextureView：</p>
+
+<ul>
+<li>您想让XWalkView支持动画和变换</li>
+<li>您想叠加两个XWalkView</li>
+</ul>
+
+
+<p>设置布尔标识ANIMATIBLE_XWALK_VIEW为true即可启用TextureView。</p>
+
+<ol>
+<li><a href="http://developer.android.com/reference/android/view/SurfaceView.html">http://developer.android.com/reference/android/view/SurfaceView.html</a></li>
+<li><a href="http://developer.android.com/reference/android/view/TextureView.html">http://developer.android.com/reference/android/view/TextureView.html</a></li>
+<li><a href="https://groups.google.com/a/chromium.org/forum/#!topic/graphics-dev/Z0yE-PWQXc4">https://groups.google.com/a/chromium.org/forum/#!topic/graphics-dev/Z0yE-PWQXc4</a></li>
+</ol>
+</blockquote>
+
+<p>文中提到的讨论起源是在google groups中有人提出如下问题：</p>
+
+<blockquote><p>在当前ContentViewRenderView实现中，使用SurfaceView作为合成表面(compositing surface)，如我们所知，SurfaceView是一个特别的视图，无法进行动画或者变换。</p>
+
+<p>TextureView可以做SufaceView同样的事情，比如，您可以在另一个独立线程中渲染，也可以从底下的SurfaceTexture创建一个egl表面(eglSurface)。更主要的是，TextureView可以进行动画和变换。</p>
+
+<p>我很好奇为什么不使用TextureView作为合成表面，是否TextureView在使用上有一些特别的考虑，比如性能问题？欢迎任何讨论。</p></blockquote>
+
+<p>Google groups有人做如下回复：</p>
+
+<blockquote><p>事实上chrome过去使用TextureView作为合成表面，但我们出于几个原因切换到SurfaceView：</p>
+
+<ul>
+<li>由于失效(invalidation)和缓冲的特性，TextureView增加了额外1~3帧的延迟显示画面更新</li>
+<li>TextureView总是使用GL合成，而SurfaceTexture可以使用硬件overlay后端，可以占用更少的内存带宽，消耗更少的能量</li>
+<li>TextureView的内部缓冲队列导致比SurfaceView使用更多的内存</li>
+<li>TextureView的动画和变换能力我们用不上</li>
+</ul>
+</blockquote>
+
+<p>所以结论是Chromium for Android中可以使用TextureView替代SurfaceView作为合成表面，但带来的后果是占用更多的内存，性能下降。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[关于Chromium WebView项目的源代码管理]]></title>
@@ -283,135 +353,6 @@
 
 
 <p>在中国，Chrome for Android如果开启数据压缩代理功能，速度反而更慢，其原因就在于Google在中国并没有部署服务器。对于个人开发者和中小企业，一来无法部署强大的数据中心，二来也无法使用Google的服务，所以服务器端加速方案不具备可行性。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Android 4.4 WebView实现分析]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/"/>
-    <updated>2014-01-16T19:22:09+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/01/16/analysis-of-android-4-4-webview-implementation</id>
-    <content type="html"><![CDATA[<p>随着Android4.4的发布，Android WebView改成由Chromium驱动了。浏览Android4.4源代码，可以看到之前版本中的external/WebKit目录被移除掉了，取而代之的是chromium_org。也就是说chromium已经完全取代了之前的WebKit for Android。虽然chromium完全取代了以前的WebKit for Android，但Android WebView的API接口并没有变，与老的版本完全兼容。这样带来的好处是基于WebView构建的APP，无需做任何修改，就能享受chromium内核的高效与强大。下面就Android 4.4中WebView的实现进行分析。</p>
-
-<p>先来看看frameworks/base/core/java/android/webkit下的文件，里面有我们熟悉的WebView、WebSettings、WebViewClient等类，其中最主要的就是WebView了，相关的类关系如下：</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_android_4_4_webview_classes_diagram.png" alt="" /></p>
-
-<p>从图中可以看出，设计者抽象出了一个WebViewProvider接口，WebView本身并不做事，所有的处理就是交给WebViewProvider。而WebViewProvider只是一个接口，由实现者决定采用哪种引擎。从Android4.1开始，就采用了这种设计架构，开始为chromium核心的WebView做准备。在Android 4.4之前的版本，由WebViewClassic实现WebViewProvider接口。在Android4.4中，则是WebViewChromium实现WebViewProvider接口。WebViewFactory也采用了相似的结构，决定了如何实例化WebViewFactoryProvider，WebViewFactoryProvider有一个关键的接口createWebView，创建具体的WebViewProvider。（注：AOSP master源码基于WebKit的实现仍然保留，但在Android4.4中已经移除，由于采用了灵活的架构，所以在两种核心之间非常容易切换）</p>
-
-<!--more-->
-
-
-<p>目前的代码结构如下图所示，在ContentAPI之上，Chromium的WebView实现封装了一个新的类AwContents，该类主要基于ContentViewCore类的实现，不同的是，AwContents需要基于一个原来存在于“chrome/”目录下的模块（图中的BrowserComponents），但是AwContents不应该依赖该目录，所以，将chrome中的一些所谓的浏览器模块化是Chromium的一个方向。目前，一些模块以及从chrome中抽取出来了，参见“components/”。</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_android_4_4_webview_awcontents.png" alt="" /></p>
-
-<p>AwContents提供的不是WebView的API，所以，需要一层桥接部分，将AwContents桥接到WebView，这就是图中的桥接模块，该模块位于Android源代码中的frameworks/webview/chromium/java/com/android/webview/chromium/目录下，WebViewChromium和WebViewChromiumFactory类作为WebView的具体实现，依赖于Chromium项目的AwContents模块，整体模块图如下：</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_androd_4_4_webview_components.png" alt="" /></p>
-
-<p>AwContents基于Content之上，专门针对Android WebView需求而进行的一个封装，这个封装只针对Android平台。</p>
-
-<p>WebView同样也是基于ContentAPI(web contents, ContentViewCore等)，在这点上来说，它同Content Shell和Chromium浏览器没有大的不同，区别在于它们对很多Delegate类的实现不同，这是ContentAPI用于让使用者参与内部逻辑和实现的过程。具体来说，它主要有以下两个方面的不同：</p>
-
-<ol>
-<li>渲染机制</li>
-</ol>
-
-
-<p>因为WebView提供的是一个View控件，那么View控件的容器可能接受储存在CPU中的结构（如bitmap），也可能是储存在GPU内存中的结构（如surface），所以它需要提供两种不同的输出结果。</p>
-
-<p>Chromium引入了一种新的合成器UberCompositor++，该合成器支持输出到GPU和CPU内存两种方式。对于Compositor的结果输出到给定View的GPU内存这种方式，关键点在于实现AwContents.InternalAccessDelegate接口的requestDrawGL方法。与requestDrawGL实现有关的代码不多，只涉及到DrawGLFunctor.java和GraphicsUtils.java，以及与之关联的native实现draw_gl_functor.cpp, graphic_buffer_impl.cpp和graphics_utils.cpp，naitve代码位于frameworks/webview/chromium/plat_support目录下。这部分代码不多，但牵涉到了Android源码，并不是只使用了Android SDK和NDK的API。</p>
-
-<ol>
-<li>进程</li>
-</ol>
-
-
-<p>目前WebView只支持单进程方式，未来不排除支持多进程方式。单进程意味了没有办法使用Android的isolated UID机制，因此，某种程度上来讲，安全性降低了，而且页面的渲染崩溃会导致使用WebView的应用程序崩溃。</p>
-
-<h4>Android 4.4中的chromium</h4>
-
-<p>Android 4.4代码树中的chromium源码位于external/chromium_org，而不是external/chromium, external/chromium是一个老版本的chromium，主要提供chromium net网络栈。external/chromium_org下的chromium版本为r227252，对应的Chromium发行版本为30.0.1599.101， Blink版本为r159105。</p>
-
-<p>AOSP源码中的默认浏览器基于chromium核心，但Browser代码和之前的版本并没有差别，这也看出WebView API的兼容性相当好。而google官方则宣布以后android系统中不再提供浏览器，只有Chrome for Android。</p>
-
-<h4>Android4.4中的chromium移植分析</h4>
-
-<p>从Android4.4的chromium_org git库log可以看到，从chromium源码获取分支后，只cherry-pick了两个提交，而且cherry-pick的代码也是来自chromium项目，信息如下：</p>
-
-<p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
-
-<p>Author: Ben Murdoch <a href="&#109;&#97;&#105;&#x6c;&#x74;&#x6f;&#x3a;&#98;&#x65;&#x6e;&#x6d;&#x40;&#x67;&#x6f;&#x6f;&#x67;&#108;&#101;&#46;&#x63;&#111;&#109;">&#98;&#x65;&#110;&#109;&#x40;&#x67;&#111;&#x6f;&#103;&#108;&#x65;&#46;&#x63;&#111;&#x6d;</a></p>
-
-<p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
-
-<p>&#160;&#160;&#160; Cherry pick&#160; [Android] MediaPlayerBridge should pass Bridge to getAllowedOperations</p>
-
-<p>&#160;&#160;&#160; Cherry pick of <a href="https://codereview.chromium.org/32213003/">https://codereview.chromium.org/32213003/</a></p>
-
-<p>&#160;&#160;&#160; Bug: 11311417</p>
-
-<p>&#160;&#160;&#160; Original description:</p>
-
-<p>&#160;&#160;&#160; [Android] MediaPlayerBridge should pass Bridge to getAllowedOperations</p>
-
-<p>&#160;&#160;&#160; Right now the Java side is expecting a MediaPlayer object to be passed</p>
-
-<p>&#160;&#160;&#160; to the MediaPlayerBridge.getAllowedOperations function, but native</p>
-
-<p>&#160;&#160;&#160; is actually passing it a MediaPlayerBridge. Update the code to be</p>
-
-<p>&#160;&#160;&#160; consistent &#8211; Java now expects the MediaPlayerBrdige and uses it to</p>
-
-<p>&#160;&#160;&#160; extract a MediaPlayer.</p>
-
-<p>&#160;&#160;&#160; Change-Id: I5ac618c833c6c3ff015d43405a9a4d507fce9ba5</p>
-
-<p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
-
-<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#105;&#108;&#116;&#111;&#58;&#x62;&#x65;&#x6e;&#109;&#x40;&#x67;&#x6f;&#x6f;&#x67;&#x6c;&#x65;&#x2e;&#x63;&#111;&#109;">&#x62;&#x65;&#110;&#x6d;&#x40;&#x67;&#x6f;&#x6f;&#103;&#108;&#101;&#x2e;&#99;&#111;&#x6d;</a></p>
-
-<p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
-
-<p>&#160;&#160;&#160; Cherry pick android: fix base::Time::FromLocalExploded() crash.</p>
-
-<p>&#160;&#160;&#160; Cherry pick of <a href="https://codereview.chromium.org/27472003/">https://codereview.chromium.org/27472003/</a></p>
-
-<p>&#160;&#160;&#160; Bug: 11313033</p>
-
-<p>&#160;&#160;&#160; Original description:</p>
-
-<p>&#160;&#160;&#160; android: fix base::Time::FromLocalExploded() crash.</p>
-
-<p>&#8230;skipping&#8230;</p>
-
-<p>&#160;&#160;&#160; Record Chromium merge at DEPS revision 30.0.1599.101</p>
-
-<p>&#160;&#160;&#160; This commit was generated by merge_to_master.py.</p>
-
-<p>&#160;&#160;&#160; Change-Id: Ie9e9e034f3e5d9a3fe3edf87595c7be467d3136b</p>
-
-<p>结合前面的分析，可以得出如下结论：</p>
-
-<p>1）AwContents都是基于Android SDK/NDK开发，并没有使用Android Source里面的未公开API和库。</p>
-
-<p>2）Android 4.4中使用的chromium，直接取自chromium开源项目，虽然它使用了自己的git库：<a href="https://android.googlesource.com/platform/external/chromium_org">https://android.googlesource.com/platform/external/chromium_org</a></p>
-
-<p>3）Android4.4中的chromium并没有针对android平台做一些特殊修改，和chromium开源项目的代码一致</p>
-
-<p>4）与Android source密切相关的代码位于ChromiumWebView。</p>
-
-<p>如前面所述，在实现reqeustDrawGL时，使用到了Frameworks 未公开的API，native部分代码也用到了Android source中的代码。所涉及的类和Android Source如下：</p>
-
-<pre><code>1. HardwareCanvas
-2. ViewRootImpl
-3. DrawGlInfo.h
-4. GraphicBuffer.h
-5. GraphicsJNI.h
-</code></pre>
-
-<p>5）整个chromium移植代码中，与android source密切相关的代码极少，绝大部分都是基于SDK和NDK而开发。</p>
 ]]></content>
   </entry>
   
