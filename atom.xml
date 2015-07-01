@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
   <link href="http://mogoweb.github.io/"/>
-  <updated>2015-06-19T23:05:27+08:00</updated>
+  <updated>2015-07-01T09:21:30+08:00</updated>
   <id>http://mogoweb.github.io/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,39 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何打印gyp构建系统中的变量值]]></title>
+    <link href="http://mogoweb.github.io/blog/2015/06/30/how-to-print-variable-of-gyp/"/>
+    <updated>2015-06-30T14:16:51+08:00</updated>
+    <id>http://mogoweb.github.io/blog/2015/06/30/how-to-print-variable-of-gyp</id>
+    <content type="html"><![CDATA[<p>chromium项目使用了gyp构建系统，gyp的全称是&#8221;Generate Your Projects&#8221;。gyp构建系统使用的并不广泛，目前已知的只有chromium开源项目采用了这一构建系统。官方虽然也有一些文档，但都是一些比较基础的指南，总体来说缺少详细的文档来指导开发人员在项目中使用。
+因为研究chromium的缘故，所以对gyp构建系统也有一些了解，在使用中也碰到一些问题，本文所要探讨的是如何输出gyp的变量值。这个问题的场景是这样的：在gyp中定义了变量，但是经过多重gypi包含，在别的gyp文件中可能对变量值进行了赋值。处于调试目的，我们希望输出gyp变量的值。</p>
+
+<p>方法看起来很简单，但也摸索了很久。方法如下，在gyp中合适的位置加入如下代码：</p>
+
+<pre><code>'variables': {
+  'mytest': '&lt;!(echo &lt;(variable) 1&gt;&amp;2)',
+}
+</code></pre>
+
+<p>其中&#8217;mytest&#8217;是我随便定义的一个变量值，variable是希望打印的gyp变量。比如以下语句：</p>
+
+<pre><code>'variables': {
+  'mytest': '&lt;!(echo &lt;(OS) 1&gt;&amp;2)',
+}
+</code></pre>
+
+<p>输出如下结果：</p>
+
+<pre><code>Updating projects from gyp files...
+android
+gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
+</code></pre>
+
+<p>从上面的输出可以看出，OS的变量值为android。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[在Chromium for Android中能否用TextureView替代SurfaceView]]></title>
@@ -1946,7 +1979,7 @@ cabal install happy
 
 <p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#105;&#x6c;&#116;&#x6f;&#58;&#x62;&#x65;&#110;&#109;&#64;&#x67;&#x6f;&#111;&#x67;&#108;&#101;&#46;&#x63;&#x6f;&#109;">&#98;&#x65;&#110;&#x6d;&#x40;&#103;&#x6f;&#x6f;&#103;&#108;&#101;&#46;&#x63;&#111;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#109;&#x61;&#x69;&#108;&#x74;&#x6f;&#x3a;&#x62;&#x65;&#x6e;&#x6d;&#64;&#x67;&#111;&#111;&#x67;&#x6c;&#x65;&#46;&#99;&#111;&#x6d;">&#98;&#x65;&#x6e;&#x6d;&#x40;&#x67;&#111;&#x6f;&#103;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
 
@@ -1974,7 +2007,7 @@ cabal install happy
 
 <p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#105;&#108;&#116;&#x6f;&#x3a;&#x62;&#x65;&#x6e;&#109;&#x40;&#x67;&#x6f;&#111;&#103;&#108;&#x65;&#46;&#x63;&#111;&#109;">&#98;&#x65;&#110;&#109;&#x40;&#103;&#x6f;&#111;&#x67;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#109;</a></p>
+<p>Author: Ben Murdoch <a href="&#109;&#97;&#105;&#x6c;&#116;&#111;&#58;&#98;&#x65;&#110;&#x6d;&#64;&#103;&#111;&#111;&#x67;&#108;&#x65;&#46;&#x63;&#111;&#109;">&#98;&#x65;&#110;&#x6d;&#x40;&#x67;&#111;&#x6f;&#103;&#108;&#x65;&#46;&#99;&#x6f;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
 
@@ -2199,222 +2232,6 @@ CTRL+h 打开文件搜索对话框</pre>
 <li>按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，待列表获取完成再输入GBK Encoding Support，等安装完毕就可以了。</li>
 <li>按照上述方法安装Codecs26和ConvertToUTF8</li>
 <li>重启sublime_text，打开文件后，选择菜单 <strong> File | Reopen with Encoding | UTF-8 </strong> 即可</li>
-</ol>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[WebKit的JavaScript对象扩展]]></title>
-    <link href="http://mogoweb.github.io/blog/2012/01/12/add-javascript-extend-object-for-webkit/"/>
-    <updated>2012-01-12T08:59:29+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2012/01/12/add-javascript-extend-object-for-webkit</id>
-    <content type="html"><![CDATA[<p>本文的内容主要参考网上收集的资料，不过在Android 4.0 webkit上做扩展时，碰到一些问题，觉得有必要记录下来。</p>
-
-<p>所谓扩展JavaScript对象，就是增加一个JS对象，但它并没有定义在标准的JS对象集合中。如果网页中包含了扩展的JS对象，使用普通的浏览器就会报JS错误。</p>
-
-<p>下面以添加HelloObject对象为例说明具体步骤，该对象具有description属性：</p>
-
-<ul>
-<li>添加HelloObject.h, HelloObject.cpp, HelloObject.idl文件，简单起见，将这三个文件放到Source/WebCore/page目录下。</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#ifndef HelloObject_h   </span>
-</span><span class='line'><span class="cp">#define HelloObject_h </span>
-</span><span class='line'>
-</span><span class='line'><span class="cp">#include &lt;wtf/PassRefPtr.h&gt;  </span>
-</span><span class='line'><span class="cp">#include &lt;wtf/RefCounted.h&gt;</span>
-</span><span class='line'>
-</span><span class='line'><span class="cp">#include &quot;PlatformString.h&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">namespace</span> <span class="n">WebCore</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">class</span> <span class="nc">HelloObject</span> <span class="o">:</span> <span class="k">public</span> <span class="n">RefCounted</span><span class="o">&lt;</span><span class="n">HelloObject</span><span class="o">&gt;</span> <span class="p">{</span>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
-</span><span class='line'>    <span class="k">static</span> <span class="n">PassRefPtr</span><span class="o">&lt;</span><span class="n">HelloObject</span><span class="o">&gt;</span> <span class="n">create</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">adoptRef</span><span class="p">(</span><span class="k">new</span> <span class="n">HelloObject</span><span class="p">());</span> <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">String</span> <span class="n">description</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-</span><span class='line'><span class="k">private</span><span class="o">:</span>
-</span><span class='line'>    <span class="n">HelloObject</span><span class="p">();</span>
-</span><span class='line'><span class="p">};</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">}</span> <span class="c1">// namespace WebCore</span>
-</span><span class='line'>
-</span><span class='line'><span class="cp">#endif </span><span class="c1">// HelloObject_h</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><font>HelloObject.h</font></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="cp">#include &quot;config.h&quot;</span>
-</span><span class='line'><span class="cp">#include &quot;HelloObject.h&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">namespace</span> <span class="n">WebCore</span> <span class="p">{</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">HelloObject</span><span class="o">::</span><span class="n">HelloObject</span><span class="p">()</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">String</span> <span class="n">HelloObject</span><span class="o">::</span><span class="n">description</span><span class="p">()</span> <span class="k">const</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">return</span> <span class="s">&quot;Hello Object&quot;</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">}</span> <span class="c1">// namespace WebCore</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><font>HelloObject.cpp</font></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='idl'><span class='line'>module <span class="nb">window</span> {
-</span><span class='line'>
-</span><span class='line'>    interface [OmitConstructor] HelloObject {
-</span><span class='line'>        readonly attribute DOMString description;
-</span><span class='line'>    };
-</span><span class='line'>}
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><font>HelloObject.idl</font></p>
-
-<ul>
-<li>修改Source/WebCore/page/下的DOMWindow.h文件，添加如下声明：</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="k">class</span> <span class="nc">HelloObject</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">public</span><span class="o">:</span>
-</span><span class='line'>    <span class="n">HelloObject</span><span class="o">*</span> <span class="n">helloObject</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">HelloObject</span><span class="o">*</span> <span class="nf">optionalHelloObject</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_helloObject</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
-</span><span class='line'><span class="k">private</span><span class="o">:</span>
-</span><span class='line'>    <span class="k">mutable</span> <span class="n">RefPtr</span><span class="o">&lt;</span><span class="n">HelloObject</span><span class="o">&gt;</span> <span class="n">m_helloObject</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>修改Source/WebCore/page/下的DOMWindow.cpp文件，添加接口实现:</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">HelloObject</span><span class="o">*</span> <span class="n">DOMWindow</span><span class="o">::</span><span class="n">helloObject</span><span class="p">()</span> <span class="k">const</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">m_helloObject</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">m_helloObject</span> <span class="o">=</span> <span class="n">HelloObject</span><span class="o">::</span><span class="n">create</span><span class="p">();</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">m_helloObject</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p><font>在DOMWindow::clear()函数中添加一行语句：</font></p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='cpp'><span class='line'><span class="n">m_helloObject</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>修改DOMWindow.idl文件，添加:</li>
-</ul>
-
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='idl'><span class='line'>attribute [Replaceable] HelloObject helloObject;
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>接下来需要修改编译系统，让android编译系统编译新增的文件：</li>
-</ul>
-
-
-<p>首先修改Source/WebCore/Android.mk，增加page/HelloObject.cpp到<strong>LOCAL_SRC_FILES</strong>变量，其次需要修改Source/WebCore/Android.derived.v8bindings.mk，增加
-$(intermediates)/bindings/V8HelloObject.h到<strong>GEN</strong>变量。（注：这个是必须的，否则就不会根据HelloObject.idl生成V8HelloObject.h文件，在编译时会出错，这也
-是折腾了半天得出的成果）</p>
-
-<p>至此，工作基本上完成，待webkit重新编译后，可以用如下的网页进行验证：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;html&gt;</span>
-</span><span class='line'><span class="nt">&lt;body&gt;</span>
-</span><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="s2">&quot;&lt;pThis is from HelloObject: &quot;</span><span class="p">);</span>
-</span><span class='line'><span class="nb">document</span><span class="p">.</span><span class="nx">write</span><span class="p">(</span><span class="nx">helloObject</span><span class="p">.</span><span class="nx">description</span> <span class="o">+</span> <span class="s2">&quot;&lt;/p&gt;&quot;</span><span class="p">);</span>
-</span><span class='line'><span class="nt">&lt;/script&gt;</span>
-</span><span class='line'><span class="nt">&lt;/body&gt;</span>
-</span><span class='line'><span class="nt">&lt;/html&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>[参考资料]</p>
-
-<ol>
-<li><p><a href="http://blog.csdn.net/perfectpdl/article/details/7051129">webkit的js对象扩展（一）——binding方式创建自定义对象（单实例）</a></p></li>
-<li><p><a href="http://blog.csdn.net/perfectpdl/article/details/7058084">android 上 webkit js 本地扩展之全局本地对象实现步骤</a></p></li>
 </ol>
 
 ]]></content>

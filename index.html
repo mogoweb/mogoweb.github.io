@@ -7,7 +7,7 @@
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="在开发Browser 2.0时，碰到一个非常头疼的问题，往布局上添加SurfaceView时，会引起黑屏闪一下。为了解决这个问题，我们不得不在初始化阶段就把SurfaceView添加好，之后也不能调整大小、移动位置。当时就考虑是不是能够用TextureView替代SurfaceView， &hellip;">
+	<meta name="description" content="chromium项目使用了gyp构建系统，gyp的全称是"Generate Your Projects"。gyp构建系统使用的并不广泛，目前已知的只有chromium开源项目采用了这一构建系统。官方虽然也有一些文档，但都是一些比较基础的指南，总体来说缺少详细的文档来指导开发人员在项目中使用。 &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -80,6 +80,73 @@
 		
 	
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/06/30/how-to-print-variable-of-gyp/">
+		
+			如何打印gyp构建系统中的变量值</a>
+	</h2>
+	<div class="entry-content">
+		<p>chromium项目使用了gyp构建系统，gyp的全称是&#8221;Generate Your Projects&#8221;。gyp构建系统使用的并不广泛，目前已知的只有chromium开源项目采用了这一构建系统。官方虽然也有一些文档，但都是一些比较基础的指南，总体来说缺少详细的文档来指导开发人员在项目中使用。
+因为研究chromium的缘故，所以对gyp构建系统也有一些了解，在使用中也碰到一些问题，本文所要探讨的是如何输出gyp的变量值。这个问题的场景是这样的：在gyp中定义了变量，但是经过多重gypi包含，在别的gyp文件中可能对变量值进行了赋值。处于调试目的，我们希望输出gyp变量的值。</p>
+
+<p>方法看起来很简单，但也摸索了很久。方法如下，在gyp中合适的位置加入如下代码：</p>
+
+<pre><code>'variables': {
+  'mytest': '&lt;!(echo &lt;(variable) 1&gt;&amp;2)',
+}
+</code></pre>
+
+<p>其中&#8217;mytest&#8217;是我随便定义的一个变量值，variable是希望打印的gyp变量。比如以下语句：</p>
+
+<pre><code>'variables': {
+  'mytest': '&lt;!(echo &lt;(OS) 1&gt;&amp;2)',
+}
+</code></pre>
+
+<p>输出如下结果：</p>
+
+<pre><code>Updating projects from gyp files...
+android
+gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
+</code></pre>
+
+<p>从上面的输出可以看出，OS的变量值为android。</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-06-30T14:16:51+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/chromium/'>chromium</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2015/06/30/how-to-print-variable-of-gyp/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
 
 
     <article class="post">
@@ -1383,59 +1450,6 @@
 </div>
 	
 	<div class="comments"><a href="/blog/2014/10/23/my-macos-programming-life/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/06/22/reading-about-macktalk/">
-		
-			读『MacTalk.人生元编程』</a>
-	</h2>
-	<div class="entry-content">
-		<p>最先我是在多看上购买的电子版&lt;&lt;MacTalk.人生元编程>>，不久印刷版本也出来了。出于对这本书的喜爱，毫不犹豫的购买了印刷版本。为什么喜欢这本书，因为这本书写的有趣，我也希望我的博文写的有趣一点，可是翻出我以前和现在写的文章，都干巴巴的。不由的感叹，没有平日的文学修养，要将文章写的好真难。平日就欣赏那些语句优美的文章，碰上有文采、技术又出众的双料王，更是打心底佩服，自然要支持一下作者。</p>
-
-<p>&lt;&lt;MacTalk.人生元编程>>是一本既有趣，又有不少干货的一本书。这本书的内容提要是这样概括这本书的:</p>
-
-<p>『作者以一个70后程序员的笔触，立于Mac之上，讲述技术与人文的故事，有历史，有明天，有技术，有人生。70多篇文章划分为六大主题：Mac、程序员与编程、科技与人文、人物、工具、职场。篇篇独立成文，可拆可合，随时阅读。』</p>
-
-<p>同样作为70后程序员，阅读这本随笔文笔容易引起共鸣（虽然地位悬殊，人家已经是院长，我还战斗在第一线）。有时读了某篇文章，不禁假想，要是我早几年读了它，是不是会走上另外一条路线。谈到这里，大家千万不要认为这是一本心灵鸡汤，作者只是以自己的经历、体会娓娓道来，从来不会将自己的观点强加于人。处在互联网这个乌烟瘴气的环境下，看到太多的争论与谩骂，不由令人心生悲观。好在还有池老师这样的技术专家，给浮躁的互联网吹进一丝清爽的凉风。本书最吸引我的地方在于文风幽默，我读过多个多个版本的Mac历史，这里是唯一写的既有趣，又让人涨见识的。关于职场与人生等话题，就如同一位老大哥在与你促膝长谈，不会给你讲为了祖国、为了人民这样的大道理，风趣而又能点中要害。</p>
-
-<p>当然，这本书并非仅仅是一本IT人文书，中间还穿插了不少知识，主要是与Mac有关，此君也自称Mac君，算得上一名苹果公司免费的Mac布道师。文章并未涉及具体的编程知识，而是介绍一些提高效率的知识点。读了此书，Mac功力至少可以精进三层。另外，本文集还收录了VIM、Shell系列，同样适合linux程序员。在此书的发布会上，三表（微信公众号：三表龙门阵的作者）就打趣说，这本数应该拆成两本的，一本人文，一本技术，各取所需。</p>
-
-<p>印刷版比电子版增加了职场系列、编程与写作等内容，这也算的上一份惊喜。印刷版的封面和正文版式都设计的简洁大方，并非仅仅将电子版印刷到纸张上。所以说，即使购买了电子版，再购买印刷版，丝毫不觉得吃亏，反而觉得物超所值。另外，如果您既不想花钱买印刷版，也不想花钱买电子版，可以上<a href="http://macshuo.com">http://macshuo.com</a>，可以免费阅读。</p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-22T21:51:17+08:00" pubdate data-updated="true"></time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/itren-wen-,du-shu/'>it人文，读书</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/06/22/reading-about-macktalk/#disqus_thread">Comments</a></div>
 	
 </div>
 </article>
