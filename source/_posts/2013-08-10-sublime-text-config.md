@@ -18,7 +18,7 @@ categories: 开发工具
         [
             "*.o"
         ],
-        "folder_exclude_pattern":
+        "folder_exclude_patterns":
         [
             ".repo"
         ]
