@@ -7,7 +7,7 @@
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="本文的内容主要参考网上收集的资料，不过在Android 4.0 webkit上做扩展时，碰到一些问题，觉得有必要记录下来。 所谓扩展JavaScript对象，就是增加一个JS对象，但它并没有定义在标准的JS对象集合中。如果网页中包含了扩展的JS对象，使用普通的浏览器就会报JS错误。 &hellip;">
+	<meta name="description" content="在我的一台开发机上在ubuntu系统下使用eclipse，经常会出现死机，不得不寻求其它的代码编辑器。windows下大名鼎鼎的source insight放到linux下就状况不断。后看到chromium项目推荐了sublime text这款编辑器，用起来感觉还不错。 &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -80,6 +80,126 @@
 		
 	
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/08/10/sublime-text-config/">
+		
+			SublimeText配置</a>
+	</h2>
+	<div class="entry-content">
+		<p>在我的一台开发机上在ubuntu系统下使用eclipse，经常会出现死机，不得不寻求其它的代码编辑器。windows下大名鼎鼎的source insight放到linux下就状况不断。后看到chromium项目推荐了sublime text这款编辑器，用起来感觉还不错。下面记录一下使用过程中的一些设置，网上各种资料比较凌乱，所以就稍微整理一下，供自己今后翻阅。</p>
+
+<h3>1. 过滤不相关的文件</h3>
+
+<p>可以针对某个特定的工程，进入菜单<strong>project | Edit Project</strong>，编辑当前工程的sublime-project文件，加入两个过滤器，<em>folder_exclude_patterns</em>和<em>file_exclude_patterns</em>，如下所示:</p>
+
+<pre>"folders":
+[
+    {
+        "path":"/home/alex/android/source/android4.2",
+        "file_exclude_patterns":
+        [
+            "*.o"
+        ],
+        "folder_exclude_patterns":
+        [
+            ".repo"
+        ]
+    }
+]</pre>
+
+
+<h3>2. 模拟eclipse的快捷键</h3>
+
+<p>在eclipse中，有几个快捷键用的非常多，分别为：</p>
+
+<pre>CTRL+TAB 头文件和c/c++文件之间切换
+CTRL+SHIFT+R 对话框中输入文件名（有联想功能），快速打开文件
+CTRL+o 输入方法（函数）名，可快速定位到方法（函数）
+CTRL+l 输入行号，快速定位到指定行
+CTRL+h 打开文件搜索对话框</pre>
+
+
+<p>可以修改sublime text的Key Bindings达到模拟eclipse快捷键的效果，有两个配置项可以修改，一个是Key Bindings-Default，一个是Key Bindings-User，最好修改后一个配置文件。进入菜单Preferences | Key Bindings &#8211; User，加入如下行：</p>
+
+<pre>[
+{ "keys": ["ctrl+shift+r"], "command": "show_overlay", "args": {"overlay": "goto", "show_files": true} },
+{ "keys": ["ctrl+o"], "command": "show_overlay", "args": {"overlay": "goto", "text": "@"} },
+{ "keys": ["ctrl+l"], "command": "show_overlay", "args": {"overlay": "goto", "text": ":"} },
+{ "keys": ["ctrl+t"], "command": "show_overlay", "args": {"overlay": "goto", "text": "#"} },
+{ "keys": ["ctrl+tab"], "command": "switch_file", "args": {"extensions": ["cpp", "cxx", "cc", "c", "hpp", "hxx", "h", "ipp", "inl", "m", "mm"]} }
+]</pre>
+
+
+<h3>3. 针对项目的代码风格设置</h3>
+
+<p>chromium的项目的代码缩进为两个空格，而其它项目的代码缩进一般为4个空格，所以我就希望针对特定的项目进行代码风格设置，方法是编辑当前工程的sublime-project文件，加入如下行（和folders项平级）：</p>
+
+<pre>"settings":
+{
+"tab_size": 2,
+"translate_tabs_to_spaces": true,
+"trim_trailing_white_space_on_save": true,
+"draw_white_space": "all"
+}</pre>
+
+
+<h3> 4. 插件集合</h3>
+
+<p>sublime_text的插件扩展机制非常强大，已经有很多人出于不同的需求，开发出各种插件。首先说一下插件的安装。</p>
+
+<p>要安装插件，最好是先安装插件包管理器，最简单的方法是在sublime_text控制台(可以通过<strong>ctrl+`</strong>快捷键或View > Show Console菜单打开)，在控制台中粘贴如下python代码：</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">urllib2</span><span class="o">,</span><span class="nn">os</span><span class="o">,</span><span class="nn">hashlib</span><span class="p">;</span> <span class="n">h</span> <span class="o">=</span> <span class="s">&#39;7183a2d3e96f11eeadd761d777e62404&#39;</span> <span class="o">+</span> <span class="s">&#39;e330c659d4bb41d3bdf022e94cab3cd0&#39;</span><span class="p">;</span> <span class="n">pf</span> <span class="o">=</span> <span class="s">&#39;Package Control.sublime-package&#39;</span><span class="p">;</span> <span class="n">ipp</span> <span class="o">=</span> <span class="n">sublime</span><span class="o">.</span><span class="n">installed_packages_path</span><span class="p">();</span> <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span> <span class="n">ipp</span> <span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">ipp</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span><span class="p">;</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">install_opener</span><span class="p">(</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">build_opener</span><span class="p">(</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">ProxyHandler</span><span class="p">())</span> <span class="p">);</span> <span class="n">by</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span> <span class="s">&#39;http://sublime.wbond.net/&#39;</span> <span class="o">+</span> <span class="n">pf</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39; &#39;</span><span class="p">,</span> <span class="s">&#39;%20&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">read</span><span class="p">();</span> <span class="n">dh</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">by</span><span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">();</span> <span class="nb">open</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span> <span class="n">ipp</span><span class="p">,</span> <span class="n">pf</span><span class="p">),</span> <span class="s">&#39;wb&#39;</span> <span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">by</span><span class="p">)</span> <span class="k">if</span> <span class="n">dh</span> <span class="o">==</span> <span class="n">h</span> <span class="k">else</span> <span class="bp">None</span><span class="p">;</span> <span class="k">print</span><span class="p">(</span><span class="s">&#39;Error validating download (got </span><span class="si">%s</span><span class="s"> instead of </span><span class="si">%s</span><span class="s">), please try manual install&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dh</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="k">if</span> <span class="n">dh</span> <span class="o">!=</span> <span class="n">h</span> <span class="k">else</span> <span class="s">&#39;Please restart Sublime Text to finish installation&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，接着就会出现插件列表，选择你所需要的插件即可。</p>
+
+<h4>4.1 GBK编码支持</h4>
+
+<ol>
+<li>按ctrl+shit+p显示命令列表，在其中输入install，选择Package Control: Install package，待列表获取完成再输入GBK Encoding Support，等安装完毕就可以了。</li>
+<li>按照上述方法安装Codecs26和ConvertToUTF8</li>
+<li>重启sublime_text，打开文件后，选择菜单 <strong> File | Reopen with Encoding | UTF-8 </strong> 即可</li>
+</ol>
+
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-10T21:27:02+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/kai-fa-gong-ju/'>开发工具</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2013/08/10/sublime-text-config/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
 
 
     <article class="post">

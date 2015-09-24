@@ -7,7 +7,7 @@
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="chromium项目使用了gyp构建系统，gyp的全称是"Generate Your Projects"。gyp构建系统使用的并不广泛，目前已知的只有chromium开源项目采用了这一构建系统。官方虽然也有一些文档，但都是一些比较基础的指南，总体来说缺少详细的文档来指导开发人员在项目中使用。 &hellip;">
+	<meta name="description" content="[注] 这是两年前写的一篇旧文，现翻出来，根据现在的实际变化作了修订。 chromium移植已经接近尾声，正在冲刺beta版本。不过越往后面，越是一些难啃的骨头。虽然背靠chromium这座大山，但是网页的复杂性超乎想象。更郁闷的是，有些BUG在chrome for android上没有， &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -80,6 +80,119 @@
 		
 	
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/09/10/customize-chrome-for-android/">
+		
+			打造自己的chrome for Android</a>
+	</h2>
+	<div class="entry-content">
+		<p>[注] 这是两年前写的一篇旧文，现翻出来，根据现在的实际变化作了修订。</p>
+
+<p>chromium移植已经接近尾声，正在冲刺beta版本。不过越往后面，越是一些难啃的骨头。虽然背靠chromium这座大山，但是网页的复杂性超乎想象。更郁闷的是，有些BUG在chrome for android上没有，但在我们的浏览器上存在。因此经常会有这样的质疑：人家的chrome浏览器好好的，你做的浏览器为什么会有这样的问题。面对这样的质疑，真是有苦说不出。在有些人看来，别人都把源代码开放出来了，超过他们是理所当然的。没有办法，碰到难啃的骨头只能迎难而上了。好在chrome for android（V25之后的版本）开始支持自行定制了，虽然没法调试全部的代码，但是部分代码还是可以调试的。这样在分析我们和chrome浏览器在代码执行路径上的差异，也许能够提供一种思路。下面就谈谈如何构建自己的chrome for android。</p>
+
+<!--excerpt-->
+
+
+<ol>
+<li><p>使用您的android设备下载chrome for android，如果能够翻墙的话就在Google Play下载，国内的应用商店也一般有，这里就不详细说了。</p></li>
+<li><p>打开您的android设备上的chrome for android，地址栏中输入chrome://version</p></li>
+<li><p>记下Build ID(版本号ID)后的那一长串数字。</p></li>
+<li><p>在PC机上访问 <a href="http://storage.googleapis.com/chrome-browser-components/">http://storage.googleapis.com/chrome-browser-components/</a>&lt;BUILD_ID>/index.html。其中&lt;BUILD_ID>为步骤3中的ID。下载该页面所列的文件。以下将以$CHROME_PREBUILT指代所存放的目录。</p></li>
+<li><p>下载与chrome for android版本对应的chromium源码，请参考[<a href="http://dev.chromium.org/developers/how-tos/get-the-code#TOC-Check-out-the-source-for-a-branch-or-specific-release">http://dev.chromium.org/developers/how-tos/get-the-code#TOC-Check-out-the-source-for-a-branch-or-specific-release</a>]上的指导将代码切换到正确的release分支。下面就以$CHROMIUM_SRC指代chromium源码的src目录</p></li>
+<li><p>build出自己的libchromeview.so库</p>
+
+<ul>
+<li>cd $CHROMIUM_SRC</li>
+<li>mkdir chrome-android-prebuilts</li>
+<li>cp $CHROME_PREBUILT/chromeview_target.gyp chrome-android-prebuilts/libchrome.gyp</li>
+<li>mkdir -p out/Release</li>
+<li>cp $CHROME_PREBUILT/libchrome_android_prebuilt.a out/Release</li>
+<li>CHROMIUM_GYP_FILE=&ldquo;chrome-android-prebuilts/libchrome.gyp&rdquo; build/gyp_chromium</li>
+<li>ninja -C  out/Release libchrome_prebuilt</li>
+</ul>
+</li>
+<li><p>解包官方chrome的apk</p>
+
+<ul>
+<li> 使用USB连接设备</li>
+<li> cd $CHROME_SRC</li>
+<li> mkdir out/apk</li>
+<li> cd out/apk</li>
+<li> adb pull $(adb shell pm path $CHROME_PACKAGE | sed &#8216;s/package:([^\r ]+).*$/\1/g&#8217;)</li>
+<li> 将pull出的apk重命名为Chrome.apk</li>
+<li> apktool d Chrome.apk</li>
+</ul>
+
+
+<p> 注1：您也可以从网上下载Chrome for android，但要确保下载正确的版本</p>
+
+<p> 注2：apktool 可以从<a href="http://code.google.com/p/android-apktool/">http://code.google.com/p/android-apktool/</a> 下载</p></li>
+<li><p>更新应用程序包</p>
+
+<ul>
+<li> cp $CHROME_PREBUILT/change_chromium_package.py .</li>
+<li> chmod a+x change_chromium_package.py</li>
+<li> ./change_chromium_package.py -u Chrome -p desired_package_name -a desired_app_name</li>
+<li> cp $CHROMIUM_SRC/out/Release/lib.target/libchromeview_prebuilt.so libchromeview.so</li>
+<li> arm-linux-androideabi-strip libchromeview.so</li>
+<li> cp libchromeview.so $CHROMIUM_SRC/out/apk/Chrome/lib/armeabi-v7a</li>
+</ul>
+</li>
+<li><p>重新打包和安装apk</p>
+
+<ul>
+<li> apktool b Chrome Chromium_unaligned.apk</li>
+<li> 签名apk，为了简便起见，可以使用debug key：</li>
+</ul>
+
+
+<blockquote><p>jarsigner -sigalg MD5withRSA -digestalg SHA1 -keystore PATH_TO_ANDROID_SDK/.android/debug.keystore -storepass android Chromium_unaligned.apk androiddebugkey</p></blockquote>
+
+<ul>
+<li> zipalign -f -v 4 Chromium_unaligned.apk Chromium.apk</li>
+<li> adb install -r Chromium.apk</li>
+</ul>
+</li>
+</ol>
+
+
+<p>到此，自有品牌的chrome浏览器就此诞生，您可以更换logo，修复chromium的bug等等。</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-09-10T22:01:54+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2015/09/10/customize-chrome-for-android/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
 
 
     <article class="post">
@@ -1151,10 +1264,10 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span> <span class="nf">application</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSApplication</span><span class="o">*</span><span class="p">)</span> <span class="n">sender</span> <span class="n">openFile</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span> <span class="n">pathname</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span> <span class="nf">application</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSApplication</span><span class="o">*</span><span class="p">)</span> <span class="n">sender</span> <span class="nl">openFile</span> <span class="p">:</span> <span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span> <span class="n">pathname</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;application is asking to open %@&quot;</span><span class="p">,</span> <span class="n">pathname</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -1243,25 +1356,25 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="nc">NSObject</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="bp">NSObject</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="kt">double</span> <span class="n">x</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@property</span> <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="p">;</span>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span><span class="p">;</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="p">;</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span><span class="p">;</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@implementation</span> <span class="nc">Foo</span>
 </span><span class='line'><span class="k">@synthesize</span> <span class="n">y</span><span class="p">;</span>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
@@ -1292,7 +1405,7 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <p>和C++不同的是，Objective-C是单根继承体系，所有的类都直接或间接继承自NSObject（注：Objective-C语言规范并没有规定这个根类的名字），这一点和Java类似。同样的，Objective-C不支持多继承。和Java语言中的接口类似的东西在Objective-C中被称作协议(protocol)。协议是一个方法声明的列表，有些方法是必须实现的，有些方法可以定义为可选的。和类一样，协议可以继承其它的协议。一个Objective-C类可以实现多个协议。值得一提的是，协议的名字可以和类名一样，比如NSObject是一个类，同时还存在一个名为NSObject的协议。因为采用了不同的关键字，所以编译器能够区分。比如下面的代码中，Foo继承NSObject类，同时实现了NSObject协议：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="bp">NSObject</span> <span class="o">&lt;</span><span class="bp">NSObject</span><span class="o">&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -1333,14 +1446,14 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <span class='line-number'>29</span>
 <span class='line-number'>30</span>
 <span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="nc">NSObject</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="bp">NSObject</span> <span class="p">{</span>
+</span><span class='line'>    <span class="bp">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="n">name</span><span class="p">;</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">name</span><span class="p">;</span>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@implementation</span> <span class="nc">Person</span>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
 </span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Person&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
@@ -1350,16 +1463,16 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@implementation</span> <span class="nc">Student</span>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
 </span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Student&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-</span><span class='line'>    <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">@autoreleasepool</span> <span class="p">{</span>
 </span><span class='line'>        <span class="n">Person</span><span class="o">*</span> <span class="n">person</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Student</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">setName:</span><span class="s">@&quot;Student A&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">setName</span><span class="p">:</span><span class="s">@&quot;Student A&quot;</span><span class="p">];</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
@@ -1399,57 +1512,6 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 </div>
 	
 	<div class="comments"><a href="/blog/2014/10/24/my-macos-programming-life-1/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/10/23/my-macos-programming-life/">
-		
-			我的macos编程之旅</a>
-	</h2>
-	<div class="entry-content">
-		<p>自从购入iMac后，这台水果机一直就是我的专属机。女人天生就对电脑这种科技产品心存畏惧，老婆一看这台电脑不是熟悉的Windows系统，就摸都不想摸。直到有一天，老婆拿了一个拷贝有儿子照片的U盘，要用这台iMac浏览一下照片，因为这台iMac的屏幕够大，显示效果也好。于是我就让位让她操作一下。我指点了一下如何插入U盘，如何打开U盘里的内容，剩下的就交给老婆大人操作了。带着Windows下的操作方式，老婆双击打开了一张图片。嗯，不错，打开了第一张照片，效果相当清晰细腻，色彩鲜艳，不禁赞叹了一句：苹果电脑还是不错的。然后&hellip;下一张，怎么浏览下一张图片？按右箭头没有用，界面上也没有浏览下一张的按钮。（注：默认是系统自带的“预览”程序）</p>
-
-<p>我解释，苹果电脑要这么用：首先将要照片导入iPhoto，然后通过iPhoto浏览。老婆睁大眼睛，为什么要导入，我仅仅想浏览一下照片而已。我意识到，和她解释苹果软件的设计理念、照片管理的理论是徒劳的，于是我又告诉她一个新方法：选择所有照片，然后从右键菜单选择“打开”。老婆还是瞪着我：为什么要先选择所有照片？看到照片，第一反应就是双击打开它。我哑口无言&hellip;至此，老婆对苹果电脑的一点好感荡然无存。</p>
-
-<p>我有点不服气，mac下的软件那么多，总有一款适合Mac新手，于是到mac appstore上去找图形图像类软件。本来苹果电脑就是以优秀的图形处理能力见长，所以各种图像处理软件琳琅满目，但很遗憾没找到一款功能足够简单，满足我的需求的软件。我在windows下常用的“光影看图”也没出Mac版。作为一个多年的程序员，当然不满足于这样一种结果。既然找不到这样的软件，就自己动手，风衣足食，好歹自己也是写程序维生的。某位国外大神级人物曾经有一个惊人的论调：每半年就要学习一门新的语言。对此我很惭愧，已经有多年围着C++/Java打转，没有去尝试学一门新的语言了。正好以此为契机，开始掌握一门新的技能吧。</p>
-
-<p>Mac OS下开发，Objective-C是当仁不让的No.1，当然今年的兵器普上出现了新面孔Swift。考虑到我在C/C++圈子摸爬滚打了这么多年，估计用Objective C会更称手一些吧。而且Objective C发展了二十多年，一直由苹果独立支撑，竟然在编程语言兵器普上排在前几位，自然有其过人之处。好吧，就选它了。学习一门新的语言，一本经典的入门书籍那是必须的，经过大牛的推荐，我选择了&lt;<Objective-C Programming - The Big Nerd Ranch Guide>>。</p>
-
-<p>下面就开始我的mac os编程之旅吧！</p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-10-23T08:43:39+08:00" pubdate data-updated="true"></time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/macos/'>macos</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/10/23/my-macos-programming-life/#disqus_thread">Comments</a></div>
 	
 </div>
 </article>
