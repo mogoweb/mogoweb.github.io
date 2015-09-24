@@ -16,7 +16,7 @@
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<script async="true" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script async="true" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
 	
 </head>
 
@@ -1264,10 +1264,10 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span> <span class="nf">application</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSApplication</span><span class="o">*</span><span class="p">)</span> <span class="n">sender</span> <span class="nl">openFile</span> <span class="p">:</span> <span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span> <span class="n">pathname</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span> <span class="nf">application</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSApplication</span><span class="o">*</span><span class="p">)</span> <span class="n">sender</span> <span class="n">openFile</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span> <span class="n">pathname</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;application is asking to open %@&quot;</span><span class="p">,</span> <span class="n">pathname</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -1356,25 +1356,25 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="bp">NSObject</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="nc">NSObject</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="kt">double</span> <span class="n">x</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@property</span> <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="p">;</span>
-</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span><span class="p">;</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@implementation</span> <span class="nc">Foo</span>
 </span><span class='line'><span class="k">@synthesize</span> <span class="n">y</span><span class="p">;</span>
-</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
@@ -1405,7 +1405,7 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <p>和C++不同的是，Objective-C是单根继承体系，所有的类都直接或间接继承自NSObject（注：Objective-C语言规范并没有规定这个根类的名字），这一点和Java类似。同样的，Objective-C不支持多继承。和Java语言中的接口类似的东西在Objective-C中被称作协议(protocol)。协议是一个方法声明的列表，有些方法是必须实现的，有些方法可以定义为可选的。和类一样，协议可以继承其它的协议。一个Objective-C类可以实现多个协议。值得一提的是，协议的名字可以和类名一样，比如NSObject是一个类，同时还存在一个名为NSObject的协议。因为采用了不同的关键字，所以编译器能够区分。比如下面的代码中，Foo继承NSObject类，同时实现了NSObject协议：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="bp">NSObject</span> <span class="o">&lt;</span><span class="bp">NSObject</span><span class="o">&gt;</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -1446,14 +1446,14 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <span class='line-number'>29</span>
 <span class='line-number'>30</span>
 <span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="bp">NSObject</span> <span class="p">{</span>
-</span><span class='line'>    <span class="bp">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="nc">NSObject</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">name</span><span class="p">;</span>
+</span><span class='line'><span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="n">name</span><span class="p">;</span>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@implementation</span> <span class="nc">Person</span>
-</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
 </span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Person&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
@@ -1463,16 +1463,16 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@implementation</span> <span class="nc">Student</span>
-</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
+</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
 </span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Student&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">@autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
 </span><span class='line'>        <span class="n">Person</span><span class="o">*</span> <span class="n">person</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Student</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">setName</span><span class="p">:</span><span class="s">@&quot;Student A&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">setName:</span><span class="s">@&quot;Student A&quot;</span><span class="p">];</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>

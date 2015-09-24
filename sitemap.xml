@@ -95,13 +95,13 @@
     <loc>http://mogoweb.net/</loc>
   </url>
   <url>
-    <loc>http://mogoweb.net/mogo-browser/</loc>
+    <loc>http://mogoweb.net/about/</loc>
   </url>
   <url>
     <loc>http://mogoweb.net/resources/</loc>
   </url>
   <url>
-    <loc>http://mogoweb.net/about/</loc>
+    <loc>http://mogoweb.net/mogo-browser/</loc>
   </url>
   <url>
     <loc>http://mogoweb.net/resources/mytestpage.html</loc>
@@ -149,7 +149,13 @@
     <loc>http://mogoweb.net/blog/categories/ubuntu/</loc>
   </url>
   <url>
+    <loc>http://mogoweb.net/posts/2/</loc>
+  </url>
+  <url>
+    <loc>http://mogoweb.net/posts/3/</loc>
+  </url>
+  <url>
     <loc>http://mogoweb.net/404.html</loc>
-    <lastmod>1443-08-16T06:00:00+08:05</lastmod>
+    <lastmod>2015-04-07T21:24:05+08:00</lastmod>
   </url>
 </urlset>
