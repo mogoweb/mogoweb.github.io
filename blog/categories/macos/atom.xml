@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: macos | 放飞梦想]]></title>
-  <link href="http://mogoweb.github.io/blog/categories/macos/atom.xml" rel="self"/>
-  <link href="http://mogoweb.github.io/"/>
-  <updated>2015-09-24T16:03:13+08:00</updated>
-  <id>http://mogoweb.github.io/</id>
+  <link href="http://mogoweb.net/blog/categories/macos/atom.xml" rel="self"/>
+  <link href="http://mogoweb.net/"/>
+  <updated>2015-09-24T16:29:10+08:00</updated>
+  <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅-AutoLayout]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/11/10/my-macos-programming-life-3/"/>
+    <link href="http://mogoweb.net/blog/2014/11/10/my-macos-programming-life-3/"/>
     <updated>2014-11-10T09:00:17+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/11/10/my-macos-programming-life-3</id>
+    <id>http://mogoweb.net/blog/2014/11/10/my-macos-programming-life-3</id>
     <content type="html"><![CDATA[<p>开始了Mac OS编程之后，仿佛又回到了Visual Basic编程年代，拖拖拽拽几个控件，app的UI就设计好了。但我至今还记得当年面临一个头疼的问题，就是应用程序在不同分辨率下的展现问题。为什么会头疼呢？那时主流的屏幕分辨率是800x600，但有些更好的显示器分辨率为1024x768，如果我们按照1024x768的分辨率设计UI，那么在800x600的分辨率下就显示不全，如果按照800x600的分辨率设计UI，那在1024x768下就没法充分利用屏幕空间。所以当时的app通常会指定最佳分辨率，低了显示不全，高了就只利用屏幕的一部分空间。</p>
 
 <p>回到<strong>365看图</strong>软件上来，按照IKImageViewDemo设计的UI，存在一个问题：当我拉大窗口，图片显示区域并不会随之变大，整个界面变得很不协调。原因呢在于UI采用了绝对布局，控件的大小和位置是固定的。当然我也可以通过编程的方式，根据窗口的大小，计算图片显示区域的大小，然后动态的设置大小和位置，但这比较繁琐。在Android中，通过设计出线性布局、相对布局等布局方式来解决这一问题，而绝对布局是不推荐使用的。Mac OS是如何解决这一难题的呢？答案就是AutoLayout。</p>
@@ -52,9 +52,9 @@
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅-应用程序关联]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/11/05/my-macos-programming-life-2/"/>
+    <link href="http://mogoweb.net/blog/2014/11/05/my-macos-programming-life-2/"/>
     <updated>2014-11-05T08:55:21+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/11/05/my-macos-programming-life-2</id>
+    <id>http://mogoweb.net/blog/2014/11/05/my-macos-programming-life-2</id>
     <content type="html"><![CDATA[<p>对objective-c做了基础的入门之后，我就开始了<strong>365看图</strong>的开发。我个人偏好通过实战来掌握新知识，碰到问题后再来阅读相关的资料并解决问题。从苹果开发者网站找到了一个<a href="https://developer.apple.com/library/mac/samplecode/IKImageViewDemo/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004049">IKImageViewDemo</a>示例，这个例子足够简单，也满足我要开发的<strong>365看图</strong>的基本功能。以IKImageViewDemo作为模板，<strong>365看图</strong>就有了显示、放大、缩小、旋转图片等功能。接下来需要实现一个功能：关联应用程序到图片类型。简单的说，就是在Finder中鼠标右键点击图片文件，能够选择<strong>365看图</strong>打开图片，或者将图片文件拖拽到<strong>365看图</strong>即打开。</p>
 
 <h3>注册文档类型</h3>
@@ -159,9 +159,9 @@
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅-Objective C入门]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/10/24/my-macos-programming-life-1/"/>
+    <link href="http://mogoweb.net/blog/2014/10/24/my-macos-programming-life-1/"/>
     <updated>2014-10-24T08:48:13+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/10/24/my-macos-programming-life-1</id>
+    <id>http://mogoweb.net/blog/2014/10/24/my-macos-programming-life-1</id>
     <content type="html"><![CDATA[<p>&lt;<Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective C和C++的不同之处。</p>
 
 <p>Objective-C是在C语言的基础上添加面向对象特性发展而来，下面就看看Objective-C中的面向对象三大要素。</p>
@@ -264,9 +264,9 @@ int main(int argc, const char* argv[]) {
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/10/23/my-macos-programming-life/"/>
+    <link href="http://mogoweb.net/blog/2014/10/23/my-macos-programming-life/"/>
     <updated>2014-10-23T08:43:39+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/10/23/my-macos-programming-life</id>
+    <id>http://mogoweb.net/blog/2014/10/23/my-macos-programming-life</id>
     <content type="html"><![CDATA[<p>自从购入iMac后，这台水果机一直就是我的专属机。女人天生就对电脑这种科技产品心存畏惧，老婆一看这台电脑不是熟悉的Windows系统，就摸都不想摸。直到有一天，老婆拿了一个拷贝有儿子照片的U盘，要用这台iMac浏览一下照片，因为这台iMac的屏幕够大，显示效果也好。于是我就让位让她操作一下。我指点了一下如何插入U盘，如何打开U盘里的内容，剩下的就交给老婆大人操作了。带着Windows下的操作方式，老婆双击打开了一张图片。嗯，不错，打开了第一张照片，效果相当清晰细腻，色彩鲜艳，不禁赞叹了一句：苹果电脑还是不错的。然后&hellip;下一张，怎么浏览下一张图片？按右箭头没有用，界面上也没有浏览下一张的按钮。（注：默认是系统自带的“预览”程序）</p>
 
 <p>我解释，苹果电脑要这么用：首先将要照片导入iPhoto，然后通过iPhoto浏览。老婆睁大眼睛，为什么要导入，我仅仅想浏览一下照片而已。我意识到，和她解释苹果软件的设计理念、照片管理的理论是徒劳的，于是我又告诉她一个新方法：选择所有照片，然后从右键菜单选择“打开”。老婆还是瞪着我：为什么要先选择所有照片？看到照片，第一反应就是双击打开它。我哑口无言&hellip;至此，老婆对苹果电脑的一点好感荡然无存。</p>

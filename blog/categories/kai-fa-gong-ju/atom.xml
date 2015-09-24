@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: 开发工具 | 放飞梦想]]></title>
-  <link href="http://mogoweb.github.io/blog/categories/kai-fa-gong-ju/atom.xml" rel="self"/>
-  <link href="http://mogoweb.github.io/"/>
-  <updated>2015-09-24T16:03:13+08:00</updated>
-  <id>http://mogoweb.github.io/</id>
+  <link href="http://mogoweb.net/blog/categories/kai-fa-gong-ju/atom.xml" rel="self"/>
+  <link href="http://mogoweb.net/"/>
+  <updated>2015-09-24T16:29:10+08:00</updated>
+  <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[SublimeText配置]]></title>
-    <link href="http://mogoweb.github.io/blog/2013/08/10/sublime-text-config/"/>
+    <link href="http://mogoweb.net/blog/2013/08/10/sublime-text-config/"/>
     <updated>2013-08-10T21:27:02+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2013/08/10/sublime-text-config</id>
+    <id>http://mogoweb.net/blog/2013/08/10/sublime-text-config</id>
     <content type="html"><![CDATA[<p>在我的一台开发机上在ubuntu系统下使用eclipse，经常会出现死机，不得不寻求其它的代码编辑器。windows下大名鼎鼎的source insight放到linux下就状况不断。后看到chromium项目推荐了sublime text这款编辑器，用起来感觉还不错。下面记录一下使用过程中的一些设置，网上各种资料比较凌乱，所以就稍微整理一下，供自己今后翻阅。</p>
 
 <h3>1. 过滤不相关的文件</h3>

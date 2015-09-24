@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: android | 放飞梦想]]></title>
-  <link href="http://mogoweb.github.io/blog/categories/android/atom.xml" rel="self"/>
-  <link href="http://mogoweb.github.io/"/>
-  <updated>2015-09-24T16:03:13+08:00</updated>
-  <id>http://mogoweb.github.io/</id>
+  <link href="http://mogoweb.net/blog/categories/android/atom.xml" rel="self"/>
+  <link href="http://mogoweb.net/"/>
+  <updated>2015-09-24T16:29:10+08:00</updated>
+  <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[打造自己的chrome for android]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/09/10/customize-chrome-for-android/"/>
+    <link href="http://mogoweb.net/blog/2015/09/10/customize-chrome-for-android/"/>
     <updated>2015-09-10T22:01:54+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/09/10/customize-chrome-for-android</id>
+    <id>http://mogoweb.net/blog/2015/09/10/customize-chrome-for-android</id>
     <content type="html"><![CDATA[<p>[注] 这是两年前写的一篇旧文，现翻出来，根据现在的实际变化作了修订。</p>
 
 <p>chromium移植已经接近尾声，正在冲刺beta版本。不过越往后面，越是一些难啃的骨头。虽然背靠chromium这座大山，但是网页的复杂性超乎想象。更郁闷的是，有些BUG在chrome for android上没有，但在我们的浏览器上存在。因此经常会有这样的质疑：人家的chrome浏览器好好的，你做的浏览器为什么会有这样的问题。面对这样的质疑，真是有苦说不出。在有些人看来，别人都把源代码开放出来了，超过他们是理所当然的。没有办法，碰到难啃的骨头只能迎难而上了。好在chrome for android（V25之后的版本）开始支持自行定制了，虽然没法调试全部的代码，但是部分代码还是可以调试的。这样在分析我们和chrome浏览器在代码执行路径上的差异，也许能够提供一种思路。下面就谈谈如何构建自己的chrome for android。</p>
@@ -94,9 +94,9 @@
   
   <entry>
     <title type="html"><![CDATA[在Chromium for Android中能否用TextureView替代SurfaceView]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android/"/>
+    <link href="http://mogoweb.net/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android/"/>
     <updated>2015-06-19T19:26:45+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android</id>
+    <id>http://mogoweb.net/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android</id>
     <content type="html"><![CDATA[<p>在开发Browser 2.0时，碰到一个非常头疼的问题，往布局上添加SurfaceView时，会引起黑屏闪一下。为了解决这个问题，我们不得不在初始化阶段就把SurfaceView添加好，之后也不能调整大小、移动位置。当时就考虑是不是能够用TextureView替代SurfaceView，不过由于计划上的调整，没有做进一步的尝试。今天在网上看到<a href="https://github.com/crosswalk-project/crosswalk-website/wiki/Android-SurfaceView-vs-TextureView">这篇文章</a>，正好解答了我的疑问，在此把文章翻译过来，供参考。</p>
 
 <blockquote><h1>Android SurfaceView和textureView</h1>
@@ -164,9 +164,9 @@
   
   <entry>
     <title type="html"><![CDATA[关于Chromium WebView项目的源代码管理]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/06/19/about-source-management-of-chromium-webview/"/>
+    <link href="http://mogoweb.net/blog/2014/06/19/about-source-management-of-chromium-webview/"/>
     <updated>2014-06-19T10:53:25+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/06/19/about-source-management-of-chromium-webview</id>
+    <id>http://mogoweb.net/blog/2014/06/19/about-source-management-of-chromium-webview</id>
     <content type="html"><![CDATA[<p>chromium项目可谓开源项目集大成者，里面使用的第三方开源库数目高达60+。为了应对庞大的代码库管理问题，chromium项目引入了<a href="http://code.google.com/p/gclient/">gclient</a>，一套开源的代码管理方案。gclient是一套python脚本，用来简化多个git/svn源码库的管理。本文不探讨gclient的使用、配置，而是谈谈chromium webview项目是如何组织源码库的。</p>
 
 <p>由于历史原因，chromium项目本身及许多第三方开源库采用的是SVN源码管理系统。SVN采用的是集中式管理，不如git那样能否方便的clone代码库。虽然google后来使用了git-svn等手段，为chromium和所有第三方开源库都做了git镜像库，但是如果需要获取某个release分支的代码，还是需要走svn（google也在不断改进，期望不久的将来，可以通过git获取某个release版本的源码）。</p>
@@ -191,9 +191,9 @@
   
   <entry>
     <title type="html"><![CDATA[关于chromium_webview项目]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/06/10/about-chromium-webview-project/"/>
+    <link href="http://mogoweb.net/blog/2014/06/10/about-chromium-webview-project/"/>
     <updated>2014-06-10T08:56:06+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/06/10/about-chromium-webview-project</id>
+    <id>http://mogoweb.net/blog/2014/06/10/about-chromium-webview-project</id>
     <content type="html"><![CDATA[<p>chromium_webview的目标是在chromium核心的基础上提供Android WebView API全兼容的接口，希望达到的效果是基于Android WebView API开发的应用程序，只需将android.webkit包名替换为com.mogoweb.chrome即可完成从WebKit内核到Chromium内核的迁移。目标支持平台为Android 4.0以上。项目地址：<a href="https://github.com/mogoweb/chromium_webview">https://github.com/mogoweb/chromium_webview</a>。</p>
 
 <h2>项目的起源</h2>
@@ -266,9 +266,9 @@
   
   <entry>
     <title type="html"><![CDATA[Chromium网络加载速度研究(2)]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/04/03/chromium-loading-spped-research-1/"/>
+    <link href="http://mogoweb.net/blog/2014/04/03/chromium-loading-spped-research-1/"/>
     <updated>2014-04-03T18:10:06+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/04/03/chromium-loading-spped-research-1</id>
+    <id>http://mogoweb.net/blog/2014/04/03/chromium-loading-spped-research-1</id>
     <content type="html"><![CDATA[<p>本文主要内容翻译自chromium的文档<a href="http://www.chromium.org/developers/design-documents/network-stack/netlog">NetLog: Chrome’s network logging system</a>，如果您觉得文章写的不明白，请参看原文。</p>
 
 <p>通过&lt;&lt;<a href="http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/">Chromium网络加载速度研究(1)</a>>>这篇文章的分析，可以得出结论，云端加速是高富帅的玩法。对于个人开发者和小公司而言，是没有那个实力去部署强大的数据中心的。所以接下来还得继续研究，看看有没有其它的途径提高网页加载速度。在着手优化之前，我们需要一个profiling手段找出瓶颈，有目的的优化。另一方面，也需要考虑如何评估优化的效果。如果没有一个客观的评估，优化方案是否有效心中就没有底。谈到Profiling，大多数人估计都会想到log大法，就是在程序的一些关键位置打上log。log通常包括时间、事件、状态等。在chromium中，开发人员早就预料了此类需求，设计了一套强大的NetLog。下面就分析一下chromium中NetLog的设计、实现及其用法。</p>

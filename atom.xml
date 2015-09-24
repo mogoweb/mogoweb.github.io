@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[放飞梦想]]></title>
-  <link href="http://mogoweb.github.io/atom.xml" rel="self"/>
-  <link href="http://mogoweb.github.io/"/>
-  <updated>2015-09-24T16:03:13+08:00</updated>
-  <id>http://mogoweb.github.io/</id>
+  <link href="http://mogoweb.net/atom.xml" rel="self"/>
+  <link href="http://mogoweb.net/"/>
+  <updated>2015-09-24T16:29:10+08:00</updated>
+  <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[打造自己的chrome for android]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/09/10/customize-chrome-for-android/"/>
+    <link href="http://mogoweb.net/blog/2015/09/10/customize-chrome-for-android/"/>
     <updated>2015-09-10T22:01:54+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/09/10/customize-chrome-for-android</id>
+    <id>http://mogoweb.net/blog/2015/09/10/customize-chrome-for-android</id>
     <content type="html"><![CDATA[<p>[注] 这是两年前写的一篇旧文，现翻出来，根据现在的实际变化作了修订。</p>
 
 <p>chromium移植已经接近尾声，正在冲刺beta版本。不过越往后面，越是一些难啃的骨头。虽然背靠chromium这座大山，但是网页的复杂性超乎想象。更郁闷的是，有些BUG在chrome for android上没有，但在我们的浏览器上存在。因此经常会有这样的质疑：人家的chrome浏览器好好的，你做的浏览器为什么会有这样的问题。面对这样的质疑，真是有苦说不出。在有些人看来，别人都把源代码开放出来了，超过他们是理所当然的。没有办法，碰到难啃的骨头只能迎难而上了。好在chrome for android（V25之后的版本）开始支持自行定制了，虽然没法调试全部的代码，但是部分代码还是可以调试的。这样在分析我们和chrome浏览器在代码执行路径上的差异，也许能够提供一种思路。下面就谈谈如何构建自己的chrome for android。</p>
@@ -94,9 +94,9 @@
   
   <entry>
     <title type="html"><![CDATA[如何打印gyp构建系统中的变量值]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/06/30/how-to-print-variable-of-gyp/"/>
+    <link href="http://mogoweb.net/blog/2015/06/30/how-to-print-variable-of-gyp/"/>
     <updated>2015-06-30T14:16:51+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/06/30/how-to-print-variable-of-gyp</id>
+    <id>http://mogoweb.net/blog/2015/06/30/how-to-print-variable-of-gyp</id>
     <content type="html"><![CDATA[<p>chromium项目使用了gyp构建系统，gyp的全称是&#8221;Generate Your Projects&#8221;。gyp构建系统使用的并不广泛，目前已知的只有chromium开源项目采用了这一构建系统。官方虽然也有一些文档，但都是一些比较基础的指南，总体来说缺少详细的文档来指导开发人员在项目中使用。
 因为研究chromium的缘故，所以对gyp构建系统也有一些了解，在使用中也碰到一些问题，本文所要探讨的是如何输出gyp的变量值。这个问题的场景是这样的：在gyp中定义了变量，但是经过多重gypi包含，在别的gyp文件中可能对变量值进行了赋值。处于调试目的，我们希望输出gyp变量的值。</p>
 
@@ -127,9 +127,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[在Chromium for Android中能否用TextureView替代SurfaceView]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android/"/>
+    <link href="http://mogoweb.net/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android/"/>
     <updated>2015-06-19T19:26:45+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android</id>
+    <id>http://mogoweb.net/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android</id>
     <content type="html"><![CDATA[<p>在开发Browser 2.0时，碰到一个非常头疼的问题，往布局上添加SurfaceView时，会引起黑屏闪一下。为了解决这个问题，我们不得不在初始化阶段就把SurfaceView添加好，之后也不能调整大小、移动位置。当时就考虑是不是能够用TextureView替代SurfaceView，不过由于计划上的调整，没有做进一步的尝试。今天在网上看到<a href="https://github.com/crosswalk-project/crosswalk-website/wiki/Android-SurfaceView-vs-TextureView">这篇文章</a>，正好解答了我的疑问，在此把文章翻译过来，供参考。</p>
 
 <blockquote><h1>Android SurfaceView和textureView</h1>
@@ -197,9 +197,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[关于Ubuntu菜单项中的%U参数]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry/"/>
+    <link href="http://mogoweb.net/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry/"/>
     <updated>2015-03-11T16:05:57+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry</id>
+    <id>http://mogoweb.net/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry</id>
     <content type="html"><![CDATA[<p>今天在研究chromium deb打包的时候，发现Google Chrome deb包中的/usr/share/applications/google-chrome.desktop文件定义入口为：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -254,9 +254,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[Ubuntu 14.04 VirtualBox启动问题之解决]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/03/11/solve-the-virtualbox-starting-problem/"/>
+    <link href="http://mogoweb.net/blog/2015/03/11/solve-the-virtualbox-starting-problem/"/>
     <updated>2015-03-11T08:54:49+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/03/11/solve-the-virtualbox-starting-problem</id>
+    <id>http://mogoweb.net/blog/2015/03/11/solve-the-virtualbox-starting-problem</id>
     <content type="html"><![CDATA[<p>开发机上的Ubuntu从12.10升级到14.04后，发现VirtualBox无法启动，有如下提示</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -483,9 +483,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[Ubuntu上从源码编译chromium浏览器]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/12/15/build-chromium-browser-from-source/"/>
+    <link href="http://mogoweb.net/blog/2014/12/15/build-chromium-browser-from-source/"/>
     <updated>2014-12-15T15:09:43+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/12/15/build-chromium-browser-from-source</id>
+    <id>http://mogoweb.net/blog/2014/12/15/build-chromium-browser-from-source</id>
     <content type="html"><![CDATA[<p>Ubuntu不仅是一个免费且开源的操作系统，而且其平台也是开放且透明的。每个组件的源码都可以获取到，也可以从源码自己编译软件包。下面就探讨一下在ubuntu下如何获取chromium源码，并编译Chromium Web Browser。</p>
 
 <p>要从ubuntu的仓库下载源码并编译软件包，最方便的就是使用apt-build实用工具。在ubuntu的发布版本中，该实用工具并没有安装，您可以用如下命令安装:</p>
@@ -712,9 +712,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[在本地服务器上建立chromium镜像]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/12/09/mirror-chromium-to-local-server/"/>
+    <link href="http://mogoweb.net/blog/2014/12/09/mirror-chromium-to-local-server/"/>
     <updated>2014-12-09T21:59:27+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/12/09/mirror-chromium-to-local-server</id>
+    <id>http://mogoweb.net/blog/2014/12/09/mirror-chromium-to-local-server</id>
     <content type="html"><![CDATA[<p>Android 5.0发布了好长时间，一直都没有来得及研究。前两周终于将android 5.0源码下载了下来，大致看了一下代码。我所关注的并非Material Design，而是Android 5.0的web引擎。从Android 4.4开始，采用了chromium/blink内核，Android 5.0自然也不例外，只是chromium的版本升级到了37.0.2062.116。想到我的chromium webview项目，仍然采用的是34.0.1847，因此打算也将chromium版本进行一次升级。</p>
 
 <p>因为可恶的GFW，下载代码及其不顺利，虽然有VPN，但是对于几十G的chromium下载量，下载速度太慢，而且git不支持断点续传。在折腾了两三个星期之后，决定在公司的服务器上建立chromium的镜像。不知道从哪个版本开始，gclient开始全面转向git。由于git的天然的分布式特点，这为完全镜像chromium源码库提供了便利。</p>
@@ -727,9 +727,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅-AutoLayout]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/11/10/my-macos-programming-life-3/"/>
+    <link href="http://mogoweb.net/blog/2014/11/10/my-macos-programming-life-3/"/>
     <updated>2014-11-10T09:00:17+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/11/10/my-macos-programming-life-3</id>
+    <id>http://mogoweb.net/blog/2014/11/10/my-macos-programming-life-3</id>
     <content type="html"><![CDATA[<p>开始了Mac OS编程之后，仿佛又回到了Visual Basic编程年代，拖拖拽拽几个控件，app的UI就设计好了。但我至今还记得当年面临一个头疼的问题，就是应用程序在不同分辨率下的展现问题。为什么会头疼呢？那时主流的屏幕分辨率是800x600，但有些更好的显示器分辨率为1024x768，如果我们按照1024x768的分辨率设计UI，那么在800x600的分辨率下就显示不全，如果按照800x600的分辨率设计UI，那在1024x768下就没法充分利用屏幕空间。所以当时的app通常会指定最佳分辨率，低了显示不全，高了就只利用屏幕的一部分空间。</p>
 
 <p>回到<strong>365看图</strong>软件上来，按照IKImageViewDemo设计的UI，存在一个问题：当我拉大窗口，图片显示区域并不会随之变大，整个界面变得很不协调。原因呢在于UI采用了绝对布局，控件的大小和位置是固定的。当然我也可以通过编程的方式，根据窗口的大小，计算图片显示区域的大小，然后动态的设置大小和位置，但这比较繁琐。在Android中，通过设计出线性布局、相对布局等布局方式来解决这一问题，而绝对布局是不推荐使用的。Mac OS是如何解决这一难题的呢？答案就是AutoLayout。</p>
@@ -764,9 +764,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅-应用程序关联]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/11/05/my-macos-programming-life-2/"/>
+    <link href="http://mogoweb.net/blog/2014/11/05/my-macos-programming-life-2/"/>
     <updated>2014-11-05T08:55:21+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/11/05/my-macos-programming-life-2</id>
+    <id>http://mogoweb.net/blog/2014/11/05/my-macos-programming-life-2</id>
     <content type="html"><![CDATA[<p>对objective-c做了基础的入门之后，我就开始了<strong>365看图</strong>的开发。我个人偏好通过实战来掌握新知识，碰到问题后再来阅读相关的资料并解决问题。从苹果开发者网站找到了一个<a href="https://developer.apple.com/library/mac/samplecode/IKImageViewDemo/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004049">IKImageViewDemo</a>示例，这个例子足够简单，也满足我要开发的<strong>365看图</strong>的基本功能。以IKImageViewDemo作为模板，<strong>365看图</strong>就有了显示、放大、缩小、旋转图片等功能。接下来需要实现一个功能：关联应用程序到图片类型。简单的说，就是在Finder中鼠标右键点击图片文件，能够选择<strong>365看图</strong>打开图片，或者将图片文件拖拽到<strong>365看图</strong>即打开。</p>
 
 <h3>注册文档类型</h3>
@@ -943,9 +943,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅-Objective C入门]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/10/24/my-macos-programming-life-1/"/>
+    <link href="http://mogoweb.net/blog/2014/10/24/my-macos-programming-life-1/"/>
     <updated>2014-10-24T08:48:13+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/10/24/my-macos-programming-life-1</id>
+    <id>http://mogoweb.net/blog/2014/10/24/my-macos-programming-life-1</id>
     <content type="html"><![CDATA[<p>&lt;<Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective C和C++的不同之处。</p>
 
 <p>Objective-C是在C语言的基础上添加面向对象特性发展而来，下面就看看Objective-C中的面向对象三大要素。</p>
@@ -1110,9 +1110,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[我的macos编程之旅]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/10/23/my-macos-programming-life/"/>
+    <link href="http://mogoweb.net/blog/2014/10/23/my-macos-programming-life/"/>
     <updated>2014-10-23T08:43:39+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/10/23/my-macos-programming-life</id>
+    <id>http://mogoweb.net/blog/2014/10/23/my-macos-programming-life</id>
     <content type="html"><![CDATA[<p>自从购入iMac后，这台水果机一直就是我的专属机。女人天生就对电脑这种科技产品心存畏惧，老婆一看这台电脑不是熟悉的Windows系统，就摸都不想摸。直到有一天，老婆拿了一个拷贝有儿子照片的U盘，要用这台iMac浏览一下照片，因为这台iMac的屏幕够大，显示效果也好。于是我就让位让她操作一下。我指点了一下如何插入U盘，如何打开U盘里的内容，剩下的就交给老婆大人操作了。带着Windows下的操作方式，老婆双击打开了一张图片。嗯，不错，打开了第一张照片，效果相当清晰细腻，色彩鲜艳，不禁赞叹了一句：苹果电脑还是不错的。然后&hellip;下一张，怎么浏览下一张图片？按右箭头没有用，界面上也没有浏览下一张的按钮。（注：默认是系统自带的“预览”程序）</p>
 
 <p>我解释，苹果电脑要这么用：首先将要照片导入iPhoto，然后通过iPhoto浏览。老婆睁大眼睛，为什么要导入，我仅仅想浏览一下照片而已。我意识到，和她解释苹果软件的设计理念、照片管理的理论是徒劳的，于是我又告诉她一个新方法：选择所有照片，然后从右键菜单选择“打开”。老婆还是瞪着我：为什么要先选择所有照片？看到照片，第一反应就是双击打开它。我哑口无言&hellip;至此，老婆对苹果电脑的一点好感荡然无存。</p>
@@ -1127,9 +1127,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[读『MacTalk.人生元编程』]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/06/22/reading-about-macktalk/"/>
+    <link href="http://mogoweb.net/blog/2014/06/22/reading-about-macktalk/"/>
     <updated>2014-06-22T21:51:17+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/06/22/reading-about-macktalk</id>
+    <id>http://mogoweb.net/blog/2014/06/22/reading-about-macktalk</id>
     <content type="html"><![CDATA[<p>最先我是在多看上购买的电子版&lt;&lt;MacTalk.人生元编程>>，不久印刷版本也出来了。出于对这本书的喜爱，毫不犹豫的购买了印刷版本。为什么喜欢这本书，因为这本书写的有趣，我也希望我的博文写的有趣一点，可是翻出我以前和现在写的文章，都干巴巴的。不由的感叹，没有平日的文学修养，要将文章写的好真难。平日就欣赏那些语句优美的文章，碰上有文采、技术又出众的双料王，更是打心底佩服，自然要支持一下作者。</p>
 
 <p>&lt;&lt;MacTalk.人生元编程>>是一本既有趣，又有不少干货的一本书。这本书的内容提要是这样概括这本书的:</p>
@@ -1146,9 +1146,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[关于Chromium WebView项目的源代码管理]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/06/19/about-source-management-of-chromium-webview/"/>
+    <link href="http://mogoweb.net/blog/2014/06/19/about-source-management-of-chromium-webview/"/>
     <updated>2014-06-19T10:53:25+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/06/19/about-source-management-of-chromium-webview</id>
+    <id>http://mogoweb.net/blog/2014/06/19/about-source-management-of-chromium-webview</id>
     <content type="html"><![CDATA[<p>chromium项目可谓开源项目集大成者，里面使用的第三方开源库数目高达60+。为了应对庞大的代码库管理问题，chromium项目引入了<a href="http://code.google.com/p/gclient/">gclient</a>，一套开源的代码管理方案。gclient是一套python脚本，用来简化多个git/svn源码库的管理。本文不探讨gclient的使用、配置，而是谈谈chromium webview项目是如何组织源码库的。</p>
 
 <p>由于历史原因，chromium项目本身及许多第三方开源库采用的是SVN源码管理系统。SVN采用的是集中式管理，不如git那样能否方便的clone代码库。虽然google后来使用了git-svn等手段，为chromium和所有第三方开源库都做了git镜像库，但是如果需要获取某个release分支的代码，还是需要走svn（google也在不断改进，期望不久的将来，可以通过git获取某个release版本的源码）。</p>
@@ -1173,9 +1173,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[使用pandoc和markdown书写文档]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/06/16/writing-document-with-pandoc-and-markdown/"/>
+    <link href="http://mogoweb.net/blog/2014/06/16/writing-document-with-pandoc-and-markdown/"/>
     <updated>2014-06-16T14:37:47+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/06/16/writing-document-with-pandoc-and-markdown</id>
+    <id>http://mogoweb.net/blog/2014/06/16/writing-document-with-pandoc-and-markdown</id>
     <content type="html"><![CDATA[<p>公司决定以后使用markdown+pandoc书写文档，于是就研究了一下markdown的写作（补充一下：markdown是一种标记语言，而pandoc则是转化工具）。虽然使用word书写文档得到大多数程序员的鄙视，但不得不承认，Word书写文档最直观，门槛最低。使用markdown+pandoc，各种问题层出不穷，以至于无法参照某一个文档搞定所有问题。在折腾了一天、google了各种中英文资料后，终于打通各路神仙。特此撰文一篇，如有雷同，纯属复制。</p>
 
 <!-- more -->
@@ -1738,9 +1738,9 @@ cabal install happy
   
   <entry>
     <title type="html"><![CDATA[关于chromium_webview项目]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/06/10/about-chromium-webview-project/"/>
+    <link href="http://mogoweb.net/blog/2014/06/10/about-chromium-webview-project/"/>
     <updated>2014-06-10T08:56:06+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/06/10/about-chromium-webview-project</id>
+    <id>http://mogoweb.net/blog/2014/06/10/about-chromium-webview-project</id>
     <content type="html"><![CDATA[<p>chromium_webview的目标是在chromium核心的基础上提供Android WebView API全兼容的接口，希望达到的效果是基于Android WebView API开发的应用程序，只需将android.webkit包名替换为com.mogoweb.chrome即可完成从WebKit内核到Chromium内核的迁移。目标支持平台为Android 4.0以上。项目地址：<a href="https://github.com/mogoweb/chromium_webview">https://github.com/mogoweb/chromium_webview</a>。</p>
 
 <h2>项目的起源</h2>
@@ -1813,9 +1813,9 @@ cabal install happy
   
   <entry>
     <title type="html"><![CDATA[使用iPhoto和微云管理照片]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/"/>
+    <link href="http://mogoweb.net/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/"/>
     <updated>2014-05-25T07:35:09+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos</id>
+    <id>http://mogoweb.net/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos</id>
     <content type="html"><![CDATA[<p>自从上次移动硬盘损坏，丢失了不少珍贵的照片，一直心有余悸，现在保存资料都会进行双备份。近一两年，云存储市场风起云涌，越来越多的企业加入战团。不仅免费，而且容量越来越大。当腾讯宣布微云免费容量10T后，我毫不犹豫的就申请了一个账号，将资料都保存在云端（基本上是一些照片和视频，对于普通老百姓，隐私从来都不是大事），形成本地和云端双保险。喜上加喜，近期新入手了一台iMac，Mac OS自带的iPhoto应用程序让人爱不释手，管理照片起来非常方便，可以直接导入RAW文件，还提供简单的编辑功能。但iPhoto通常是将相机照片导入到自己的库中，这样会出现iPhoto和微云两套照片，有点浪费空间。在琢磨了一段时间后，总结了一套自己的照片管理方法。</p>
 
 <!--more-->
@@ -1833,9 +1833,9 @@ cabal install happy
   
   <entry>
     <title type="html"><![CDATA[Chromium网络加载速度研究(2)]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/04/03/chromium-loading-spped-research-1/"/>
+    <link href="http://mogoweb.net/blog/2014/04/03/chromium-loading-spped-research-1/"/>
     <updated>2014-04-03T18:10:06+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/04/03/chromium-loading-spped-research-1</id>
+    <id>http://mogoweb.net/blog/2014/04/03/chromium-loading-spped-research-1</id>
     <content type="html"><![CDATA[<p>本文主要内容翻译自chromium的文档<a href="http://www.chromium.org/developers/design-documents/network-stack/netlog">NetLog: Chrome’s network logging system</a>，如果您觉得文章写的不明白，请参看原文。</p>
 
 <p>通过&lt;&lt;<a href="http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/">Chromium网络加载速度研究(1)</a>>>这篇文章的分析，可以得出结论，云端加速是高富帅的玩法。对于个人开发者和小公司而言，是没有那个实力去部署强大的数据中心的。所以接下来还得继续研究，看看有没有其它的途径提高网页加载速度。在着手优化之前，我们需要一个profiling手段找出瓶颈，有目的的优化。另一方面，也需要考虑如何评估优化的效果。如果没有一个客观的评估，优化方案是否有效心中就没有底。谈到Profiling，大多数人估计都会想到log大法，就是在程序的一些关键位置打上log。log通常包括时间、事件、状态等。在chromium中，开发人员早就预料了此类需求，设计了一套强大的NetLog。下面就分析一下chromium中NetLog的设计、实现及其用法。</p>
@@ -1926,9 +1926,9 @@ cabal install happy
   
   <entry>
     <title type="html"><![CDATA[Chromium网络加载速度研究(1)]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/"/>
+    <link href="http://mogoweb.net/blog/2014/03/18/chromium-loading-speed-research-0/"/>
     <updated>2014-03-18T16:22:09+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0</id>
+    <id>http://mogoweb.net/blog/2014/03/18/chromium-loading-speed-research-0</id>
     <content type="html"><![CDATA[<p>本文主要内容翻译自Google的文档<a href="https://developers.google.com/chrome/mobile/docs/data-compression?hl=zh-CN">Data Compression Proxy</a>，如果您觉得文章写的不明白，请参看原文。</p>
 
 <p>对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera、QQ浏览器都采用了服务器端加速技术。Chrome移动版从V33开始正式支持数据压缩代理。下面就分析一下Chrome for Android所采用的数据压缩技术。</p>
@@ -2004,9 +2004,9 @@ cabal install happy
   
   <entry>
     <title type="html"><![CDATA[Android 4.4 WebView实现分析]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/"/>
+    <link href="http://mogoweb.net/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/"/>
     <updated>2014-01-16T19:22:09+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/01/16/analysis-of-android-4-4-webview-implementation</id>
+    <id>http://mogoweb.net/blog/2014/01/16/analysis-of-android-4-4-webview-implementation</id>
     <content type="html"><![CDATA[<p>随着Android4.4的发布，Android WebView改成由Chromium驱动了。浏览Android4.4源代码，可以看到之前版本中的external/WebKit目录被移除掉了，取而代之的是chromium_org。也就是说chromium已经完全取代了之前的WebKit for Android。虽然chromium完全取代了以前的WebKit for Android，但Android WebView的API接口并没有变，与老的版本完全兼容。这样带来的好处是基于WebView构建的APP，无需做任何修改，就能享受chromium内核的高效与强大。下面就Android 4.4中WebView的实现进行分析。</p>
 
 <p>先来看看frameworks/base/core/java/android/webkit下的文件，里面有我们熟悉的WebView、WebSettings、WebViewClient等类，其中最主要的就是WebView了，相关的类关系如下：</p>
@@ -2058,7 +2058,7 @@ cabal install happy
 
 <p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#97;&#x69;&#x6c;&#x74;&#x6f;&#x3a;&#98;&#101;&#110;&#x6d;&#x40;&#103;&#111;&#x6f;&#x67;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#109;">&#x62;&#x65;&#x6e;&#109;&#x40;&#103;&#x6f;&#111;&#103;&#108;&#101;&#46;&#99;&#x6f;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#109;&#97;&#105;&#x6c;&#116;&#x6f;&#x3a;&#98;&#x65;&#110;&#109;&#x40;&#103;&#111;&#x6f;&#103;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;">&#98;&#101;&#x6e;&#109;&#64;&#x67;&#x6f;&#111;&#103;&#108;&#101;&#x2e;&#x63;&#111;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
 
@@ -2086,7 +2086,7 @@ cabal install happy
 
 <p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
 
-<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#x6c;&#116;&#111;&#58;&#x62;&#x65;&#x6e;&#109;&#x40;&#103;&#x6f;&#x6f;&#x67;&#108;&#101;&#46;&#99;&#x6f;&#109;">&#98;&#x65;&#x6e;&#109;&#x40;&#x67;&#111;&#111;&#103;&#x6c;&#x65;&#x2e;&#x63;&#111;&#x6d;</a></p>
+<p>Author: Ben Murdoch <a href="&#109;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#x62;&#101;&#x6e;&#109;&#64;&#x67;&#111;&#x6f;&#103;&#108;&#x65;&#46;&#99;&#111;&#x6d;">&#98;&#101;&#x6e;&#109;&#x40;&#103;&#x6f;&#x6f;&#103;&#x6c;&#101;&#x2e;&#99;&#x6f;&#109;</a></p>
 
 <p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
 
@@ -2133,9 +2133,9 @@ cabal install happy
   
   <entry>
     <title type="html"><![CDATA[[译]Android WebView]]></title>
-    <link href="http://mogoweb.github.io/blog/2013/10/24/translated-android-webview/"/>
+    <link href="http://mogoweb.net/blog/2013/10/24/translated-android-webview/"/>
     <updated>2013-10-24T15:27:02+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2013/10/24/translated-android-webview</id>
+    <id>http://mogoweb.net/blog/2013/10/24/translated-android-webview</id>
     <content type="html"><![CDATA[<p>原文地址：<a href="https://crosswalk-project.org/#wiki/android-webview">https://crosswalk-project.org/#wiki/android-webview</a></p>
 
 <ul>

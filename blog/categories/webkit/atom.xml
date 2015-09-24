@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: webkit | 放飞梦想]]></title>
-  <link href="http://mogoweb.github.io/blog/categories/webkit/atom.xml" rel="self"/>
-  <link href="http://mogoweb.github.io/"/>
-  <updated>2015-09-24T16:03:13+08:00</updated>
-  <id>http://mogoweb.github.io/</id>
+  <link href="http://mogoweb.net/blog/categories/webkit/atom.xml" rel="self"/>
+  <link href="http://mogoweb.net/"/>
+  <updated>2015-09-24T16:29:10+08:00</updated>
+  <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[WebKit的JavaScript对象扩展]]></title>
-    <link href="http://mogoweb.github.io/blog/2012/01/12/add-javascript-extend-object-for-webkit/"/>
+    <link href="http://mogoweb.net/blog/2012/01/12/add-javascript-extend-object-for-webkit/"/>
     <updated>2012-01-12T08:59:29+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2012/01/12/add-javascript-extend-object-for-webkit</id>
+    <id>http://mogoweb.net/blog/2012/01/12/add-javascript-extend-object-for-webkit</id>
     <content type="html"><![CDATA[<p>本文的内容主要参考网上收集的资料，不过在Android 4.0 webkit上做扩展时，碰到一些问题，觉得有必要记录下来。</p>
 
 <p>所谓扩展JavaScript对象，就是增加一个JS对象，但它并没有定义在标准的JS对象集合中。如果网页中包含了扩展的JS对象，使用普通的浏览器就会报JS错误。</p>

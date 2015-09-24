@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: chromium | 放飞梦想]]></title>
-  <link href="http://mogoweb.github.io/blog/categories/chromium/atom.xml" rel="self"/>
-  <link href="http://mogoweb.github.io/"/>
-  <updated>2015-09-24T16:03:13+08:00</updated>
-  <id>http://mogoweb.github.io/</id>
+  <link href="http://mogoweb.net/blog/categories/chromium/atom.xml" rel="self"/>
+  <link href="http://mogoweb.net/"/>
+  <updated>2015-09-24T16:29:10+08:00</updated>
+  <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[如何打印gyp构建系统中的变量值]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/06/30/how-to-print-variable-of-gyp/"/>
+    <link href="http://mogoweb.net/blog/2015/06/30/how-to-print-variable-of-gyp/"/>
     <updated>2015-06-30T14:16:51+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/06/30/how-to-print-variable-of-gyp</id>
+    <id>http://mogoweb.net/blog/2015/06/30/how-to-print-variable-of-gyp</id>
     <content type="html"><![CDATA[<p>chromium项目使用了gyp构建系统，gyp的全称是&#8221;Generate Your Projects&#8221;。gyp构建系统使用的并不广泛，目前已知的只有chromium开源项目采用了这一构建系统。官方虽然也有一些文档，但都是一些比较基础的指南，总体来说缺少详细的文档来指导开发人员在项目中使用。
 因为研究chromium的缘故，所以对gyp构建系统也有一些了解，在使用中也碰到一些问题，本文所要探讨的是如何输出gyp的变量值。这个问题的场景是这样的：在gyp中定义了变量，但是经过多重gypi包含，在别的gyp文件中可能对变量值进行了赋值。处于调试目的，我们希望输出gyp变量的值。</p>
 
@@ -48,9 +48,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[在Chromium for Android中能否用TextureView替代SurfaceView]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android/"/>
+    <link href="http://mogoweb.net/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android/"/>
     <updated>2015-06-19T19:26:45+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android</id>
+    <id>http://mogoweb.net/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android</id>
     <content type="html"><![CDATA[<p>在开发Browser 2.0时，碰到一个非常头疼的问题，往布局上添加SurfaceView时，会引起黑屏闪一下。为了解决这个问题，我们不得不在初始化阶段就把SurfaceView添加好，之后也不能调整大小、移动位置。当时就考虑是不是能够用TextureView替代SurfaceView，不过由于计划上的调整，没有做进一步的尝试。今天在网上看到<a href="https://github.com/crosswalk-project/crosswalk-website/wiki/Android-SurfaceView-vs-TextureView">这篇文章</a>，正好解答了我的疑问，在此把文章翻译过来，供参考。</p>
 
 <blockquote><h1>Android SurfaceView和textureView</h1>
@@ -118,9 +118,9 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
   
   <entry>
     <title type="html"><![CDATA[关于Ubuntu菜单项中的%U参数]]></title>
-    <link href="http://mogoweb.github.io/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry/"/>
+    <link href="http://mogoweb.net/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry/"/>
     <updated>2015-03-11T16:05:57+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry</id>
+    <id>http://mogoweb.net/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry</id>
     <content type="html"><![CDATA[<p>今天在研究chromium deb打包的时候，发现Google Chrome deb包中的/usr/share/applications/google-chrome.desktop文件定义入口为：
 <code>
 Exec=/usr/bin/google-chrome-stable %U
@@ -156,9 +156,9 @@ Code    Description
   
   <entry>
     <title type="html"><![CDATA[Ubuntu上从源码编译chromium浏览器]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/12/15/build-chromium-browser-from-source/"/>
+    <link href="http://mogoweb.net/blog/2014/12/15/build-chromium-browser-from-source/"/>
     <updated>2014-12-15T15:09:43+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/12/15/build-chromium-browser-from-source</id>
+    <id>http://mogoweb.net/blog/2014/12/15/build-chromium-browser-from-source</id>
     <content type="html"><![CDATA[<p>Ubuntu不仅是一个免费且开源的操作系统，而且其平台也是开放且透明的。每个组件的源码都可以获取到，也可以从源码自己编译软件包。下面就探讨一下在ubuntu下如何获取chromium源码，并编译Chromium Web Browser。</p>
 
 <p>要从ubuntu的仓库下载源码并编译软件包，最方便的就是使用apt-build实用工具。在ubuntu的发布版本中，该实用工具并没有安装，您可以用如下命令安装:</p>
@@ -290,9 +290,9 @@ W: Failed to fetch file:/var/cache/apt-build/repository/dists/apt-build/main/bin
   
   <entry>
     <title type="html"><![CDATA[在本地服务器上建立chromium镜像]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/12/09/mirror-chromium-to-local-server/"/>
+    <link href="http://mogoweb.net/blog/2014/12/09/mirror-chromium-to-local-server/"/>
     <updated>2014-12-09T21:59:27+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/12/09/mirror-chromium-to-local-server</id>
+    <id>http://mogoweb.net/blog/2014/12/09/mirror-chromium-to-local-server</id>
     <content type="html"><![CDATA[<p>Android 5.0发布了好长时间，一直都没有来得及研究。前两周终于将android 5.0源码下载了下来，大致看了一下代码。我所关注的并非Material Design，而是Android 5.0的web引擎。从Android 4.4开始，采用了chromium/blink内核，Android 5.0自然也不例外，只是chromium的版本升级到了37.0.2062.116。想到我的chromium webview项目，仍然采用的是34.0.1847，因此打算也将chromium版本进行一次升级。</p>
 
 <p>因为可恶的GFW，下载代码及其不顺利，虽然有VPN，但是对于几十G的chromium下载量，下载速度太慢，而且git不支持断点续传。在折腾了两三个星期之后，决定在公司的服务器上建立chromium的镜像。不知道从哪个版本开始，gclient开始全面转向git。由于git的天然的分布式特点，这为完全镜像chromium源码库提供了便利。</p>

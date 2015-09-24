@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: mac技巧 | 放飞梦想]]></title>
-  <link href="http://mogoweb.github.io/blog/categories/macji-qiao/atom.xml" rel="self"/>
-  <link href="http://mogoweb.github.io/"/>
-  <updated>2015-09-24T16:03:13+08:00</updated>
-  <id>http://mogoweb.github.io/</id>
+  <link href="http://mogoweb.net/blog/categories/macji-qiao/atom.xml" rel="self"/>
+  <link href="http://mogoweb.net/"/>
+  <updated>2015-09-24T16:29:10+08:00</updated>
+  <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[使用iPhoto和微云管理照片]]></title>
-    <link href="http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/"/>
+    <link href="http://mogoweb.net/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/"/>
     <updated>2014-05-25T07:35:09+08:00</updated>
-    <id>http://mogoweb.github.io/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos</id>
+    <id>http://mogoweb.net/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos</id>
     <content type="html"><![CDATA[<p>自从上次移动硬盘损坏，丢失了不少珍贵的照片，一直心有余悸，现在保存资料都会进行双备份。近一两年，云存储市场风起云涌，越来越多的企业加入战团。不仅免费，而且容量越来越大。当腾讯宣布微云免费容量10T后，我毫不犹豫的就申请了一个账号，将资料都保存在云端（基本上是一些照片和视频，对于普通老百姓，隐私从来都不是大事），形成本地和云端双保险。喜上加喜，近期新入手了一台iMac，Mac OS自带的iPhoto应用程序让人爱不释手，管理照片起来非常方便，可以直接导入RAW文件，还提供简单的编辑功能。但iPhoto通常是将相机照片导入到自己的库中，这样会出现iPhoto和微云两套照片，有点浪费空间。在琢磨了一段时间后，总结了一套自己的照片管理方法。</p>
 
 <!--more-->
