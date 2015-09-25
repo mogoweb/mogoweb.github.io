@@ -4,7 +4,7 @@
   <title><![CDATA[Category: chromium | 放飞梦想]]></title>
   <link href="http://mogoweb.net/blog/categories/chromium/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-09-24T21:54:01+08:00</updated>
+  <updated>2015-09-25T09:54:38+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Chromium for Android开源了]]></title>
+    <link href="http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/"/>
+    <updated>2015-09-25T09:08:49+08:00</updated>
+    <id>http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source</id>
+    <content type="html"><![CDATA[<p>最近一段时间都在忙其它的事情，没有关注chromium的最新进展。这几天浏览 <a href="http://www.chromium.org">http://www.chromium.org</a> 上的文档，发现android build目标增加了一个：chrome_public_apk。编译方法：</p>
+
+<blockquote><h1>Build the full browser</h1>
+
+<p>~/chromium/src$ ninja -C out/Release chrome_public_apk</p>
+
+<p>~/chromium/src$ build/android/adb_install_apk.py out/Release/apks/ChromePublic.apk</p></blockquote>
+
+<p>搜索了一下相关新闻，大约在2015年5月份开始，chromium中开始加入了chrome for android的源码。从2012年开始，chromium中开始出现Android的移植代码，但只有Content API和ContentShell，离一个完备的浏览器还有一定的距离。当然，基于Content API开发浏览器也是可行的，当年就是这么干的。Chromium for Android和Chrome for Android并非完全一样，就如同桌面版Chromium浏览器和Chrome浏览器之间的区别。</p>
+
+<p>下面放上一些Chromium for Android浏览器的截图，慢慢品味吧：</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_welcome.png" alt="welcome" /></p>
+
+<p>欢迎界面</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_account.png" alt="account" /></p>
+
+<p>帐号同步界面</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_main.png" alt="main" /></p>
+
+<p>浏览器主界面</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_menu.png" alt="menu" /></p>
+
+<p>浏览器菜单</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_settings.png" alt="settings" /></p>
+
+<p>浏览器设置</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_tabs.png" alt="tabs" /></p>
+
+<p>浏览器标签页</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何打印gyp构建系统中的变量值]]></title>
@@ -285,21 +328,6 @@ W: Failed to fetch file:/var/cache/apt-build/repository/dists/apt-build/main/bin
 <p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2014_chromium_ubuntu_source_info.png" alt="" /></p>
 
 <p>从上图中可以看到源码包的大小只有200多M，而我们从chromium开源项目下的源码通常有7、8个G，主要原因是这里下的源码是不带git和svn信息的，是纯粹的源代码。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在本地服务器上建立chromium镜像]]></title>
-    <link href="http://mogoweb.net/blog/2014/12/09/mirror-chromium-to-local-server/"/>
-    <updated>2014-12-09T21:59:27+08:00</updated>
-    <id>http://mogoweb.net/blog/2014/12/09/mirror-chromium-to-local-server</id>
-    <content type="html"><![CDATA[<p>Android 5.0发布了好长时间，一直都没有来得及研究。前两周终于将android 5.0源码下载了下来，大致看了一下代码。我所关注的并非Material Design，而是Android 5.0的web引擎。从Android 4.4开始，采用了chromium/blink内核，Android 5.0自然也不例外，只是chromium的版本升级到了37.0.2062.116。想到我的chromium webview项目，仍然采用的是34.0.1847，因此打算也将chromium版本进行一次升级。</p>
-
-<p>因为可恶的GFW，下载代码及其不顺利，虽然有VPN，但是对于几十G的chromium下载量，下载速度太慢，而且git不支持断点续传。在折腾了两三个星期之后，决定在公司的服务器上建立chromium的镜像。不知道从哪个版本开始，gclient开始全面转向git。由于git的天然的分布式特点，这为完全镜像chromium源码库提供了便利。</p>
-
-<p>chromium源码库是由chromium本身加上一堆第三方开源库组成，极其庞大。为此我写了一个脚本，放到了github上，有兴趣的可以访问<a href="https://github.com/mogoweb/chromium_mirror_script">chromium_mirror_script</a>项目，其中chromium_git_list.txt为所有的源码库列表，来自<a href="https://chromium.googlesource.com/">https://chromium.googlesource.com/</a>，随着时间的推移，这个列表也可能发生变化。</p>
-
-<p>有了内部的chromium镜像后，我们可以修改.DEPS.git文件，将其中的git_url值替换为本地git地址，这样通过gclient下载，就是从本地镜像服务器上获取代码了。</p>
 ]]></content>
   </entry>
   
