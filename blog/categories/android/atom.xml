@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | 放飞梦想]]></title>
   <link href="http://mogoweb.net/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-09-25T09:54:38+08:00</updated>
+  <updated>2015-11-03T09:42:57+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,58 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[基于chromium for android开发Android浏览器]]></title>
+    <link href="http://mogoweb.net/blog/2015/11/03/develop-android-browser-base-on-chromium-for-android/"/>
+    <updated>2015-11-03T08:39:21+08:00</updated>
+    <id>http://mogoweb.net/blog/2015/11/03/develop-android-browser-base-on-chromium-for-android</id>
+    <content type="html"><![CDATA[<p>在上一篇文章&lt;&lt; <a href="http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/">Chromium for Android开源了</a> >>中谈到了Google已经完全开源了Chromium for Android，这样我们就完全可以开发与Chrome for Android媲美的Android浏览器了。通常浏览器的一些新特性和新功能会先出现在Chromium for Android上，稳定后才会出现在Chrome for Android上，如果我们基于Chromium for Android开发浏览器产品，在新特性和新功能方面不会落后于Chrome浏览器.</p>
+
+<p>Chromium开源项目的代码及其庞大，也相当的复杂。对于Android开发人员，特别是UI开发人员来说，没有一个合适的IDE环境，会是一个非常痛苦的事情。我们通常是这样开发的，在sublime text中阅读、修改代码，使用chromium的构建系统build出apk，安装到手机，进行调试。对于native代码来说，这样的开发方式也不会有太多麻烦，因为native部分的代码通常修改很少。但如果主要进行UI的定制，这种开发方式就非常痛苦了。</p>
+
+<p>为了应对这个问题，考虑如下方案：</p>
+
+<ol>
+<li>采用Android Studio作为开发环境，从Chromium for Android抽取chrome模块的源码，加入Android project。</li>
+<li>native代码在chromium环境中build，作为so加入Android project</li>
+<li>基础模块(base, content, net等)在chromium环境build为jar，加入Android project</li>
+<li>content, chrome, ui等模块的资源文件加入Android library project</li>
+</ol>
+
+
+<p>资源文件为什么不能直接都添加到Android project呢？因为命名空间的原因，比如content模块的资源的命名空间为org.chromium.content, chrome模块的资源的命名空间为org.chromium.chrome，所以需要建立不同的Android library project, 指定不同的包名。最后整个项目的结构如下：</p>
+
+<pre><code>browser
+  |_ app
+  |    |_ libs
+  |    |_ src
+  |         |_ main
+  |              |_ aidl
+  |              |_ assets
+  |              |_ java
+  |              |_ jniLibs
+  |              |_ res
+  |_ libraries
+       |_ androidmedia_res
+       |_ chrome_res
+       |_ content_res
+       |_ datausagechart_res
+       |_ ui_res
+</code></pre>
+
+<p>注意事项：</p>
+
+<ol>
+<li>chromium项目的源码和资源有些是自动生成的，需要到out下copy</li>
+<li>pak和dat等文件需要加入到assets目录，而且不能压缩</li>
+<li>aidl文件加入到main/aidl下，android studio会自动处理</li>
+</ol>
+
+
+<p>实践证明，这种方案是行之有效的，请参考github上的项目: <a href="https://github.com/mogoweb/365browser">365browser</a>。在script目录下有从chromium项目同步代码和资源的脚本。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Chromium for Android开源了]]></title>
@@ -229,81 +281,6 @@
 <p>Chromium WebView项目采用了第三种方案，由于chromium和blink这两个库太庞大，屡次上传到github都失败，于是改成从crosswalk项目clone相关的代码库。所以在我的名下多了chromium-crosswalk, blink-crosswalk, v8-crosswalk这几个库，其实它们都是为chromium webview项目服务的，里面包含了crosswalk项目的代码，可以忽略之。</p>
 
 <p>[注: 由于一些原因，在国内访问chromium的源码库不再顺畅了，免费的翻墙服务GAE也被屏蔽了，所以要同步代码，还需要购买商业的VPN，以保证网络是通畅的。您也可以从Chromium Browser for Snapdragon Project获取相关的git库，只要版本取的正确，可以同样使用。]</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[关于chromium_webview项目]]></title>
-    <link href="http://mogoweb.net/blog/2014/06/10/about-chromium-webview-project/"/>
-    <updated>2014-06-10T08:56:06+08:00</updated>
-    <id>http://mogoweb.net/blog/2014/06/10/about-chromium-webview-project</id>
-    <content type="html"><![CDATA[<p>chromium_webview的目标是在chromium核心的基础上提供Android WebView API全兼容的接口，希望达到的效果是基于Android WebView API开发的应用程序，只需将android.webkit包名替换为com.mogoweb.chrome即可完成从WebKit内核到Chromium内核的迁移。目标支持平台为Android 4.0以上。项目地址：<a href="https://github.com/mogoweb/chromium_webview">https://github.com/mogoweb/chromium_webview</a>。</p>
-
-<h2>项目的起源</h2>
-
-<p>从2011年开始，我转向从事chromium的定制化工作。2012年在移动手机平台上开发了一款浏览器Browser1.0，基于WebKit内核和Android WebView API。2012年下半年开始进行chromium的移植工作，其时google发布了Chrome for Android的第一个版本V0.16，还是beta版本。虽然浏览器的内核发生了很大的变化，但是我们期望上层的代码不需要做修改，于是在Content API的基础上，按照Android WebView API进行接口封装。最后做出来的浏览器美其名曰“双内核”，也就是WebKit加Chromium双内核。</p>
-
-<!--more-->
-
-
-<p>由于Chromium渲染架构的缘故，在Content API之上封装的WebView API还存在问题：</p>
-
-<ol>
-<li>为了启用硬件加速，chromium for android引入了SurfaceView，但SurfaceView动态添加会引起黑屏。所以SurfaceView必须在应用程序的初始化代码中添加，不能象Android WebView那样随心所欲的使用。</li>
-<li>采用了多进程架构，后果之一就是内存狂飙，更让人难以接受的是，访问新浪首页这样复杂的网页，还不如WebKit浏览器流畅。</li>
-</ol>
-
-
-<p>在我们移植chromium的同时，google的工程师也没闲着，chromium代码下面开始出现android_webview的代码，接着代码越来越多，更新的也越来越频繁。有一天，在github上看到一个项目：<a href="https://github.com/pwnall/chromeview">ChromeView Project</a>。这正是我所需要的基于chromium的WebView API封装,但这哥们估计也没啥闲功夫，项目好久都没有更新。于是我就在github上创建了chromium_webview项目，早期的AwContents实现是软件渲染，所以效率低下。</p>
-
-<p>时间推到2013年11月，Android 4.4发布，其中很大的一个变化就是使用chromium替换了原来的webkit引擎。于是我又开始哼哧哼哧研究起AOSP中的Chromium WebView实现，研究了AOSP中的Chromium WebView实现后，定下了如下策略：</p>
-
-<ol>
-<li>照搬WebViewChromium及相关代码，如果代码中使用了未公开的API，使用反射机制实现。</li>
-<li>启用光栅化位图，消除对GraphicBuffer的依赖，从而不依赖系统的未公开C++接口。</li>
-</ol>
-
-
-<p>经过一段时间的工作，chromium webview项目终于完整支持硬件加速。</p>
-
-<h2>Chromium WebView的应用场景</h2>
-
-<p>有人要说了，现在Android系统都已经采用chromium引擎了，你还费老大劲整出这玩意儿，是不是吃饱了撑了。的确，做这个事情没给我带来一毛钱经济上的收益，反而搭进了我的业余休息时间，我做这件事的动力来自：</p>
-
-<ol>
-<li>Android WebView采用chromium引擎不假，但那也得4.4及以上的版本。</li>
-<li>使用系统的WebView，失去了定制能力，比如要添加一个HTML标签就比较难。</li>
-<li>提高水平，结交朋友。</li>
-</ol>
-
-
-<p>早些年做《无线城市》项目时，就发现Hybrid App还是有一些市场的。但使用系统的WebView可能存在性能低下、兼容性不良、无法定制的问题。所以chromium webview的最佳应用场景就是集成到APP作为渲染引擎，此外开发浏览器也是一个选择。</p>
-
-<h2>Chromium WebView存在的问题</h2>
-
-<p>Chromium WebView刚完成了初步的移植，问题还非常多，在后续的时间，将会继续完善。目前看来，仍然有几大难题难以解决：</p>
-
-<ol>
-<li>由于渲染架构的原因，在Android 4.0 &amp; Android 4.0.3上还只能使用软件方式渲染；</li>
-<li>光栅化位图的效率似乎比GraphicBuffer的效率低一些，长网页或复杂网页在快速滚动时，会出现短暂的白屏。</li>
-</ol>
-
-
-<h2>后续计划</h2>
-
-<ol>
-<li>完善Chromium WebView API，修复BUG</li>
-<li>开启WebGL支持</li>
-<li>精简内核，优化内存占用</li>
-<li>将开源浏览器TintBrowser改成使用Chromium WebView，证明基于WebView API的应用能够无缝迁移到Chromium WebView。</li>
-</ol>
-
-
-<h2>更新</h2>
-
-<p>2014-08-18</p>
-
-<p>完成TintBrowser在Chromium WebView上的适配，并修改了若干UI，命名为365浏览器，已经在腾讯开放平台上上架，你可以从<a href="http://android.myapp.com/myapp/detail.htm?apkName=com.mogoweb">这里</a>下载。</p>
 ]]></content>
   </entry>
   
