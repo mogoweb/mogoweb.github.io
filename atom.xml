@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.net/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-11-03T09:42:57+08:00</updated>
+  <updated>2015-11-04T19:08:59+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -27,7 +27,7 @@
 <ol>
 <li>采用Android Studio作为开发环境，从Chromium for Android抽取chrome模块的源码，加入Android project。</li>
 <li>native代码在chromium环境中build，作为so加入Android project</li>
-<li>基础模块(base, content, net等)在chromium环境build为jar，加入Android project</li>
+<li>基础模块(base, content, net等)在chromium环境build为jar包，加入Android project</li>
 <li>content, chrome, ui等模块的资源文件加入Android library project</li>
 </ol>
 
@@ -71,7 +71,7 @@
 <p>注意事项：</p>
 
 <ol>
-<li>chromium项目的源码和资源有些是自动生成的，需要到out下copy</li>
+<li>chromium项目的源码和资源有些是自动生成的，需要到out目录下去复制</li>
 <li>pak和dat等文件需要加入到assets目录，而且不能压缩</li>
 <li>aidl文件加入到main/aidl下，android studio会自动处理</li>
 </ol>
