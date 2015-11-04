@@ -19,10 +19,10 @@ footer: true
 
 1. 拥有chromium一样强大而稳定的核心；
 2. 拥有safari mobile一样优雅简洁的UI；
-3. 支持android 4.0以上android平台；
+3. 支持android 4.1以上android平台；
 4. 支持浏览器扩展；
 
-经过一番权衡和抉择，决定采用开源项目TintBrowser作为浏览器UI，精力集中于浏览器内核精简与完善。TintBrowser项目采用GPL V3开源协议，所以365浏览器的UI也采用GPL V3开源协议，源码地址:[https://github.com/mogoweb/TintBrowser](https://github.com/mogoweb/TintBrowser)。安装包已经在腾讯开放平台上线，您也可以前往如下地址下载：
+项目基于Chromium for Android，精力集中于浏览器内核精简与完善。源码地址:[https://github.com/mogoweb/365browser](https://github.com/mogoweb/365browser)。安装包已经在腾讯开放平台上线，您也可以前往如下地址下载：
 
 [http://android.myapp.com/myapp/detail.htm?apkName=com.mogoweb](http://android.myapp.com/myapp/detail.htm?apkName=com.mogoweb)
 
@@ -45,3 +45,5 @@ footer: true
     - 修复非http/https网址下载导致崩溃的问题
     - 去掉第一次运行时的指导页面
     - 修改错误页面
+* 2015-11-04 v3.0.0
+    - 基于Chromium for Android构建浏览器
