@@ -7,7 +7,7 @@
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="在上一篇文章&lt;&lt; Chromium for Android开源了 >>中谈到了Google已经完全开源了Chromium for Android，这样我们就完全可以开发与Chrome for Android媲美的Android浏览器了。 &hellip;&#8221;>
+	<meta name="description" content="作为一个自认为苦逼的程序员，有一阵子曾考虑逃离程序世界，做一个文艺青年。你看，出去旅旅游、读读书、摄个影，没事发个呆，生活该是多么的惬意。反观程序员，每天对着冰冷的机器，有事无事还要加个班。正如一个段子所写： 你苦战通宵游戏时，布里斯班的灯鱼已划过珊瑚丛; 你赶场招聘会时， &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -80,6 +80,83 @@
 		
 	
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/13/reading-android-source-preface/">
+		
+			Android源码阅读与理解（一）：开篇</a>
+	</h2>
+	<div class="entry-content">
+		<p>作为一个自认为苦逼的程序员，有一阵子曾考虑逃离程序世界，做一个文艺青年。你看，出去旅旅游、读读书、摄个影，没事发个呆，生活该是多么的惬意。反观程序员，每天对着冰冷的机器，有事无事还要加个班。正如一个段子所写：</p>
+
+<blockquote><p>你苦战通宵游戏时，布里斯班的灯鱼已划过珊瑚丛;</p>
+
+<p>你赶场招聘会时，蒙巴萨的小蟹刚溜出渔夫的掌心;</p>
+
+<p>你写程序代码时，布拉格的电车正摇着铃晃过金色夕阳;</p>
+
+<p>你挤进汹涌的食堂时，哥本哈根的街头画家完成了第99幅立体画。</p>
+
+<p>有一些穿高跟鞋走不到的路，有一些喷着香水闻不到的空气，有一些在楼宇里永远碰遇不到的人。</p></blockquote>
+
+<p>但是，看村上春书的《当我谈跑步时我谈些什么》如同嚼蜡，看侯孝贤、王家卫的电影直睡觉之后，我发现其实身上缺少文艺细胞，无事发呆更是让我难受。其实仔细想想，写代码时虽然苦逼，但是当纠出一个苦苦追寻了半个月的bug的时刻，内心还是感觉很爽的。不读村上春树，读读东野圭吾也挺开心的。每天充实的感觉比无所事事更舒服。所以，我还是需要做回自己，做自己喜欢、自己擅长的事情。读到池建强的《是旅行还是长跑》中这样一段话：</p>
+
+<blockquote><p>只要你没有一个强悍的爹，就要先忘掉那些小鱼小蟹，还有珊瑚丛，那些暂时还不属于你，踏踏实实地练习和提升才是王道，为自己规划一个十年的长跑，可以时不时停下来休息一下，低下头汗水就落入尘埃，抬起头就看看夕阳西下，你抹去疲惫，然后继续前行。十年看似很长，但实在很短，十年以后你回头看看，你究竟是成了人中龙凤，还是小鱼小虾，是你认知了世界，还是世界抛弃了你。</p></blockquote>
+
+<p>瞬间引起了共鸣。</p>
+
+<p>闲话扯远了，作为一个国产OS的从业者，一直都从Android系统吸(chao)收(xi)营(yuan)养(ma)。其实我们更想借鉴ios系统，可惜人家不开源，光看表面是做不了神似的。在开发的过程中，也碰到不少问题，零零碎碎读过一些Android的源码，但基本上都是现学现用，缺乏整体的理解。既然做不了文艺青年，那我就来挑战一下Android系统源码吧。当然现在Android源码分析的书和文章也比较多，比如我手头就有邓凡平的《深入理解Android》、杨云君的《Android的设计与实现》和罗升阳的《Android系统源代码情景分析》，网上的文章更是不计其数。但别人分析了也是别人的，买了他们的书，但买不到他们的知识。还是需要亲自深入代码分析，知识才能变成我的。</p>
+
+<p>在后续的学习中，我将结合自身的工作，分析我所感兴趣的部分。Android系统是一个相当庞大的系统，想要深入掌握每个细节，那是一个不可能完成的任务。所以我会略去驱动、linux内核、media等部分，初步计划阅读的部分如下：</p>
+
+<ol>
+<li>Android build系统</li>
+<li>Android系统启动</li>
+<li>Binder原理与实现</li>
+<li>Surface系统</li>
+<li>Dalvik虚拟机</li>
+<li>chromium Webview</li>
+</ol>
+
+
+<p>为了让自己能坚持下去，要求在阅读过程中记笔记，每周至少写一篇博客，梳理一下阅读心得。希望我能够坚持下去并有所得，加油！</p>
+
+<p><strong>[注]</strong> 本文引用的文字出自池建强《MacTalk人生元编程》P.194。</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-13T20:36:35+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/xi-tong-fen-xi/'>系统分析</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2015/11/13/reading-android-source-preface/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
 
 
     <article class="post">
@@ -1206,77 +1283,6 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 </div>
 	
 	<div class="comments"><a href="/blog/2014/12/09/mirror-chromium-to-local-server/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/11/10/my-macos-programming-life-3/">
-		
-			我的macos编程之旅-AutoLayout</a>
-	</h2>
-	<div class="entry-content">
-		<p>开始了Mac OS编程之后，仿佛又回到了Visual Basic编程年代，拖拖拽拽几个控件，app的UI就设计好了。但我至今还记得当年面临一个头疼的问题，就是应用程序在不同分辨率下的展现问题。为什么会头疼呢？那时主流的屏幕分辨率是800x600，但有些更好的显示器分辨率为1024x768，如果我们按照1024x768的分辨率设计UI，那么在800x600的分辨率下就显示不全，如果按照800x600的分辨率设计UI，那在1024x768下就没法充分利用屏幕空间。所以当时的app通常会指定最佳分辨率，低了显示不全，高了就只利用屏幕的一部分空间。</p>
-
-<p>回到<strong>365看图</strong>软件上来，按照IKImageViewDemo设计的UI，存在一个问题：当我拉大窗口，图片显示区域并不会随之变大，整个界面变得很不协调。原因呢在于UI采用了绝对布局，控件的大小和位置是固定的。当然我也可以通过编程的方式，根据窗口的大小，计算图片显示区域的大小，然后动态的设置大小和位置，但这比较繁琐。在Android中，通过设计出线性布局、相对布局等布局方式来解决这一问题，而绝对布局是不推荐使用的。Mac OS是如何解决这一难题的呢？答案就是AutoLayout。</p>
-
-<h3>AutoLayout <sup>[1]</sup></h3>
-
-<p>自动布局系统通过数学化描述元素之间的关系来布局应用程序用户界面。这种关系称作约束，可以定义在单个的元素上，也可以定义在元素之间。使用自动布局，您可以创建动态灵活的界面来适应窗口大小的改变、设备横竖屏变化，还可以应对本地化带来的麻烦。</p>
-
-<p>约束是自动布局的基础，它描述了界面元素布局的规则，比如您可以创建一个约束指定元素的宽度，或者与另一个元素的水平距离。您也可以添加或者删除约束，甚至修改约束的属性，来改变界面布局。</p>
-
-<p>当您添加了多个约束后，不可避免的可能会存在冲突。所以，在计算用户界面上元素的运行时位置时，自动布局系统会综合考虑所有的约束，然后找出一种最大满足所有约束的布局。</p>
-
-<p>自动布局从XCode 5开始引入，适用于ios 6.0和mac os 10.7及以上系统。当一个新工程创建时，自动布局缺省是开启的。</p>
-
-<h3>添加约束</h3>
-
-<p>添加约束的最简单方法就是通过拖拽来完成，方法如下：按住Ctrl键，然后拖动画布上的控件，类似于创建outlet连接。您可以拖拽元素到自身、到容器，或者到另一个元素。</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_mac_autolayout_trailing_2x.png" alt="autolayout" /></p>
-
-<p>如上图中，您可以根据需要选择&#8221;保持在容器垂直方向的中央“，也可以选择”尾部与容器保持一定的距离“。</p>
-
-<p>在<strong>365看图</strong>中，我选择将IKImageView的四边与容器保持一定的距离，这样，当窗口放大和缩小时，IKImageView就能同步放大与缩小。</p>
-
-<h3>更多</h3>
-
-<p>关于约束，还有许多地方值得探讨：比如编辑/删除约束，多条约束出现冲突该如何处理，如何通过编程的方法增加约束，等等。现在我只使用了一个基础的用法，更多的资料，可以参考apple的一篇官方文档：<a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/Introduction/Introduction.html">Auto Layout Guide</a>。</p>
-
-<p>[1]  <a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/Introduction/Introduction.html">https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/Introduction/Introduction.html</a></p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-10T09:00:17+08:00" pubdate data-updated="true"></time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/macos/'>macos</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/11/10/my-macos-programming-life-3/#disqus_thread">Comments</a></div>
 	
 </div>
 </article>

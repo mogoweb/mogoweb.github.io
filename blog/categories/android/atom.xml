@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | 放飞梦想]]></title>
   <link href="http://mogoweb.net/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-11-04T19:08:59+08:00</updated>
+  <updated>2015-11-13T21:51:20+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,49 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Android源码阅读与理解（一）：开篇]]></title>
+    <link href="http://mogoweb.net/blog/2015/11/13/reading-android-source-preface/"/>
+    <updated>2015-11-13T20:36:35+08:00</updated>
+    <id>http://mogoweb.net/blog/2015/11/13/reading-android-source-preface</id>
+    <content type="html"><![CDATA[<p>作为一个自认为苦逼的程序员，有一阵子曾考虑逃离程序世界，做一个文艺青年。你看，出去旅旅游、读读书、摄个影，没事发个呆，生活该是多么的惬意。反观程序员，每天对着冰冷的机器，有事无事还要加个班。正如一个段子所写：</p>
+
+<blockquote><p>你苦战通宵游戏时，布里斯班的灯鱼已划过珊瑚丛;</p>
+
+<p>你赶场招聘会时，蒙巴萨的小蟹刚溜出渔夫的掌心;</p>
+
+<p>你写程序代码时，布拉格的电车正摇着铃晃过金色夕阳;</p>
+
+<p>你挤进汹涌的食堂时，哥本哈根的街头画家完成了第99幅立体画。</p>
+
+<p>有一些穿高跟鞋走不到的路，有一些喷着香水闻不到的空气，有一些在楼宇里永远碰遇不到的人。</p></blockquote>
+
+<p>但是，看村上春书的《当我谈跑步时我谈些什么》如同嚼蜡，看侯孝贤、王家卫的电影直睡觉之后，我发现其实身上缺少文艺细胞，无事发呆更是让我难受。其实仔细想想，写代码时虽然苦逼，但是当纠出一个苦苦追寻了半个月的bug的时刻，内心还是感觉很爽的。不读村上春树，读读东野圭吾也挺开心的。每天充实的感觉比无所事事更舒服。所以，我还是需要做回自己，做自己喜欢、自己擅长的事情。读到池建强的《是旅行还是长跑》中这样一段话：</p>
+
+<blockquote><p>只要你没有一个强悍的爹，就要先忘掉那些小鱼小蟹，还有珊瑚丛，那些暂时还不属于你，踏踏实实地练习和提升才是王道，为自己规划一个十年的长跑，可以时不时停下来休息一下，低下头汗水就落入尘埃，抬起头就看看夕阳西下，你抹去疲惫，然后继续前行。十年看似很长，但实在很短，十年以后你回头看看，你究竟是成了人中龙凤，还是小鱼小虾，是你认知了世界，还是世界抛弃了你。</p></blockquote>
+
+<p>瞬间引起了共鸣。</p>
+
+<p>闲话扯远了，作为一个国产OS的从业者，一直都从Android系统吸(chao)收(xi)营(yuan)养(ma)。其实我们更想借鉴ios系统，可惜人家不开源，光看表面是做不了神似的。在开发的过程中，也碰到不少问题，零零碎碎读过一些Android的源码，但基本上都是现学现用，缺乏整体的理解。既然做不了文艺青年，那我就来挑战一下Android系统源码吧。当然现在Android源码分析的书和文章也比较多，比如我手头就有邓凡平的《深入理解Android》、杨云君的《Android的设计与实现》和罗升阳的《Android系统源代码情景分析》，网上的文章更是不计其数。但别人分析了也是别人的，买了他们的书，但买不到他们的知识。还是需要亲自深入代码分析，知识才能变成我的。</p>
+
+<p>在后续的学习中，我将结合自身的工作，分析我所感兴趣的部分。Android系统是一个相当庞大的系统，想要深入掌握每个细节，那是一个不可能完成的任务。所以我会略去驱动、linux内核、media等部分，初步计划阅读的部分如下：</p>
+
+<ol>
+<li>Android build系统</li>
+<li>Android系统启动</li>
+<li>Binder原理与实现</li>
+<li>Surface系统</li>
+<li>Dalvik虚拟机</li>
+<li>chromium Webview</li>
+</ol>
+
+
+<p>为了让自己能坚持下去，要求在阅读过程中记笔记，每周至少写一篇博客，梳理一下阅读心得。希望我能够坚持下去并有所得，加油！</p>
+
+<p><strong>[注]</strong> 本文引用的文字出自池建强《MacTalk人生元编程》P.194。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[基于chromium for android开发Android浏览器]]></title>
@@ -254,33 +297,6 @@
 </blockquote>
 
 <p>所以结论是Chromium for Android中可以使用TextureView替代SurfaceView作为合成表面，但带来的后果是占用更多的内存，性能下降。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[关于Chromium WebView项目的源代码管理]]></title>
-    <link href="http://mogoweb.net/blog/2014/06/19/about-source-management-of-chromium-webview/"/>
-    <updated>2014-06-19T10:53:25+08:00</updated>
-    <id>http://mogoweb.net/blog/2014/06/19/about-source-management-of-chromium-webview</id>
-    <content type="html"><![CDATA[<p>chromium项目可谓开源项目集大成者，里面使用的第三方开源库数目高达60+。为了应对庞大的代码库管理问题，chromium项目引入了<a href="http://code.google.com/p/gclient/">gclient</a>，一套开源的代码管理方案。gclient是一套python脚本，用来简化多个git/svn源码库的管理。本文不探讨gclient的使用、配置，而是谈谈chromium webview项目是如何组织源码库的。</p>
-
-<p>由于历史原因，chromium项目本身及许多第三方开源库采用的是SVN源码管理系统。SVN采用的是集中式管理，不如git那样能否方便的clone代码库。虽然google后来使用了git-svn等手段，为chromium和所有第三方开源库都做了git镜像库，但是如果需要获取某个release分支的代码，还是需要走svn（google也在不断改进，期望不久的将来，可以通过git获取某个release版本的源码）。</p>
-
-<!--more-->
-
-
-<p>基于chromium的开源项目有三种组织源码方案：</p>
-
-<ol>
-<li><a href="http://code.google.com/p/chromiumembedded">CEF</a>开源项目本身没有放chromium源码，只是提供了一套脚本，从google的服务器上去获取对应的源码，对chromium所做的修改以patch提交，同样提供了脚本应用这些patch。有了自动化脚本，开发人员其实也不关心代码托管在何处，项目组也可以省掉同步chromium源码的工作。但这种方案对项目组人员要求较高，必须要有扎实的脚本语言开发功底，每次对chromium的修改都必须做patch，也很考研开发人员的细致与耐心程度。</li>
-<li><a href="https://www.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/WebHome">Chromium Browser for Snapdragon Project</a>开源项目为所有chromium及第三方开源库都做了git镜像，对chromium的修改直接提交到这些镜像库上。这种方案的优点是可控，非常适合企业内部开发，在企业内部部署，开发人员就无需每人都从外部下载，涉及到技术保密的提交也无需让外界知晓。但这种方案的缺点也是非常明显的，为60+个git库做镜像，有一定的工作量，还要定期同步，需要处理内部提交与外部提交合并问题。</li>
-<li><a href="https://crosswalk-project.org/">crosswalk</a>开源项目只镜像了chromium/blink/v8等少量几个会修改的开源库，其它的库则从google的网站上取。这种方案在维护与便捷之间做了最佳平衡，因为chromium项目使用了大量的第三方开源库，但我们极少有需要去修改这些第三方开源库，处于定制和优化的目的，我们通常也只在chromium/blink库上修改代码。</li>
-</ol>
-
-
-<p>Chromium WebView项目采用了第三种方案，由于chromium和blink这两个库太庞大，屡次上传到github都失败，于是改成从crosswalk项目clone相关的代码库。所以在我的名下多了chromium-crosswalk, blink-crosswalk, v8-crosswalk这几个库，其实它们都是为chromium webview项目服务的，里面包含了crosswalk项目的代码，可以忽略之。</p>
-
-<p>[注: 由于一些原因，在国内访问chromium的源码库不再顺畅了，免费的翻墙服务GAE也被屏蔽了，所以要同步代码，还需要购买商业的VPN，以保证网络是通畅的。您也可以从Chromium Browser for Snapdragon Project获取相关的git库，只要版本取的正确，可以同样使用。]</p>
 ]]></content>
   </entry>
   

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://mogoweb.net/blog/2015/11/13/reading-android-source-preface/</loc>
+    <lastmod>2015-11-13T20:36:35+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://mogoweb.net/blog/2015/11/03/develop-android-browser-base-on-chromium-for-android/</loc>
     <lastmod>2015-11-03T08:39:21+08:00</lastmod>
   </url>
@@ -155,6 +159,9 @@
   </url>
   <url>
     <loc>http://mogoweb.net/blog/categories/ubuntu/</loc>
+  </url>
+  <url>
+    <loc>http://mogoweb.net/blog/categories/xi-tong-fen-xi/</loc>
   </url>
   <url>
     <loc>http://mogoweb.net/404.html</loc>
