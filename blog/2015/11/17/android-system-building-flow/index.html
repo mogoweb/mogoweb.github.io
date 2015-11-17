@@ -1,24 +1,89 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Category: 系统分析 | 放飞梦想]]></title>
-  <link href="http://mogoweb.net/blog/categories/xi-tong-fen-xi/atom.xml" rel="self"/>
-  <link href="http://mogoweb.net/"/>
-  <updated>2015-11-17T18:01:37+08:00</updated>
-  <id>http://mogoweb.net/</id>
-  <author>
-    <name><![CDATA[mogoweb]]></name>
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Android源码阅读与理解（二）：Android系统Build流程详解 - 放飞梦想</title>
+	<meta name="author" content="mogoweb">
+
+	
+	<meta name="description" content="个人认为，成为一个靠谱的Android系统工程师，必须具备以下技能： 翻墙
+会使用Linux系统
+阅读英文资料 翻墙技能就不用说了，因为不翻墙，Android源码难以获取，更不用谈体验墙外精彩的世界了。关于第二点，最好的Android系统开发环境就是Linux（推荐ubuntu）， &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="放飞梦想" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script async="true" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">放飞梦想</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:mogoweb.net">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		
     
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+    
+	</div>
+	<form class="search" action="https://www.google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:mogoweb.net">
+	</form>
+</nav>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Android源码阅读与理解（二）：Android系统Build流程详解]]></title>
-    <link href="http://mogoweb.net/blog/2015/11/17/android-system-building-flow/"/>
-    <updated>2015-11-17T08:51:50+08:00</updated>
-    <id>http://mogoweb.net/blog/2015/11/17/android-system-building-flow</id>
-    <content type="html"><![CDATA[<p>个人认为，成为一个靠谱的Android系统工程师，必须具备以下技能：</p>
+</header>
+	
+		
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Android源码阅读与理解（二）：Android系统Build流程详解</h2>
+	<div class="entry-content"><p>个人认为，成为一个靠谱的Android系统工程师，必须具备以下技能：</p>
 
 <ul>
 <li>翻墙</li>
@@ -168,17 +233,27 @@
 
 <p>产品定义文件通常位于device目录下，vendor目录已经不建议使用（nexus系列的产品定义就是放在vendor目录）。device目录下通常根据公司名及产品名分为二级目录，比如generic的目录结构如下：</p>
 
-<pre><code> device
-   |-- generic
-         |-- armv7-a-neon
-         |-- common
-         |-- goldfish
-         |-- mini-emulator-armv7-a-neon
-         |-- mini-emulator-mips
-         |-- mini-emulator-x86
-         |-- mips
-         |-- x86
-</code></pre>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> device
+</span><span class='line'>   |-- generic
+</span><span class='line'>         |-- armv7-a-neon
+</span><span class='line'>         |-- common
+</span><span class='line'>         |-- goldfish
+</span><span class='line'>         |-- mini-emulator-armv7-a-neon
+</span><span class='line'>         |-- mini-emulator-mips
+</span><span class='line'>         |-- mini-emulator-x86
+</span><span class='line'>         |-- mips
+</span><span class='line'>         |-- x86</span></code></pre></td></tr></table></div></figure>
+
 
 <p>通常一个产品定义至少包含4个文件：AndroidProducts.mk, BoardConfig.mk, vendorsetup.sh及版本定义文件（文件名不固定）。关于如何添加产品定义，请参考<a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-android-build/index.html">&lt;&lt;理解 Android Build 系统>></a>一文的<strong>添加新的产品</strong>一节。</p>
 
@@ -221,50 +296,89 @@
 <li><a href="http://www.devdiv.com/android_-blog-1-1488.html">Android模拟器镜像文件介绍</a></li>
 </ol>
 
-]]></content>
-  </entry>
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
   
-  <entry>
-    <title type="html"><![CDATA[Android源码阅读与理解（一）：开篇]]></title>
-    <link href="http://mogoweb.net/blog/2015/11/13/reading-android-source-preface/"/>
-    <updated>2015-11-13T20:36:35+08:00</updated>
-    <id>http://mogoweb.net/blog/2015/11/13/reading-android-source-preface</id>
-    <content type="html"><![CDATA[<p>作为一个自认为苦逼的程序员，有一阵子曾考虑逃离程序世界，做一个文艺青年。你看，出去旅旅游、读读书、摄个影，没事发个呆，生活该是多么的惬意。反观程序员，每天对着冰冷的机器，有事无事还要加个班。正如一个段子所写：</p>
-
-<blockquote><p>你苦战通宵游戏时，布里斯班的灯鱼已划过珊瑚丛;</p>
-
-<p>你赶场招聘会时，蒙巴萨的小蟹刚溜出渔夫的掌心;</p>
-
-<p>你写程序代码时，布拉格的电车正摇着铃晃过金色夕阳;</p>
-
-<p>你挤进汹涌的食堂时，哥本哈根的街头画家完成了第99幅立体画。</p>
-
-<p>有一些穿高跟鞋走不到的路，有一些喷着香水闻不到的空气，有一些在楼宇里永远碰遇不到的人。</p></blockquote>
-
-<p>但是，看村上春书的《当我谈跑步时我谈些什么》如同嚼蜡，看侯孝贤、王家卫的电影直睡觉之后，我发现其实身上缺少文艺细胞，无事发呆更是让我难受。其实仔细想想，写代码时虽然苦逼，但是当纠出一个苦苦追寻了半个月的bug的时刻，内心还是感觉很爽的。不读村上春树，读读东野圭吾也挺开心的。每天充实的感觉比无所事事更舒服。所以，我还是需要做回自己，做自己喜欢、自己擅长的事情。读到池建强的《是旅行还是长跑》中这样一段话：</p>
-
-<blockquote><p>只要你没有一个强悍的爹，就要先忘掉那些小鱼小蟹，还有珊瑚丛，那些暂时还不属于你，踏踏实实地练习和提升才是王道，为自己规划一个十年的长跑，可以时不时停下来休息一下，低下头汗水就落入尘埃，抬起头就看看夕阳西下，你抹去疲惫，然后继续前行。十年看似很长，但实在很短，十年以后你回头看看，你究竟是成了人中龙凤，还是小鱼小虾，是你认知了世界，还是世界抛弃了你。</p></blockquote>
-
-<p>瞬间引起了共鸣。</p>
-
-<p>闲话扯远了，作为一个国产OS的从业者，一直都从Android系统吸(chao)收(xi)营(yuan)养(ma)。其实我们更想借鉴ios系统，可惜人家不开源，光看表面是做不了神似的。在开发的过程中，也碰到不少问题，零零碎碎读过一些Android的源码，但基本上都是现学现用，缺乏整体的理解。既然做不了文艺青年，那我就来挑战一下Android系统源码吧。当然现在Android源码分析的书和文章也比较多，比如我手头就有邓凡平的《深入理解Android》、杨云君的《Android的设计与实现》和罗升阳的《Android系统源代码情景分析》，网上的文章更是不计其数。但别人分析了也是别人的，买了他们的书，但买不到他们的知识。还是需要亲自深入代码分析，知识才能变成我的。</p>
-
-<p>在后续的学习中，我将结合自身的工作，分析我所感兴趣的部分。Android系统是一个相当庞大的系统，想要深入掌握每个细节，那是一个不可能完成的任务。所以我会略去驱动、linux内核、media等部分，初步计划阅读的部分如下：</p>
-
-<ol>
-<li>Android build系统</li>
-<li>Android系统启动</li>
-<li>Binder原理与实现</li>
-<li>Surface系统</li>
-<li>Dalvik虚拟机</li>
-<li>chromium Webview</li>
-</ol>
 
 
-<p>为了让自己能坚持下去，要求在阅读过程中记笔记，每周至少写一篇博客，梳理一下阅读心得。希望我能够坚持下去并有所得，加油！</p>
+<time datetime="2015-11-17T08:51:50+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
 
-<p><strong>[注]</strong> 本文引用的文字出自池建强《MacTalk人生元编程》P.194。</p>
-]]></content>
-  </entry>
-  
-</feed>
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/xi-tong-fen-xi/'>系统分析</a>
+
+
+</div>
+	
+	<div class="comments"><a href="#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2015
+
+    mogoweb
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'mogoweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mogoweb.net/blog/2015/11/17/android-system-building-flow/';
+        var disqus_url = 'http://mogoweb.net/blog/2015/11/17/android-system-building-flow/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//go.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+</body>
+</html>
