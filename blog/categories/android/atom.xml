@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | 放飞梦想]]></title>
   <link href="http://mogoweb.net/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-11-17T18:01:37+08:00</updated>
+  <updated>2015-09-24T21:54:01+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,355 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[Android源码阅读与理解（二）：Android系统Build流程详解]]></title>
-    <link href="http://mogoweb.net/blog/2015/11/17/android-system-building-flow/"/>
-    <updated>2015-11-17T08:51:50+08:00</updated>
-    <id>http://mogoweb.net/blog/2015/11/17/android-system-building-flow</id>
-    <content type="html"><![CDATA[<p>个人认为，成为一个靠谱的Android系统工程师，必须具备以下技能：</p>
-
-<ul>
-<li>翻墙</li>
-<li>会使用Linux系统</li>
-<li>阅读英文资料</li>
-</ul>
-
-
-<p>翻墙技能就不用说了，因为不翻墙，Android源码难以获取，更不用谈体验墙外精彩的世界了。关于第二点，最好的Android系统开发环境就是Linux（推荐ubuntu），如果能够熟练使用Linux系统可以节省不少折腾环境的时间。最后英文阅读能力也很关键，因为碰到问题Google, <a href="http://www.stackoverflow.com">StackOverflow</a>非常有用，上面的回答有不少是用英文写的。</p>
-
-<p>在这里略过下载Android源码，最好的方法是参考<a href="http://source.android.com">官方文档</a>。简单说一下我的环境：</p>
-
-<ul>
-<li>Ubuntu 14.04 LTS 64位</li>
-<li>Android 4.4.2源码</li>
-<li>Sublime Text 2</li>
-<li>Intel&reg; Core&trade; i7-2630QM CPU @ 2.00GHz, 8G RAM, 1TB hd</li>
-</ul>
-
-
-<p>源码下载后，执行如下命令即可编译Android系统(后面的文章将使用$ANDROID_SRC指代Android源码所在目录，如非特别指明，假设命令行在Android源码目录下执行):</p>
-
-<ol>
-<li>source build/envsetup.sh</li>
-<li>lunch</li>
-<li>make -j4</li>
-</ol>
-
-
-<p>下面就解析以上三个步骤分别做了什么事情。</p>
-
-<h2>设置环境变量</h2>
-
-<p>打开$ANDROID_SRC/build/envsetup.sh文件，我们可以看到文件中定义了一些shell函数，其作用是初始化编译环境，并引入一些辅助的Shell函数，这其中就包括第二步使用lunch函数。这些shell函数可以看做shell命令，方便我们进行一些build任务，比如常用的mm。下面就列出一些常用的函数：</p>
-
-<p><strong>表 1. build/envsetup.sh 中定义的常用函数</strong></p>
-
-<hr />
-
-<table>
-<thead>
-<tr>
-<th style="text-align:left;"> <strong>名称</strong> </th>
-<th style="text-align:left;"> <strong>说明</strong> </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">lunch          </td>
-<td style="text-align:left;"> 选择产品，格式为lunch BUILDID-BUILDTYPE，如果不指定，会弹出一个列表选择 </td>
-</tr>
-<tr>
-<td style="text-align:left;">tapas          </td>
-<td style="text-align:left;"> build未打包到image的app，命令行后可以跟一个或者多个app的名称</td>
-</tr>
-<tr>
-<td style="text-align:left;">croot          </td>
-<td style="text-align:left;"> 切换到源码树的根目录 </td>
-</tr>
-<tr>
-<td style="text-align:left;">m              </td>
-<td style="text-align:left;"> 在源码树的根目录执行 make </td>
-</tr>
-<tr>
-<td style="text-align:left;">mm             </td>
-<td style="text-align:left;"> Build 当前目录下的模块 </td>
-</tr>
-<tr>
-<td style="text-align:left;">mmm                </td>
-<td style="text-align:left;"> Build 指定目录下的模块 </td>
-</tr>
-<tr>
-<td style="text-align:left;">mma            </td>
-<td style="text-align:left;"> Build 当前目录下的模块及所有依赖的模块 </td>
-</tr>
-<tr>
-<td style="text-align:left;">mmma           </td>
-<td style="text-align:left;"> Build 指定目录下的模块及所有依赖的模块 </td>
-</tr>
-<tr>
-<td style="text-align:left;">cgrep          </td>
-<td style="text-align:left;"> 在所有 C/C++ 文件上执行 grep </td>
-</tr>
-<tr>
-<td style="text-align:left;">jgrep          </td>
-<td style="text-align:left;"> 在所有 Java 文件上执行 grep </td>
-</tr>
-<tr>
-<td style="text-align:left;">resgrep        </td>
-<td style="text-align:left;"> 在所有 res/*.xml 文件上执行 grep </td>
-</tr>
-<tr>
-<td style="text-align:left;">godir          </td>
-<td style="text-align:left;"> 转到包含某个文件的目录路径 </td>
-</tr>
-<tr>
-<td style="text-align:left;">printconfig    </td>
-<td style="text-align:left;"> 显示当前 Build 的配置信息 </td>
-</tr>
-<tr>
-<td style="text-align:left;">add_lunch_combo</td>
-<td style="text-align:left;"> 在 lunch 函数的菜单中添加一个条目 </td>
-</tr>
-</tbody>
-</table>
-
-
-<p>除了定义辅助Shell函数，在脚本的结尾处，遍历device和vendor目录下的vendorsetup.sh文件，vendorsetup.sh文件定义与设备相关的环境变量，比如<em>/device/generic/armv7-a-neon/vendorsetup.sh</em>就定义了如下：</p>
-
-<blockquote><p>add_lunch_combo mini_armv7a_neon-userdebug</p></blockquote>
-
-<p>这会在lunch菜单中增加一个选项：mini_armv7a_neon-userdebug</p>
-
-<h2>lunch函数详解</h2>
-
-<p>Android支持不同的硬件，比如不同的CPU架构（ARM、MIPS，X86），不同厂商的外设（如蓝牙、wifi、基带等），另外可能还需要分Debug版本和Release版本，这都是在lunch中进行选择的。lunch命令的格式为lunch BUILDID-BUILDTYPE，其中BUILDTYPE取值如下：</p>
-
-<p><strong>表 2. BUILDTYPE说明</strong></p>
-
-<hr />
-
-<table>
-<thead>
-<tr>
-<th style="text-align:left;"> <strong>BUILDTYPE</strong> </th>
-<th style="text-align:left;"> <strong>说明</strong> </th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left;">user           </td>
-<td style="text-align:left;"> 相当于Release版本，无root权限，不打包调试工具，适合最后的产品发布 </td>
-</tr>
-<tr>
-<td style="text-align:left;">userdebug      </td>
-<td style="text-align:left;"> 和user类似，但多了root权限，可以调试，适合于产品调试 </td>
-</tr>
-<tr>
-<td style="text-align:left;">eng            </td>
-<td style="text-align:left;"> 开发阶段的配置，另外还打包了许多调试工具，适合于产品初期阶段 </td>
-</tr>
-</tbody>
-</table>
-
-
-<p>BUILDID则是一组特性集合的代码，这个通常与具体的平台相关。除了Android源码预置的选项外，还可以通过add_lunch_combo命令添加自定义的组合。当我们要开发一款新的Android产品时，首先就需要在Build系统中添加对于该产品的定义。</p>
-
-<p>产品定义文件通常位于device目录下，vendor目录已经不建议使用（nexus系列的产品定义就是放在vendor目录）。device目录下通常根据公司名及产品名分为二级目录，比如generic的目录结构如下：</p>
-
-<pre><code> device
-   |-- generic
-         |-- armv7-a-neon
-         |-- common
-         |-- goldfish
-         |-- mini-emulator-armv7-a-neon
-         |-- mini-emulator-mips
-         |-- mini-emulator-x86
-         |-- mips
-         |-- x86
-</code></pre>
-
-<p>通常一个产品定义至少包含4个文件：AndroidProducts.mk, BoardConfig.mk, vendorsetup.sh及版本定义文件（文件名不固定）。关于如何添加产品定义，请参考<a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-android-build/index.html">&lt;&lt;理解 Android Build 系统>></a>一文的<strong>添加新的产品</strong>一节。</p>
-
-<h2>build Android系统</h2>
-
-<p>最后一步执行<em>make -j4</em>才开始真正的进行编译操作，j后面的数字代表同时编译的job数，这个数字可根据CPU核心线程数而定，通常可指定为CPU核心线程的1~2倍，数字越大，代表同时进行编译的任务越多，整个编译过程也会越快。如果不指定目标，默认就会实用“droid”目标，build出完整的Android系统镜像。</p>
-
-<p>Android build系统使用了GNU make，这点很让人意外，因为GNU make实在太难用了，Makefile也很难阅读。不过Google的天才工程师引入了模块化、写了很多实用函数，修改/添加起来还算容易。</p>
-
-<h3>Build输出目录结构</h3>
-
-<p>所有的编译产物都将位于 /out 目录下，该目录下主要有以下几个子目录：</p>
-
-<ul>
-<li>out/host/：该目录下包含了host端的工具和库，例如：emulator，adb，aapt等。</li>
-<li>out/target/common/：该目录下包含了针对设备的共用的编译产物，主要是 Java 应用代码和 Java 库。</li>
-<li>out/target/product/&lt;product_name>/：包含了针对特定设备的编译结果以及平台相关的 C/C++ 库和二进制文件。其中，&lt;product_name>是具体目标设备的名称。</li>
-</ul>
-
-
-<h3>Build生成的镜像文件</h3>
-
-<p>Build 的产物中最重要的是三个镜像文件，它们都位于 out/target/product/&lt;product_name>/ 目录下。这三个文件是：</p>
-
-<ul>
-<li>system.img：包含了 Android OS 的系统文件，库，可执行文件以及预置的应用程序，将被挂载为根分区。</li>
-<li>ramdisk.img：在启动时将被 Linux 内核挂载为只读分区，它包含了 /init 文件和一些配置文件。它用来挂载其他系统镜像并启动 init 进程。</li>
-<li>userdata.img：将被挂载为 /data，包含了应用程序相关的数据以及和用户相关的数据。</li>
-</ul>
-
-
-<p>另外还有cache.img,启动模拟器时可使用-cache参数来挂载该文件，指定/cache内容。一般来说我们不直接使用userdata.img，而是使用userdata_qemu.data，用来存放用户数据，可读写，android启动后mount到 /data。只有使用-wipe-data参数启动模拟器是时候才会用到userdata.img，它会使用userdata.img的内容覆盖userdata-qemu.img。</p>
-
-<h2>参考文档</h2>
-
-<ol>
-<li><a href="http://www.stackoverflow.com">Android官方文档</a></li>
-<li><a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-android-build/index.html">理解 Android Build 系统</a></li>
-<li><a href="http://www.cloudchou.com/android/post-134.html">Android编译系统详解(一)——build/envsetup.sh</a></li>
-<li><a href="http://www.devdiv.com/android_-blog-1-1488.html">Android模拟器镜像文件介绍</a></li>
-</ol>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Android源码阅读与理解（一）：开篇]]></title>
-    <link href="http://mogoweb.net/blog/2015/11/13/reading-android-source-preface/"/>
-    <updated>2015-11-13T20:36:35+08:00</updated>
-    <id>http://mogoweb.net/blog/2015/11/13/reading-android-source-preface</id>
-    <content type="html"><![CDATA[<p>作为一个自认为苦逼的程序员，有一阵子曾考虑逃离程序世界，做一个文艺青年。你看，出去旅旅游、读读书、摄个影，没事发个呆，生活该是多么的惬意。反观程序员，每天对着冰冷的机器，有事无事还要加个班。正如一个段子所写：</p>
-
-<blockquote><p>你苦战通宵游戏时，布里斯班的灯鱼已划过珊瑚丛;</p>
-
-<p>你赶场招聘会时，蒙巴萨的小蟹刚溜出渔夫的掌心;</p>
-
-<p>你写程序代码时，布拉格的电车正摇着铃晃过金色夕阳;</p>
-
-<p>你挤进汹涌的食堂时，哥本哈根的街头画家完成了第99幅立体画。</p>
-
-<p>有一些穿高跟鞋走不到的路，有一些喷着香水闻不到的空气，有一些在楼宇里永远碰遇不到的人。</p></blockquote>
-
-<p>但是，看村上春书的《当我谈跑步时我谈些什么》如同嚼蜡，看侯孝贤、王家卫的电影直睡觉之后，我发现其实身上缺少文艺细胞，无事发呆更是让我难受。其实仔细想想，写代码时虽然苦逼，但是当纠出一个苦苦追寻了半个月的bug的时刻，内心还是感觉很爽的。不读村上春树，读读东野圭吾也挺开心的。每天充实的感觉比无所事事更舒服。所以，我还是需要做回自己，做自己喜欢、自己擅长的事情。读到池建强的《是旅行还是长跑》中这样一段话：</p>
-
-<blockquote><p>只要你没有一个强悍的爹，就要先忘掉那些小鱼小蟹，还有珊瑚丛，那些暂时还不属于你，踏踏实实地练习和提升才是王道，为自己规划一个十年的长跑，可以时不时停下来休息一下，低下头汗水就落入尘埃，抬起头就看看夕阳西下，你抹去疲惫，然后继续前行。十年看似很长，但实在很短，十年以后你回头看看，你究竟是成了人中龙凤，还是小鱼小虾，是你认知了世界，还是世界抛弃了你。</p></blockquote>
-
-<p>瞬间引起了共鸣。</p>
-
-<p>闲话扯远了，作为一个国产OS的从业者，一直都从Android系统吸(chao)收(xi)营(yuan)养(ma)。其实我们更想借鉴ios系统，可惜人家不开源，光看表面是做不了神似的。在开发的过程中，也碰到不少问题，零零碎碎读过一些Android的源码，但基本上都是现学现用，缺乏整体的理解。既然做不了文艺青年，那我就来挑战一下Android系统源码吧。当然现在Android源码分析的书和文章也比较多，比如我手头就有邓凡平的《深入理解Android》、杨云君的《Android的设计与实现》和罗升阳的《Android系统源代码情景分析》，网上的文章更是不计其数。但别人分析了也是别人的，买了他们的书，但买不到他们的知识。还是需要亲自深入代码分析，知识才能变成我的。</p>
-
-<p>在后续的学习中，我将结合自身的工作，分析我所感兴趣的部分。Android系统是一个相当庞大的系统，想要深入掌握每个细节，那是一个不可能完成的任务。所以我会略去驱动、linux内核、media等部分，初步计划阅读的部分如下：</p>
-
-<ol>
-<li>Android build系统</li>
-<li>Android系统启动</li>
-<li>Binder原理与实现</li>
-<li>Surface系统</li>
-<li>Dalvik虚拟机</li>
-<li>chromium Webview</li>
-</ol>
-
-
-<p>为了让自己能坚持下去，要求在阅读过程中记笔记，每周至少写一篇博客，梳理一下阅读心得。希望我能够坚持下去并有所得，加油！</p>
-
-<p><strong>[注]</strong> 本文引用的文字出自池建强《MacTalk人生元编程》P.194。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[基于chromium for android开发Android浏览器]]></title>
-    <link href="http://mogoweb.net/blog/2015/11/03/develop-android-browser-base-on-chromium-for-android/"/>
-    <updated>2015-11-03T08:39:21+08:00</updated>
-    <id>http://mogoweb.net/blog/2015/11/03/develop-android-browser-base-on-chromium-for-android</id>
-    <content type="html"><![CDATA[<p>在上一篇文章&lt;&lt; <a href="http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/">Chromium for Android开源了</a> >>中谈到了Google已经完全开源了Chromium for Android，这样我们就完全可以开发与Chrome for Android媲美的Android浏览器了。通常浏览器的一些新特性和新功能会先出现在Chromium for Android上，稳定后才会出现在Chrome for Android上，如果我们基于Chromium for Android开发浏览器产品，在新特性和新功能方面不会落后于Chrome浏览器.</p>
-
-<p>Chromium开源项目的代码及其庞大，也相当的复杂。对于Android开发人员，特别是UI开发人员来说，没有一个合适的IDE环境，会是一个非常痛苦的事情。我们通常是这样开发的，在sublime text中阅读、修改代码，使用chromium的构建系统build出apk，安装到手机，进行调试。对于native代码来说，这样的开发方式也不会有太多麻烦，因为native部分的代码通常修改很少。但如果主要进行UI的定制，这种开发方式就非常痛苦了。</p>
-
-<p>为了应对这个问题，考虑如下方案：</p>
-
-<ol>
-<li>采用Android Studio作为开发环境，从Chromium for Android抽取chrome模块的源码，加入Android project。</li>
-<li>native代码在chromium环境中build，作为so加入Android project</li>
-<li>基础模块(base, content, net等)在chromium环境build为jar包，加入Android project</li>
-<li>content, chrome, ui等模块的资源文件加入Android library project</li>
-</ol>
-
-
-<p>资源文件为什么不能直接都添加到Android project呢？因为命名空间的原因，比如content模块的资源的命名空间为org.chromium.content, chrome模块的资源的命名空间为org.chromium.chrome，所以需要建立不同的Android library project, 指定不同的包名。最后整个项目的结构如下：</p>
-
-<pre><code>browser
-  |_ app
-  |    |_ libs
-  |    |_ src
-  |         |_ main
-  |              |_ aidl
-  |              |_ assets
-  |              |_ java
-  |              |_ jniLibs
-  |              |_ res
-  |_ libraries
-       |_ androidmedia_res
-       |_ chrome_res
-       |_ content_res
-       |_ datausagechart_res
-       |_ ui_res
-</code></pre>
-
-<p>注意事项：</p>
-
-<ol>
-<li>chromium项目的源码和资源有些是自动生成的，需要到out目录下去复制</li>
-<li>pak和dat等文件需要加入到assets目录，而且不能压缩</li>
-<li>aidl文件加入到main/aidl下，android studio会自动处理</li>
-</ol>
-
-
-<p>实践证明，这种方案是行之有效的，请参考github上的项目: <a href="https://github.com/mogoweb/365browser">365browser</a>。在script目录下有从chromium项目同步代码和资源的脚本。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Chromium for Android开源了]]></title>
-    <link href="http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/"/>
-    <updated>2015-09-25T09:08:49+08:00</updated>
-    <id>http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source</id>
-    <content type="html"><![CDATA[<p>最近一段时间都在忙其它的事情，没有关注chromium的最新进展。这几天浏览 <a href="http://www.chromium.org">http://www.chromium.org</a> 上的文档，发现android build目标增加了一个：chrome_public_apk。编译方法：</p>
-
-<blockquote><h1>Build the full browser</h1>
-
-<p>~/chromium/src$ ninja -C out/Release chrome_public_apk</p>
-
-<p>~/chromium/src$ build/android/adb_install_apk.py out/Release/apks/ChromePublic.apk</p></blockquote>
-
-<p>搜索了一下相关新闻，大约在2015年5月份开始，chromium中开始加入了chrome for android的源码。从2012年开始，chromium中开始出现Android的移植代码，但只有Content API和ContentShell，离一个完备的浏览器还有一定的距离。当然，基于Content API开发浏览器也是可行的，当年就是这么干的。Chromium for Android和Chrome for Android并非完全一样，就如同桌面版Chromium浏览器和Chrome浏览器之间的区别。</p>
-
-<p>下面放上一些Chromium for Android浏览器的截图，慢慢品味吧：</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_welcome.png" alt="welcome" /></p>
-
-<p>欢迎界面</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_account.png" alt="account" /></p>
-
-<p>帐号同步界面</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_main.png" alt="main" /></p>
-
-<p>浏览器主界面</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_menu.png" alt="menu" /></p>
-
-<p>浏览器菜单</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_settings.png" alt="settings" /></p>
-
-<p>浏览器设置</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_tabs.png" alt="tabs" /></p>
-
-<p>浏览器标签页</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[打造自己的chrome for android]]></title>
@@ -438,6 +89,271 @@
 
 
 <p>到此，自有品牌的chrome浏览器就此诞生，您可以更换logo，修复chromium的bug等等。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在Chromium for Android中能否用TextureView替代SurfaceView]]></title>
+    <link href="http://mogoweb.net/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android/"/>
+    <updated>2015-06-19T19:26:45+08:00</updated>
+    <id>http://mogoweb.net/blog/2015/06/19/using-textureview-instead-of-surfaceview-in-chrome-for-android</id>
+    <content type="html"><![CDATA[<p>在开发Browser 2.0时，碰到一个非常头疼的问题，往布局上添加SurfaceView时，会引起黑屏闪一下。为了解决这个问题，我们不得不在初始化阶段就把SurfaceView添加好，之后也不能调整大小、移动位置。当时就考虑是不是能够用TextureView替代SurfaceView，不过由于计划上的调整，没有做进一步的尝试。今天在网上看到<a href="https://github.com/crosswalk-project/crosswalk-website/wiki/Android-SurfaceView-vs-TextureView">这篇文章</a>，正好解答了我的疑问，在此把文章翻译过来，供参考。</p>
+
+<blockquote><h1>Android SurfaceView和textureView</h1>
+
+<p>本文将简要介绍SurfaceView和TextureView的不同之处</p>
+
+<h2>SurfaceView和TextureView</h2>
+
+<p>SurfaceView和TextureView都继承自android.view.View类，他们都可以在另一个独立线程中绘制和渲染，这是和其它View的最大不同。Crosswalk采用这一分离绘制特性，独立的GPU线程显著提高了渲染效率。</p>
+
+<p>SurfaceView提供一个嵌入在视图层次上的专用绘制表面，您可以控制该表面（Surface）的格式和尺寸。SurfaceView负责将表面放置在屏幕上正确的位置。它的行为多少有些类似于传统桌面系统上的onscreen窗口，比如，X11系统中的XWindow可以是无边框的，嵌入在另一个XWindow中。</p>
+
+<p>SurfaceView存在如下两个缺点：</p>
+
+<ul>
+<li>不能应用动画、变换和缩放</li>
+<li>不能叠加（Overlay）两个SurfaceView</li>
+</ul>
+
+
+<p>TextureView看似更像一个通用的View，可以应用动画、变换和缩放，就如同TextView。TextureView只能用在硬件加速的窗口。但是，TextureView比SurfaceView更耗内存，而且可能会有1～3帧的延迟，请参考讨论<a href="https://groups.google.com/a/chromium.org/forum/#!topic/graphics-dev/Z0yE-PWQXc4">3</a>。</p>
+
+<h2>使用可以动画的XWalkView</h2>
+
+<p>Crosswalk Embedding API for Android很好的支持了SurfaceView和TextureView。XWalkView缺省使用SurfaceView，也允许您在以下情况下使用TextureView：</p>
+
+<ul>
+<li>您想让XWalkView支持动画和变换</li>
+<li>您想叠加两个XWalkView</li>
+</ul>
+
+
+<p>设置布尔标识ANIMATIBLE_XWALK_VIEW为true即可启用TextureView。</p>
+
+<ol>
+<li><a href="http://developer.android.com/reference/android/view/SurfaceView.html">http://developer.android.com/reference/android/view/SurfaceView.html</a></li>
+<li><a href="http://developer.android.com/reference/android/view/TextureView.html">http://developer.android.com/reference/android/view/TextureView.html</a></li>
+<li><a href="https://groups.google.com/a/chromium.org/forum/#!topic/graphics-dev/Z0yE-PWQXc4">https://groups.google.com/a/chromium.org/forum/#!topic/graphics-dev/Z0yE-PWQXc4</a></li>
+</ol>
+</blockquote>
+
+<p>文中提到的讨论起源是在google groups中有人提出如下问题：</p>
+
+<blockquote><p>在当前ContentViewRenderView实现中，使用SurfaceView作为合成表面(compositing surface)，如我们所知，SurfaceView是一个特别的视图，无法进行动画或者变换。</p>
+
+<p>TextureView可以做SufaceView同样的事情，比如，您可以在另一个独立线程中渲染，也可以从底下的SurfaceTexture创建一个egl表面(eglSurface)。更主要的是，TextureView可以进行动画和变换。</p>
+
+<p>我很好奇为什么不使用TextureView作为合成表面，是否TextureView在使用上有一些特别的考虑，比如性能问题？欢迎任何讨论。</p></blockquote>
+
+<p>Google groups有人做如下回复：</p>
+
+<blockquote><p>事实上chrome过去使用TextureView作为合成表面，但我们出于几个原因切换到SurfaceView：</p>
+
+<ul>
+<li>由于失效(invalidation)和缓冲的特性，TextureView增加了额外1~3帧的延迟显示画面更新</li>
+<li>TextureView总是使用GL合成，而SurfaceTexture可以使用硬件overlay后端，可以占用更少的内存带宽，消耗更少的能量</li>
+<li>TextureView的内部缓冲队列导致比SurfaceView使用更多的内存</li>
+<li>TextureView的动画和变换能力我们用不上</li>
+</ul>
+</blockquote>
+
+<p>所以结论是Chromium for Android中可以使用TextureView替代SurfaceView作为合成表面，但带来的后果是占用更多的内存，性能下降。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[关于Chromium WebView项目的源代码管理]]></title>
+    <link href="http://mogoweb.net/blog/2014/06/19/about-source-management-of-chromium-webview/"/>
+    <updated>2014-06-19T10:53:25+08:00</updated>
+    <id>http://mogoweb.net/blog/2014/06/19/about-source-management-of-chromium-webview</id>
+    <content type="html"><![CDATA[<p>chromium项目可谓开源项目集大成者，里面使用的第三方开源库数目高达60+。为了应对庞大的代码库管理问题，chromium项目引入了<a href="http://code.google.com/p/gclient/">gclient</a>，一套开源的代码管理方案。gclient是一套python脚本，用来简化多个git/svn源码库的管理。本文不探讨gclient的使用、配置，而是谈谈chromium webview项目是如何组织源码库的。</p>
+
+<p>由于历史原因，chromium项目本身及许多第三方开源库采用的是SVN源码管理系统。SVN采用的是集中式管理，不如git那样能否方便的clone代码库。虽然google后来使用了git-svn等手段，为chromium和所有第三方开源库都做了git镜像库，但是如果需要获取某个release分支的代码，还是需要走svn（google也在不断改进，期望不久的将来，可以通过git获取某个release版本的源码）。</p>
+
+<!--more-->
+
+
+<p>基于chromium的开源项目有三种组织源码方案：</p>
+
+<ol>
+<li><a href="http://code.google.com/p/chromiumembedded">CEF</a>开源项目本身没有放chromium源码，只是提供了一套脚本，从google的服务器上去获取对应的源码，对chromium所做的修改以patch提交，同样提供了脚本应用这些patch。有了自动化脚本，开发人员其实也不关心代码托管在何处，项目组也可以省掉同步chromium源码的工作。但这种方案对项目组人员要求较高，必须要有扎实的脚本语言开发功底，每次对chromium的修改都必须做patch，也很考研开发人员的细致与耐心程度。</li>
+<li><a href="https://www.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/WebHome">Chromium Browser for Snapdragon Project</a>开源项目为所有chromium及第三方开源库都做了git镜像，对chromium的修改直接提交到这些镜像库上。这种方案的优点是可控，非常适合企业内部开发，在企业内部部署，开发人员就无需每人都从外部下载，涉及到技术保密的提交也无需让外界知晓。但这种方案的缺点也是非常明显的，为60+个git库做镜像，有一定的工作量，还要定期同步，需要处理内部提交与外部提交合并问题。</li>
+<li><a href="https://crosswalk-project.org/">crosswalk</a>开源项目只镜像了chromium/blink/v8等少量几个会修改的开源库，其它的库则从google的网站上取。这种方案在维护与便捷之间做了最佳平衡，因为chromium项目使用了大量的第三方开源库，但我们极少有需要去修改这些第三方开源库，处于定制和优化的目的，我们通常也只在chromium/blink库上修改代码。</li>
+</ol>
+
+
+<p>Chromium WebView项目采用了第三种方案，由于chromium和blink这两个库太庞大，屡次上传到github都失败，于是改成从crosswalk项目clone相关的代码库。所以在我的名下多了chromium-crosswalk, blink-crosswalk, v8-crosswalk这几个库，其实它们都是为chromium webview项目服务的，里面包含了crosswalk项目的代码，可以忽略之。</p>
+
+<p>[注: 由于一些原因，在国内访问chromium的源码库不再顺畅了，免费的翻墙服务GAE也被屏蔽了，所以要同步代码，还需要购买商业的VPN，以保证网络是通畅的。您也可以从Chromium Browser for Snapdragon Project获取相关的git库，只要版本取的正确，可以同样使用。]</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[关于chromium_webview项目]]></title>
+    <link href="http://mogoweb.net/blog/2014/06/10/about-chromium-webview-project/"/>
+    <updated>2014-06-10T08:56:06+08:00</updated>
+    <id>http://mogoweb.net/blog/2014/06/10/about-chromium-webview-project</id>
+    <content type="html"><![CDATA[<p>chromium_webview的目标是在chromium核心的基础上提供Android WebView API全兼容的接口，希望达到的效果是基于Android WebView API开发的应用程序，只需将android.webkit包名替换为com.mogoweb.chrome即可完成从WebKit内核到Chromium内核的迁移。目标支持平台为Android 4.0以上。项目地址：<a href="https://github.com/mogoweb/chromium_webview">https://github.com/mogoweb/chromium_webview</a>。</p>
+
+<h2>项目的起源</h2>
+
+<p>从2011年开始，我转向从事chromium的定制化工作。2012年在移动手机平台上开发了一款浏览器Browser1.0，基于WebKit内核和Android WebView API。2012年下半年开始进行chromium的移植工作，其时google发布了Chrome for Android的第一个版本V0.16，还是beta版本。虽然浏览器的内核发生了很大的变化，但是我们期望上层的代码不需要做修改，于是在Content API的基础上，按照Android WebView API进行接口封装。最后做出来的浏览器美其名曰“双内核”，也就是WebKit加Chromium双内核。</p>
+
+<!--more-->
+
+
+<p>由于Chromium渲染架构的缘故，在Content API之上封装的WebView API还存在问题：</p>
+
+<ol>
+<li>为了启用硬件加速，chromium for android引入了SurfaceView，但SurfaceView动态添加会引起黑屏。所以SurfaceView必须在应用程序的初始化代码中添加，不能象Android WebView那样随心所欲的使用。</li>
+<li>采用了多进程架构，后果之一就是内存狂飙，更让人难以接受的是，访问新浪首页这样复杂的网页，还不如WebKit浏览器流畅。</li>
+</ol>
+
+
+<p>在我们移植chromium的同时，google的工程师也没闲着，chromium代码下面开始出现android_webview的代码，接着代码越来越多，更新的也越来越频繁。有一天，在github上看到一个项目：<a href="https://github.com/pwnall/chromeview">ChromeView Project</a>。这正是我所需要的基于chromium的WebView API封装,但这哥们估计也没啥闲功夫，项目好久都没有更新。于是我就在github上创建了chromium_webview项目，早期的AwContents实现是软件渲染，所以效率低下。</p>
+
+<p>时间推到2013年11月，Android 4.4发布，其中很大的一个变化就是使用chromium替换了原来的webkit引擎。于是我又开始哼哧哼哧研究起AOSP中的Chromium WebView实现，研究了AOSP中的Chromium WebView实现后，定下了如下策略：</p>
+
+<ol>
+<li>照搬WebViewChromium及相关代码，如果代码中使用了未公开的API，使用反射机制实现。</li>
+<li>启用光栅化位图，消除对GraphicBuffer的依赖，从而不依赖系统的未公开C++接口。</li>
+</ol>
+
+
+<p>经过一段时间的工作，chromium webview项目终于完整支持硬件加速。</p>
+
+<h2>Chromium WebView的应用场景</h2>
+
+<p>有人要说了，现在Android系统都已经采用chromium引擎了，你还费老大劲整出这玩意儿，是不是吃饱了撑了。的确，做这个事情没给我带来一毛钱经济上的收益，反而搭进了我的业余休息时间，我做这件事的动力来自：</p>
+
+<ol>
+<li>Android WebView采用chromium引擎不假，但那也得4.4及以上的版本。</li>
+<li>使用系统的WebView，失去了定制能力，比如要添加一个HTML标签就比较难。</li>
+<li>提高水平，结交朋友。</li>
+</ol>
+
+
+<p>早些年做《无线城市》项目时，就发现Hybrid App还是有一些市场的。但使用系统的WebView可能存在性能低下、兼容性不良、无法定制的问题。所以chromium webview的最佳应用场景就是集成到APP作为渲染引擎，此外开发浏览器也是一个选择。</p>
+
+<h2>Chromium WebView存在的问题</h2>
+
+<p>Chromium WebView刚完成了初步的移植，问题还非常多，在后续的时间，将会继续完善。目前看来，仍然有几大难题难以解决：</p>
+
+<ol>
+<li>由于渲染架构的原因，在Android 4.0 &amp; Android 4.0.3上还只能使用软件方式渲染；</li>
+<li>光栅化位图的效率似乎比GraphicBuffer的效率低一些，长网页或复杂网页在快速滚动时，会出现短暂的白屏。</li>
+</ol>
+
+
+<h2>后续计划</h2>
+
+<ol>
+<li>完善Chromium WebView API，修复BUG</li>
+<li>开启WebGL支持</li>
+<li>精简内核，优化内存占用</li>
+<li>将开源浏览器TintBrowser改成使用Chromium WebView，证明基于WebView API的应用能够无缝迁移到Chromium WebView。</li>
+</ol>
+
+
+<h2>更新</h2>
+
+<p>2014-08-18</p>
+
+<p>完成TintBrowser在Chromium WebView上的适配，并修改了若干UI，命名为365浏览器，已经在腾讯开放平台上上架，你可以从<a href="http://android.myapp.com/myapp/detail.htm?apkName=com.mogoweb">这里</a>下载。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Chromium网络加载速度研究(2)]]></title>
+    <link href="http://mogoweb.net/blog/2014/04/03/chromium-loading-spped-research-1/"/>
+    <updated>2014-04-03T18:10:06+08:00</updated>
+    <id>http://mogoweb.net/blog/2014/04/03/chromium-loading-spped-research-1</id>
+    <content type="html"><![CDATA[<p>本文主要内容翻译自chromium的文档<a href="http://www.chromium.org/developers/design-documents/network-stack/netlog">NetLog: Chrome’s network logging system</a>，如果您觉得文章写的不明白，请参看原文。</p>
+
+<p>通过&lt;&lt;<a href="http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/">Chromium网络加载速度研究(1)</a>>>这篇文章的分析，可以得出结论，云端加速是高富帅的玩法。对于个人开发者和小公司而言，是没有那个实力去部署强大的数据中心的。所以接下来还得继续研究，看看有没有其它的途径提高网页加载速度。在着手优化之前，我们需要一个profiling手段找出瓶颈，有目的的优化。另一方面，也需要考虑如何评估优化的效果。如果没有一个客观的评估，优化方案是否有效心中就没有底。谈到Profiling，大多数人估计都会想到log大法，就是在程序的一些关键位置打上log。log通常包括时间、事件、状态等。在chromium中，开发人员早就预料了此类需求，设计了一套强大的NetLog。下面就分析一下chromium中NetLog的设计、实现及其用法。</p>
+
+<!--more-->
+
+
+<h2>概述</h2>
+
+<p>NetLog是一套为Chrome网络栈而设计的事件日志机制，帮助调试问题和分析性能。它遵照&#8221;抓取->转储->分析&#8221;的工作流程，这点和某些工具，如tcpdump有些相像。</p>
+
+<p>典型的使用场景为：</p>
+
+<ol>
+<li>用户启用网络日志</li>
+<li>用户重现问题</li>
+<li>用户将日志上传到BUG报告系统</li>
+<li>开发人员分析日志，定位问题</li>
+</ol>
+
+
+<p>在chrome网络栈内部，在一些关键位置都加入了日志机制，产生事件。观察者监控事件流，对数据进行处理。Chrome中已有的观察者有：</p>
+
+<ul>
+<li>(net_log_logger.cc) 将事件流序列化到文件</li>
+<li>(net_internals_ui.cc) 将事件传递到Javascript应用程序chrome://net-internals,改应用程序可以将数据可视化展现，也可以导出到文件</li>
+</ul>
+
+
+<h2>NetLog的设计理念：</h2>
+
+<ul>
+<li>NetLog缺省关闭</li>
+<li>NetLog关闭时不会影响性能</li>
+<li>Chrome官方发行版本支持NetLog</li>
+<li>事件容易序列化/反序列化到磁盘</li>
+<li>NetLog仅仅用作记录日志</li>
+</ul>
+
+
+<p>也就是说，日志如何序列化，如何分析并非NetLog需要关心的事情。此外，不要通过NetLog获取内部网络信息，比如为NetLog增加一个观察者得到内部网络状态信息。正确的做法是为NetworkDelegate增加接口，进行充分的测试，然后增加文档进行说明。</p>
+
+<h2>NetLog事件的结构定义</h2>
+
+<p>C++中NetLog事件用net::NetLog::Entry定义，这是在内存中的表示，非常容易序列化到JSON。</p>
+
+<p>不到必要的时候，NetLog事件并不会序列化到JSON。在需要序列化事件时，JSON格式如下：</p>
+
+<table>
+<thead>
+<tr>
+<th style="text-align:center;">字段 </th>
+<th style="text-align:center;"> 类型 </th>
+<th style="text-align:left;"> 描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">time </td>
+<td style="text-align:center;"> string </td>
+<td style="text-align:left;">事件发生的时间（毫秒)，这是时间滴答数而不是unix时间戳. 尽管这是一个数字域，使用字符串表示是避免精度损失</td>
+</tr>
+<tr>
+<td style="text-align:center;">type </td>
+<td style="text-align:center;"> number </td>
+<td style="text-align:left;">事件类型的ID，枚举值定义在<a href="http://src.chromium.org/viewvc/chrome/trunk/src/net/base/net_log_event_type_list.h?view=markup">net_log_event_type_list.h</a></td>
+</tr>
+<tr>
+<td style="text-align:center;">source </td>
+<td style="text-align:center;"> object </td>
+<td style="text-align:left;">产生事件的实例，比如可以标识出某个特定的URLRequest</td>
+</tr>
+<tr>
+<td style="text-align:center;">phase </td>
+<td style="text-align:center;"> number </td>
+<td style="text-align:left;">BEGIN, END, NONE三个枚举值之一</td>
+</tr>
+<tr>
+<td style="text-align:center;">params </td>
+<td style="text-align:center;"> object </td>
+<td style="text-align:left;">可选字段</td>
+</tr>
+</tbody>
+</table>
+
 ]]></content>
   </entry>
   

@@ -7,7 +7,7 @@
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="Android 5.0发布了好长时间，一直都没有来得及研究。前两周终于将android 5.0源码下载了下来，大致看了一下代码。我所关注的并非Material Design，而是Android 5.0的web引擎。从Android 4.4开始，采用了chromium/blink内核， &hellip;">
+	<meta name="description" content="自从购入iMac后，这台水果机一直就是我的专属机。女人天生就对电脑这种科技产品心存畏惧，老婆一看这台电脑不是熟悉的Windows系统，就摸都不想摸。直到有一天，老婆拿了一个拷贝有儿子照片的U盘，要用这台iMac浏览一下照片，因为这台iMac的屏幕够大，显示效果也好。于是我就让位让她操作一下。 &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -80,540 +80,6 @@
 		
 	
 	<div id="content" class="inner">
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/12/09/mirror-chromium-to-local-server/">
-		
-			在本地服务器上建立chromium镜像</a>
-	</h2>
-	<div class="entry-content">
-		<p>Android 5.0发布了好长时间，一直都没有来得及研究。前两周终于将android 5.0源码下载了下来，大致看了一下代码。我所关注的并非Material Design，而是Android 5.0的web引擎。从Android 4.4开始，采用了chromium/blink内核，Android 5.0自然也不例外，只是chromium的版本升级到了37.0.2062.116。想到我的chromium webview项目，仍然采用的是34.0.1847，因此打算也将chromium版本进行一次升级。</p>
-
-<p>因为可恶的GFW，下载代码及其不顺利，虽然有VPN，但是对于几十G的chromium下载量，下载速度太慢，而且git不支持断点续传。在折腾了两三个星期之后，决定在公司的服务器上建立chromium的镜像。不知道从哪个版本开始，gclient开始全面转向git。由于git的天然的分布式特点，这为完全镜像chromium源码库提供了便利。</p>
-
-<p>chromium源码库是由chromium本身加上一堆第三方开源库组成，极其庞大。为此我写了一个脚本，放到了github上，有兴趣的可以访问<a href="https://github.com/mogoweb/chromium_mirror_script">chromium_mirror_script</a>项目，其中chromium_git_list.txt为所有的源码库列表，来自<a href="https://chromium.googlesource.com/">https://chromium.googlesource.com/</a>，随着时间的推移，这个列表也可能发生变化。</p>
-
-<p>有了内部的chromium镜像后，我们可以修改.DEPS.git文件，将其中的git_url值替换为本地git地址，这样通过gclient下载，就是从本地镜像服务器上获取代码了。</p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-12-09T21:59:27+08:00" pubdate data-updated="true"></time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/chromium/'>chromium</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/12/09/mirror-chromium-to-local-server/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/11/10/my-macos-programming-life-3/">
-		
-			我的macos编程之旅-AutoLayout</a>
-	</h2>
-	<div class="entry-content">
-		<p>开始了Mac OS编程之后，仿佛又回到了Visual Basic编程年代，拖拖拽拽几个控件，app的UI就设计好了。但我至今还记得当年面临一个头疼的问题，就是应用程序在不同分辨率下的展现问题。为什么会头疼呢？那时主流的屏幕分辨率是800x600，但有些更好的显示器分辨率为1024x768，如果我们按照1024x768的分辨率设计UI，那么在800x600的分辨率下就显示不全，如果按照800x600的分辨率设计UI，那在1024x768下就没法充分利用屏幕空间。所以当时的app通常会指定最佳分辨率，低了显示不全，高了就只利用屏幕的一部分空间。</p>
-
-<p>回到<strong>365看图</strong>软件上来，按照IKImageViewDemo设计的UI，存在一个问题：当我拉大窗口，图片显示区域并不会随之变大，整个界面变得很不协调。原因呢在于UI采用了绝对布局，控件的大小和位置是固定的。当然我也可以通过编程的方式，根据窗口的大小，计算图片显示区域的大小，然后动态的设置大小和位置，但这比较繁琐。在Android中，通过设计出线性布局、相对布局等布局方式来解决这一问题，而绝对布局是不推荐使用的。Mac OS是如何解决这一难题的呢？答案就是AutoLayout。</p>
-
-<h3>AutoLayout <sup>[1]</sup></h3>
-
-<p>自动布局系统通过数学化描述元素之间的关系来布局应用程序用户界面。这种关系称作约束，可以定义在单个的元素上，也可以定义在元素之间。使用自动布局，您可以创建动态灵活的界面来适应窗口大小的改变、设备横竖屏变化，还可以应对本地化带来的麻烦。</p>
-
-<p>约束是自动布局的基础，它描述了界面元素布局的规则，比如您可以创建一个约束指定元素的宽度，或者与另一个元素的水平距离。您也可以添加或者删除约束，甚至修改约束的属性，来改变界面布局。</p>
-
-<p>当您添加了多个约束后，不可避免的可能会存在冲突。所以，在计算用户界面上元素的运行时位置时，自动布局系统会综合考虑所有的约束，然后找出一种最大满足所有约束的布局。</p>
-
-<p>自动布局从XCode 5开始引入，适用于ios 6.0和mac os 10.7及以上系统。当一个新工程创建时，自动布局缺省是开启的。</p>
-
-<h3>添加约束</h3>
-
-<p>添加约束的最简单方法就是通过拖拽来完成，方法如下：按住Ctrl键，然后拖动画布上的控件，类似于创建outlet连接。您可以拖拽元素到自身、到容器，或者到另一个元素。</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_mac_autolayout_trailing_2x.png" alt="autolayout" /></p>
-
-<p>如上图中，您可以根据需要选择&#8221;保持在容器垂直方向的中央“，也可以选择”尾部与容器保持一定的距离“。</p>
-
-<p>在<strong>365看图</strong>中，我选择将IKImageView的四边与容器保持一定的距离，这样，当窗口放大和缩小时，IKImageView就能同步放大与缩小。</p>
-
-<h3>更多</h3>
-
-<p>关于约束，还有许多地方值得探讨：比如编辑/删除约束，多条约束出现冲突该如何处理，如何通过编程的方法增加约束，等等。现在我只使用了一个基础的用法，更多的资料，可以参考apple的一篇官方文档：<a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/Introduction/Introduction.html">Auto Layout Guide</a>。</p>
-
-<p>[1]  <a href="https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/Introduction/Introduction.html">https://developer.apple.com/library/ios/documentation/UserExperience/Conceptual/AutolayoutPG/Introduction/Introduction.html</a></p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-10T09:00:17+08:00" pubdate data-updated="true"></time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/macos/'>macos</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/11/10/my-macos-programming-life-3/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/11/05/my-macos-programming-life-2/">
-		
-			我的macos编程之旅-应用程序关联</a>
-	</h2>
-	<div class="entry-content">
-		<p>对objective-c做了基础的入门之后，我就开始了<strong>365看图</strong>的开发。我个人偏好通过实战来掌握新知识，碰到问题后再来阅读相关的资料并解决问题。从苹果开发者网站找到了一个<a href="https://developer.apple.com/library/mac/samplecode/IKImageViewDemo/Introduction/Intro.html#//apple_ref/doc/uid/DTS10004049">IKImageViewDemo</a>示例，这个例子足够简单，也满足我要开发的<strong>365看图</strong>的基本功能。以IKImageViewDemo作为模板，<strong>365看图</strong>就有了显示、放大、缩小、旋转图片等功能。接下来需要实现一个功能：关联应用程序到图片类型。简单的说，就是在Finder中鼠标右键点击图片文件，能够选择<strong>365看图</strong>打开图片，或者将图片文件拖拽到<strong>365看图</strong>即打开。</p>
-
-<h3>注册文档类型</h3>
-
-<p>在Windows系统中，有一个叫做注册表的东东来集中管理文档类型和能够打开文档的应用程序列表，在Mac系统中，则是通过应用程序包中的info.plist。在info.plist中，声明应用程序能够处理的文档类型(通过文件名后缀)。在<strong>365看图</strong>项目中有一个ImageViewer-Info.plist的文件，内容如下:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span class='line'><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
-</span><span class='line'><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
-</span><span class='line'><span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleDevelopmentRegion<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>zh_CN<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;key&gt;</span>CFBundleDocumentTypes<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeExtensions<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;array&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;string&gt;</span>jpg<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;string&gt;</span>png<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/array&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeIconFile<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;string&gt;&lt;/string&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeRole<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;string&gt;</span>Viewer<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleExecutable<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>${EXECUTABLE_NAME}<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleIconFile<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleIdentifier<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>com.mogoweb.${PRODUCT_NAME:rfc1034identifier}<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleInfoDictionaryVersion<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>6.0<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleName<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>${PRODUCT_NAME}<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundlePackageType<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>APPL<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleShortVersionString<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>1.0<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleSignature<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>????<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>CFBundleVersion<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>1<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>LSApplicationCategoryType<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>public.app-category.photography<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>LSMinimumSystemVersion<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>${MACOSX_DEPLOYMENT_TARGET}<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>NSHumanReadableCopyright<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>Copyright © 2014年 mogoweb. All rights reserved.<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>NSMainNibFile<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>MainMenu<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;key&gt;</span>NSPrincipalClass<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>  <span class="nt">&lt;string&gt;</span>NSApplication<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'><span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'><span class="nt">&lt;/plist&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>其中关键的地方在于:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='xml'><span class='line'><span class="nt">&lt;key&gt;</span>CFBundleDocumentTypes<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;array&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;dict&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeExtensions<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;array&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;string&gt;</span>jpg<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>                <span class="nt">&lt;string&gt;</span>png<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;/array&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeIconFile<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;string&gt;&lt;/string&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;key&gt;</span>CFBundleTypeRole<span class="nt">&lt;/key&gt;</span>
-</span><span class='line'>            <span class="nt">&lt;string&gt;</span>Viewer<span class="nt">&lt;/string&gt;</span>
-</span><span class='line'>        <span class="nt">&lt;/dict&gt;</span>
-</span><span class='line'>    <span class="nt">&lt;/array&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>指明了应用程序能够处理jpg, png为后缀的文件。</p>
-
-<h3>获取文件名</h3>
-
-<p>通过右键点击开启应用程序，app是如何得到这个文件名呢？请看下面的代码:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span> <span class="nf">application</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSApplication</span><span class="o">*</span><span class="p">)</span> <span class="n">sender</span> <span class="nl">openFile</span> <span class="p">:</span> <span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span> <span class="n">pathname</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;application is asking to open %@&quot;</span><span class="p">,</span> <span class="n">pathname</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h3>调试技巧</h3>
-
-<p>通过拖拽打开应用程序如何调试(比如在application:openFile中打断点)呢？方法如下：</p>
-
-<ol>
-<li>在Xcode中点击菜单 <strong>Product > Scheme > Edit Scheme</strong> ，在 <strong>Info</strong> 页修改 <strong>Lauch</strong> 选项为：<strong>Wait for executable to be launched</strong></li>
-<li>在 application:openFile 方法中设置断点。</li>
-<li>打开 <strong>Finder</strong>, 将图片文件拖拽到您的应用程序上。［注：您可以在XCode的<strong>Project Navigator</strong>中右键点击Porducts节点下的xxx.app，然后点击<strong>Show in Finder</strong>菜单项来定位你的app可执行文件的位置］</li>
-</ol>
-
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-11-05T08:55:21+08:00" pubdate data-updated="true"></time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/macos/'>macos</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/11/05/my-macos-programming-life-2/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/10/24/my-macos-programming-life-1/">
-		
-			我的macos编程之旅-Objective C入门</a>
-	</h2>
-	<div class="entry-content">
-		<p>&lt;<Objective-C Programming>>这本书属于基础入门书，Part I和Part II的内容是C语言基础，直接略过，直接跳到“Part III Objective-C and Foundation”。由于已经有C/C++编程经验，看书时着重于Objective C和C++的不同之处。</p>
-
-<p>Objective-C是在C语言的基础上添加面向对象特性发展而来，下面就看看Objective-C中的面向对象三大要素。</p>
-
-<h2>1. 封装</h2>
-
-<p>和C++、Java等面向对象语言不同，Objective-C中并没有定义private, protected, public关键字，所有数据成员（instance variable）
-都是私有的，无法直接访问。例如如下类定义中，x是不能直接被外部访问的。</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="bp">NSObject</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'>    <span class="kt">double</span> <span class="n">x</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@property</span> <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="p">;</span>
-</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span><span class="p">;</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@implementation</span> <span class="nc">Foo</span>
-</span><span class='line'><span class="k">@synthesize</span> <span class="n">y</span><span class="p">;</span>
-</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span>
-</span><span class='line'><span class="p">{</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@end</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>要访问类的数据成员，必须通过类的成员方法，最常见的就是称之为getter和setter的方法。为了简化存取方法，Objective-C引入了property概念。比如上面的代码中:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@property</span> <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>定义了属性y，并在实现文件中使用如下代码:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@synthesize</span> <span class="n">y</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>上面的语句相当于为y定义了getter和setter方法，比如你可以通过y()返回属性值，setY()设置属性值。</p>
-
-<p>同样的，成员方法也没有共有私有之分，所有成员方法都可以被外部访问。上述代码中成员方法前的“-”表示这是一个实例方法，如果为“+”表示类方法，等价于C++中的静态成员函数。如果要为类定义一个方法，又不希望被外部调用，该如何做到呢？解决的方法是不在头文件(.h)中定义，直接在实现文件(.m)中加入成员函数。是的，没错，Objective-C并不要求在头文件中列出所有的成员方法。</p>
-
-<h2>2. 继承</h2>
-
-<p>和C++不同的是，Objective-C是单根继承体系，所有的类都直接或间接继承自NSObject（注：Objective-C语言规范并没有规定这个根类的名字），这一点和Java类似。同样的，Objective-C不支持多继承。和Java语言中的接口类似的东西在Objective-C中被称作协议(protocol)。协议是一个方法声明的列表，有些方法是必须实现的，有些方法可以定义为可选的。和类一样，协议可以继承其它的协议。一个Objective-C类可以实现多个协议。值得一提的是，协议的名字可以和类名一样，比如NSObject是一个类，同时还存在一个名为NSObject的协议。因为采用了不同的关键字，所以编译器能够区分。比如下面的代码中，Foo继承NSObject类，同时实现了NSObject协议：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="bp">NSObject</span> <span class="o">&lt;</span><span class="bp">NSObject</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在C++和Java中，父类可以控制成员方式是否被子类覆盖（通过virtual/final关键字)，在Objective-C中，只要子类的成员方法和父类完全一样（包括参数个数及类型），就会覆盖父类的成员方法。</p>
-
-<h2>3. 多态</h2>
-
-<p>Objective-C支持多态，而且不像C++那么复杂，比如C++中，如果使用栈变量实例，是无法达到多态效果的。关于Objective-C的多态，可通过下面的代码实例说明：</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="bp">NSObject</span> <span class="p">{</span>
-</span><span class='line'>    <span class="bp">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">name</span><span class="p">;</span>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@implementation</span> <span class="nc">Person</span>
-</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Person&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@interface</span> <span class="nc">Student</span> : <span class="nc">Person</span>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">@implementation</span> <span class="nc">Student</span>
-</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
-</span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Student&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
-</span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="k">@end</span>
-</span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-</span><span class='line'>    <span class="k">@autoreleasepool</span> <span class="p">{</span>
-</span><span class='line'>        <span class="n">Person</span><span class="o">*</span> <span class="n">person</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Student</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">setName</span><span class="p">:</span><span class="s">@&quot;Student A&quot;</span><span class="p">];</span>
-</span><span class='line'>    <span class="p">}</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>4. 小结</h2>
-
-<p>Objective-C支持面向对象的编程，同时又没有C++的多继承、虚继承等复杂的概念，如果之前有过C++/Java等编程经验，会很容易就能理解Objective-C中的面向对象编程，学起来也会非常轻松。</p>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-10-24T08:48:13+08:00" pubdate data-updated="true"></time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/macos/'>macos</a>, <a class='category' href='/blog/categories/objective-c/'>objective-c</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/10/24/my-macos-programming-life-1/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
 
 
     <article class="post">
@@ -897,6 +363,281 @@
 </div>
 	
 	<div class="comments"><a href="/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/04/03/chromium-loading-spped-research-1/">
+		
+			Chromium网络加载速度研究(2)</a>
+	</h2>
+	<div class="entry-content">
+		<p>本文主要内容翻译自chromium的文档<a href="http://www.chromium.org/developers/design-documents/network-stack/netlog">NetLog: Chrome’s network logging system</a>，如果您觉得文章写的不明白，请参看原文。</p>
+
+<p>通过&lt;&lt;<a href="http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/">Chromium网络加载速度研究(1)</a>>>这篇文章的分析，可以得出结论，云端加速是高富帅的玩法。对于个人开发者和小公司而言，是没有那个实力去部署强大的数据中心的。所以接下来还得继续研究，看看有没有其它的途径提高网页加载速度。在着手优化之前，我们需要一个profiling手段找出瓶颈，有目的的优化。另一方面，也需要考虑如何评估优化的效果。如果没有一个客观的评估，优化方案是否有效心中就没有底。谈到Profiling，大多数人估计都会想到log大法，就是在程序的一些关键位置打上log。log通常包括时间、事件、状态等。在chromium中，开发人员早就预料了此类需求，设计了一套强大的NetLog。下面就分析一下chromium中NetLog的设计、实现及其用法。</p>
+
+
+		
+		<a href="/blog/2014/04/03/chromium-loading-spped-research-1/" class="more-link">阅读全文 &rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-03T18:10:06+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2014/04/03/chromium-loading-spped-research-1/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/03/18/chromium-loading-speed-research-0/">
+		
+			Chromium网络加载速度研究(1)</a>
+	</h2>
+	<div class="entry-content">
+		<p>本文主要内容翻译自Google的文档<a href="https://developers.google.com/chrome/mobile/docs/data-compression?hl=zh-CN">Data Compression Proxy</a>，如果您觉得文章写的不明白，请参看原文。</p>
+
+<p>对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera、QQ浏览器都采用了服务器端加速技术。Chrome移动版从V33开始正式支持数据压缩代理。下面就分析一下Chrome for Android所采用的数据压缩技术。</p>
+
+
+		
+		<a href="/blog/2014/03/18/chromium-loading-speed-research-0/" class="more-link">阅读全文 &rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-18T16:22:09+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2014/03/18/chromium-loading-speed-research-0/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/">
+		
+			Android 4.4 WebView实现分析</a>
+	</h2>
+	<div class="entry-content">
+		<p>随着Android4.4的发布，Android WebView改成由Chromium驱动了。浏览Android4.4源代码，可以看到之前版本中的external/WebKit目录被移除掉了，取而代之的是chromium_org。也就是说chromium已经完全取代了之前的WebKit for Android。虽然chromium完全取代了以前的WebKit for Android，但Android WebView的API接口并没有变，与老的版本完全兼容。这样带来的好处是基于WebView构建的APP，无需做任何修改，就能享受chromium内核的高效与强大。下面就Android 4.4中WebView的实现进行分析。</p>
+
+<p>先来看看frameworks/base/core/java/android/webkit下的文件，里面有我们熟悉的WebView、WebSettings、WebViewClient等类，其中最主要的就是WebView了，相关的类关系如下：</p>
+
+<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_android_4_4_webview_classes_diagram.png" alt="" /></p>
+
+<p>从图中可以看出，设计者抽象出了一个WebViewProvider接口，WebView本身并不做事，所有的处理就是交给WebViewProvider。而WebViewProvider只是一个接口，由实现者决定采用哪种引擎。从Android4.1开始，就采用了这种设计架构，开始为chromium核心的WebView做准备。在Android 4.4之前的版本，由WebViewClassic实现WebViewProvider接口。在Android4.4中，则是WebViewChromium实现WebViewProvider接口。WebViewFactory也采用了相似的结构，决定了如何实例化WebViewFactoryProvider，WebViewFactoryProvider有一个关键的接口createWebView，创建具体的WebViewProvider。（注：AOSP master源码基于WebKit的实现仍然保留，但在Android4.4中已经移除，由于采用了灵活的架构，所以在两种核心之间非常容易切换）</p>
+
+
+		
+		<a href="/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/" class="more-link">阅读全文 &rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-16T19:22:09+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/10/24/translated-android-webview/">
+		
+			[译]Android WebView</a>
+	</h2>
+	<div class="entry-content">
+		<p>原文地址：<a href="https://crosswalk-project.org/#wiki/android-webview">https://crosswalk-project.org/#wiki/android-webview</a></p>
+
+<ul>
+<li><p>架构&amp;组件</p>
+
+<ul>
+<li>AOSP中的Android WebView将基于AwContents，其位于Content API和Content View之上。</li>
+<li>与Content API不同，它还依赖于从最初的chrome browser分离出来的组件，组件位于components/下，包含auto_login_parser，navigation_interception，visitedlink_browser，visitedlink_renderer和web_contents_delegate_android，这些都是用于页面。</li>
+<li>无渲染进程（进程内渲染），无沙盒机制（sandbox机制）</li>
+<li>图形架构和Content Shell有很大的不同，且正在开发中，将支持软件和硬件输出。</li>
+</ul>
+</li>
+<li><p>API</p>
+
+<ul>
+<li>API类似于EFL WebView，不会暴露内部的browser/renderer/gpu进程。</li>
+<li>能够加载URL，接收加载过程中的事件和回调。</li>
+<li>可通过addJavaScriptInterface扩展JavaScript API，允许JavaScript调用Java代码，反之这不支持。</li>
+<li>提供了若干API接收页面状态改变通知和页面回调。</li>
+</ul>
+</li>
+<li><p>消息循环和事件处理</p>
+
+<ul>
+<li>整合利用Android消息处理</li>
+<li>native代码设置定时器到Java侧的消息循环</li>
+</ul>
+</li>
+<li><p>图形</p>
+
+<ul>
+<li>渲染使用chromium合成器，开启了硬件加速</li>
+<li>合成器输出支持软件和硬件Surface</li>
+<li>硬件加速的架构和content shell不同，和ChromeOS类似。现在还处在早期开发阶段，使用了UberCompositor，支持软件输出</li>
+</ul>
+</li>
+<li><p>WebAPI扩展</p>
+
+<ul>
+<li>API addJavaScriptInterface可用于JavaScript API扩展，但支持JavaScript调用Java代码。</li>
+<li>相反方向的调用（Java -> JavaScript）不支持</li>
+<li>addJavaScriptInterface通过NPObject机制（之前用于NPAPI插件）支持进程外访问，虽然在WebView中不再需要。</li>
+<li>来自Java侧的事件通知貌似还不支持</li>
+</ul>
+</li>
+<li><p>API细节和涵盖范围</p>
+
+<ul>
+<li>WebViewClient用于页面状态改变通知</li>
+<li>WebChromeClient包含参与渲染逻辑的回调</li>
+<li>原生代码/JS交互</li>
+<li>页面加载</li>
+<li>导航&amp;历史记录</li>
+<li>文字搜索</li>
+<li>事件处理</li>
+<li>轨迹球、触摸、键盘</li>
+<li>不支持鼠标事件</li>
+<li>设置：编码</li>
+<li>页面信息：标题、favicon</li>
+<li>HTTPS/SSL</li>
+<li>页面加载状态、缩放、重定向、URL重载，等等</li>
+</ul>
+</li>
+<li><p>源码</p>
+
+<ul>
+<li>src/android_webview
+
+<ul>
+<li>android_webview_java.jar, libwebviewchromium.so和webviewchromium.pak是本模块的编译目标.</li>
+</ul>
+</li>
+<li>Google的工程师正在Android开源项目里开发基于Chrome核心的新WebView.
+
+<ul>
+<li>官方 站点:
+<a href="https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/webkit/">https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/webkit/</a></li>
+<li>镜像:
+<a href="https://github.com/android/platform_frameworks_base/tree/master/core/java/android/webkit">https://github.com/android/platform_frameworks_base/tree/master/core/java/android/webkit</a></li>
+<li>第三方开发者也在基于android_webview模块开发ChromeView
+
+<ul>
+<li>ChromeView有着和Android Webview一样的API. <a href="https://github.com/pwnall/chromeview-src">https://github.com/pwnall/chromeview-src</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-24T15:27:02+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium,</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2013/10/24/translated-android-webview/#disqus_thread">Comments</a></div>
 	
 </div>
 </article>

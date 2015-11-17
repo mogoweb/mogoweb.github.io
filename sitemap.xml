@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://mogoweb.net/blog/2015/11/17/android-system-building-flow/</loc>
-    <lastmod>2015-11-17T08:51:50+08:00</lastmod>
-  </url>
-  <url>
-    <loc>http://mogoweb.net/blog/2015/11/13/reading-android-source-preface/</loc>
-    <lastmod>2015-11-13T20:36:35+08:00</lastmod>
-  </url>
-  <url>
-    <loc>http://mogoweb.net/blog/2015/11/03/develop-android-browser-base-on-chromium-for-android/</loc>
-    <lastmod>2015-11-03T08:39:21+08:00</lastmod>
-  </url>
-  <url>
-    <loc>http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/</loc>
-    <lastmod>2015-09-25T09:08:49+08:00</lastmod>
-  </url>
-  <url>
     <loc>http://mogoweb.net/blog/2015/09/10/customize-chrome-for-android/</loc>
     <lastmod>2015-09-10T22:01:54+08:00</lastmod>
   </url>
@@ -111,13 +95,13 @@
     <loc>http://mogoweb.net/</loc>
   </url>
   <url>
-    <loc>http://mogoweb.net/mogo-browser/</loc>
+    <loc>http://mogoweb.net/about/</loc>
   </url>
   <url>
     <loc>http://mogoweb.net/resources/</loc>
   </url>
   <url>
-    <loc>http://mogoweb.net/about/</loc>
+    <loc>http://mogoweb.net/mogo-browser/</loc>
   </url>
   <url>
     <loc>http://mogoweb.net/resources/mytestpage.html</loc>
@@ -165,10 +149,13 @@
     <loc>http://mogoweb.net/blog/categories/ubuntu/</loc>
   </url>
   <url>
-    <loc>http://mogoweb.net/blog/categories/xi-tong-fen-xi/</loc>
+    <loc>http://mogoweb.net/posts/2/</loc>
+  </url>
+  <url>
+    <loc>http://mogoweb.net/posts/3/</loc>
   </url>
   <url>
     <loc>http://mogoweb.net/404.html</loc>
-    <lastmod>2015-09-25T09:57:08+08:00</lastmod>
+    <lastmod>2015-04-07T21:24:05+08:00</lastmod>
   </url>
 </urlset>

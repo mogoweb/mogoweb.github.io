@@ -4,7 +4,7 @@
   <title><![CDATA[Category: chromium | 放飞梦想]]></title>
   <link href="http://mogoweb.net/blog/categories/chromium/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-11-17T18:01:37+08:00</updated>
+  <updated>2015-09-24T21:54:01+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,101 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[基于chromium for android开发Android浏览器]]></title>
-    <link href="http://mogoweb.net/blog/2015/11/03/develop-android-browser-base-on-chromium-for-android/"/>
-    <updated>2015-11-03T08:39:21+08:00</updated>
-    <id>http://mogoweb.net/blog/2015/11/03/develop-android-browser-base-on-chromium-for-android</id>
-    <content type="html"><![CDATA[<p>在上一篇文章&lt;&lt; <a href="http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/">Chromium for Android开源了</a> >>中谈到了Google已经完全开源了Chromium for Android，这样我们就完全可以开发与Chrome for Android媲美的Android浏览器了。通常浏览器的一些新特性和新功能会先出现在Chromium for Android上，稳定后才会出现在Chrome for Android上，如果我们基于Chromium for Android开发浏览器产品，在新特性和新功能方面不会落后于Chrome浏览器.</p>
-
-<p>Chromium开源项目的代码及其庞大，也相当的复杂。对于Android开发人员，特别是UI开发人员来说，没有一个合适的IDE环境，会是一个非常痛苦的事情。我们通常是这样开发的，在sublime text中阅读、修改代码，使用chromium的构建系统build出apk，安装到手机，进行调试。对于native代码来说，这样的开发方式也不会有太多麻烦，因为native部分的代码通常修改很少。但如果主要进行UI的定制，这种开发方式就非常痛苦了。</p>
-
-<p>为了应对这个问题，考虑如下方案：</p>
-
-<ol>
-<li>采用Android Studio作为开发环境，从Chromium for Android抽取chrome模块的源码，加入Android project。</li>
-<li>native代码在chromium环境中build，作为so加入Android project</li>
-<li>基础模块(base, content, net等)在chromium环境build为jar包，加入Android project</li>
-<li>content, chrome, ui等模块的资源文件加入Android library project</li>
-</ol>
-
-
-<p>资源文件为什么不能直接都添加到Android project呢？因为命名空间的原因，比如content模块的资源的命名空间为org.chromium.content, chrome模块的资源的命名空间为org.chromium.chrome，所以需要建立不同的Android library project, 指定不同的包名。最后整个项目的结构如下：</p>
-
-<pre><code>browser
-  |_ app
-  |    |_ libs
-  |    |_ src
-  |         |_ main
-  |              |_ aidl
-  |              |_ assets
-  |              |_ java
-  |              |_ jniLibs
-  |              |_ res
-  |_ libraries
-       |_ androidmedia_res
-       |_ chrome_res
-       |_ content_res
-       |_ datausagechart_res
-       |_ ui_res
-</code></pre>
-
-<p>注意事项：</p>
-
-<ol>
-<li>chromium项目的源码和资源有些是自动生成的，需要到out目录下去复制</li>
-<li>pak和dat等文件需要加入到assets目录，而且不能压缩</li>
-<li>aidl文件加入到main/aidl下，android studio会自动处理</li>
-</ol>
-
-
-<p>实践证明，这种方案是行之有效的，请参考github上的项目: <a href="https://github.com/mogoweb/365browser">365browser</a>。在script目录下有从chromium项目同步代码和资源的脚本。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Chromium for Android开源了]]></title>
-    <link href="http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/"/>
-    <updated>2015-09-25T09:08:49+08:00</updated>
-    <id>http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source</id>
-    <content type="html"><![CDATA[<p>最近一段时间都在忙其它的事情，没有关注chromium的最新进展。这几天浏览 <a href="http://www.chromium.org">http://www.chromium.org</a> 上的文档，发现android build目标增加了一个：chrome_public_apk。编译方法：</p>
-
-<blockquote><h1>Build the full browser</h1>
-
-<p>~/chromium/src$ ninja -C out/Release chrome_public_apk</p>
-
-<p>~/chromium/src$ build/android/adb_install_apk.py out/Release/apks/ChromePublic.apk</p></blockquote>
-
-<p>搜索了一下相关新闻，大约在2015年5月份开始，chromium中开始加入了chrome for android的源码。从2012年开始，chromium中开始出现Android的移植代码，但只有Content API和ContentShell，离一个完备的浏览器还有一定的距离。当然，基于Content API开发浏览器也是可行的，当年就是这么干的。Chromium for Android和Chrome for Android并非完全一样，就如同桌面版Chromium浏览器和Chrome浏览器之间的区别。</p>
-
-<p>下面放上一些Chromium for Android浏览器的截图，慢慢品味吧：</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_welcome.png" alt="welcome" /></p>
-
-<p>欢迎界面</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_account.png" alt="account" /></p>
-
-<p>帐号同步界面</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_main.png" alt="main" /></p>
-
-<p>浏览器主界面</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_menu.png" alt="menu" /></p>
-
-<p>浏览器菜单</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_settings.png" alt="settings" /></p>
-
-<p>浏览器设置</p>
-
-<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_tabs.png" alt="tabs" /></p>
-
-<p>浏览器标签页</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何打印gyp构建系统中的变量值]]></title>
@@ -246,6 +151,155 @@ Code    Description
 %v  Deprecated.
 %m  Deprecated.
 </code></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ubuntu上从源码编译chromium浏览器]]></title>
+    <link href="http://mogoweb.net/blog/2014/12/15/build-chromium-browser-from-source/"/>
+    <updated>2014-12-15T15:09:43+08:00</updated>
+    <id>http://mogoweb.net/blog/2014/12/15/build-chromium-browser-from-source</id>
+    <content type="html"><![CDATA[<p>Ubuntu不仅是一个免费且开源的操作系统，而且其平台也是开放且透明的。每个组件的源码都可以获取到，也可以从源码自己编译软件包。下面就探讨一下在ubuntu下如何获取chromium源码，并编译Chromium Web Browser。</p>
+
+<p>要从ubuntu的仓库下载源码并编译软件包，最方便的就是使用apt-build实用工具。在ubuntu的发布版本中，该实用工具并没有安装，您可以用如下命令安装:</p>
+
+<pre><code>sudo apt-get install apt-build
+</code></pre>
+
+<p>接下来就可以使用如下命令下载并build chromium browser了:</p>
+
+<pre><code>sudo apt-build install chromium-browser
+</code></pre>
+
+<p>因为我的ubuntu是64位系统(ubuntu 11.04 LTS 64bit)，所以出现了如下错误:</p>
+
+<pre><code>E: There are problems and -y was used without --force-yes
+E: Failed to process build dependencies
+-----&gt; Updating package lists &lt;-----
+Ign file: apt-build Release.gpg
+Get:1 file: apt-build Release [107 B]                                                                                                                
+Ign file: apt-build/main TranslationIndex                                                                                                            
+Err file: apt-build/main i386 Packages                                                                                                               
+  File not found
+Ign file: apt-build/main Translation-en_US                                                                                                           
+Ign file: apt-build/main Translation-en                                                                                                              
+Get:2 http://mirrors.163.com precise-updates Release.gpg [198 B]                                                                                     
+Get:3 http://mirrors.163.com precise Release.gpg [198 B]                                                                                             
+Hit http://mirrors.163.com precise-updates Release                                                                                                   
+Hit http://mirrors.163.com precise Release                                                                                                           
+Hit http://mirrors.163.com precise-updates/restricted Sources                                                                                        
+Get:4 http://dl.google.com stable Release.gpg [198 B]                                                                                                
+Get:5 http://archive.ubuntu.com precise Release.gpg [198 B]                                                                                          
+Hit http://mirrors.163.com precise-updates/main Sources                                                                                              
+Hit http://mirrors.163.com precise-updates/universe Sources                                                                                          
+Hit http://mirrors.163.com precise-updates/main amd64 Packages                                                                                       
+Hit http://mirrors.163.com precise-updates/restricted amd64 Packages                                                                                 
+Hit http://mirrors.163.com precise-updates/universe amd64 Packages                                                                                   
+Get:6 http://ppa.launchpad.net precise Release.gpg [316 B]                                                                                           
+Get:7 http://extras.ubuntu.com precise Release.gpg [72 B]                                                                                            
+Hit http://mirrors.163.com precise-updates/main i386 Packages                                                                                        
+Hit http://mirrors.163.com precise-updates/restricted i386 Packages                                                                                  
+Hit http://mirrors.163.com precise-updates/universe i386 Packages                                                                                    
+Hit http://mirrors.163.com precise-updates/main TranslationIndex                                                                                     
+Hit http://mirrors.163.com precise-updates/restricted TranslationIndex                                                                               
+Hit http://mirrors.163.com precise-updates/universe TranslationIndex                                                                                 
+Hit http://mirrors.163.com precise/universe amd64 Packages                                                                                           
+Hit http://mirrors.163.com precise/universe i386 Packages                                                                                            
+Hit http://dl.google.com stable Release                                                                                                              
+Hit http://mirrors.163.com precise/universe TranslationIndex                                                                                         
+Hit http://mirrors.163.com precise-updates/main Translation-en                                                                                       
+Hit http://mirrors.163.com precise-updates/restricted Translation-en                                                                                 
+Hit http://mirrors.163.com precise-updates/universe Translation-en                                                                                   
+Hit http://mirrors.163.com precise/universe Translation-en                                                                                           
+Hit http://dl.google.com stable/main amd64 Packages                                                                                                  
+Hit http://archive.ubuntu.com precise Release                                                                                                        
+Hit http://dl.google.com stable/main i386 Packages                                                                                                   
+Hit http://ppa.launchpad.net precise Release                                                                                                         
+Ign http://dl.google.com stable/main TranslationIndex                                                                                                
+Hit http://extras.ubuntu.com precise Release                                                                                                         
+Get:8 http://security.ubuntu.com precise-security Release.gpg [198 B]                                                                                
+Hit http://archive.ubuntu.com precise/main Sources                                                                                                   
+Get:9 http://cn.archive.ubuntu.com precise Release.gpg [198 B]                                                                                       
+Hit http://ppa.launchpad.net precise/main Sources                                                                                                    
+Hit http://extras.ubuntu.com precise/main Sources                                                                                                    
+Hit http://security.ubuntu.com precise-security Release                                                                                              
+Hit http://archive.ubuntu.com precise/restricted Sources                                                                                             
+Hit http://ppa.launchpad.net precise/main amd64 Packages                                                                                    
+Hit http://ppa.launchpad.net precise/main i386 Packages                                                                              
+Ign http://ppa.launchpad.net precise/main TranslationIndex                                                                           
+Hit http://extras.ubuntu.com precise/main amd64 Packages                                                                             
+Hit http://extras.ubuntu.com precise/main i386 Packages                                                                              
+Ign http://extras.ubuntu.com precise/main TranslationIndex                                                                           
+Hit http://security.ubuntu.com precise-security/restricted Sources                                                
+Hit http://security.ubuntu.com precise-security/main Sources                                                      
+Hit http://security.ubuntu.com precise-security/universe Sources                                                                   
+Hit http://cn.archive.ubuntu.com precise Release                                                                                   
+Hit http://security.ubuntu.com precise-security/main amd64 Packages                                                
+Hit http://security.ubuntu.com precise-security/restricted amd64 Packages                                                                            
+Hit http://security.ubuntu.com precise-security/universe amd64 Packages                                                                              
+Hit http://security.ubuntu.com precise-security/main i386 Packages                                                                                   
+Hit http://security.ubuntu.com precise-security/restricted i386 Packages                                                                             
+Hit http://security.ubuntu.com precise-security/universe i386 Packages                                                                               
+Hit http://security.ubuntu.com precise-security/main TranslationIndex                                                                                
+Hit http://security.ubuntu.com precise-security/restricted TranslationIndex                                                                          
+Hit http://security.ubuntu.com precise-security/universe TranslationIndex                                                                            
+Ign http://dl.google.com stable/main Translation-en_US                                                                                               
+Hit http://security.ubuntu.com precise-security/main Translation-en                                                                                  
+Ign http://dl.google.com stable/main Translation-en                                                                                                  
+Hit http://cn.archive.ubuntu.com precise/main Sources                                                                                                
+Hit http://security.ubuntu.com precise-security/restricted Translation-en                                                                            
+Hit http://cn.archive.ubuntu.com precise/restricted Sources                                                                                          
+Hit http://cn.archive.ubuntu.com precise/main amd64 Packages                                                                                         
+Hit http://security.ubuntu.com precise-security/universe Translation-en                                                                              
+Hit http://cn.archive.ubuntu.com precise/restricted amd64 Packages                                                                                   
+Hit http://cn.archive.ubuntu.com precise/main i386 Packages                                                                                          
+Hit http://cn.archive.ubuntu.com precise/restricted i386 Packages                                                                                    
+Hit http://cn.archive.ubuntu.com precise/main TranslationIndex                                                                                       
+Hit http://cn.archive.ubuntu.com precise/restricted TranslationIndex                                                                                 
+Ign http://ppa.launchpad.net precise/main Translation-en_US                                                                                          
+Hit http://cn.archive.ubuntu.com precise/main Translation-en                                                                                         
+Ign http://extras.ubuntu.com precise/main Translation-en_US                                                                                          
+Ign http://extras.ubuntu.com precise/main Translation-en                                                                                             
+Hit http://cn.archive.ubuntu.com precise/restricted Translation-en                                                                                   
+Ign http://ppa.launchpad.net precise/main Translation-en                                                                                             
+Fetched 1,576 B in 10s (147 B/s)                                                                                                                     
+W: Failed to fetch file:/var/cache/apt-build/repository/dists/apt-build/main/binary-i386/Packages  File not found
+</code></pre>
+
+<p>从网上找到了答案，解决方法就是指定配置文件中的架构：修改<em>/etc/apt/sources.list.d/apt-build.list</em>文件，将其中的</p>
+
+<pre><code>deb file:/var/cache/apt-build/repository apt-build main
+</code></pre>
+
+<p>替换为:</p>
+
+<pre><code>deb [arch=amd64] file:/var/cache/apt-build/repository apt-build main
+</code></pre>
+
+<p>接下来就是下载源码，再经过漫长的build过程，生成并安装Chromium Web Browser。版本信息如下图:</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2014_chromium_for_linux_37.0.2062.120_info.png" alt="chrome://version" /></p>
+
+<p>下载的源码位于<em>/var/cache/apt-build/build/</em>下：</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2014_chromium_ubuntu_source_info.png" alt="" /></p>
+
+<p>从上图中可以看到源码包的大小只有200多M，而我们从chromium开源项目下的源码通常有7、8个G，主要原因是这里下的源码是不带git和svn信息的，是纯粹的源代码。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在本地服务器上建立chromium镜像]]></title>
+    <link href="http://mogoweb.net/blog/2014/12/09/mirror-chromium-to-local-server/"/>
+    <updated>2014-12-09T21:59:27+08:00</updated>
+    <id>http://mogoweb.net/blog/2014/12/09/mirror-chromium-to-local-server</id>
+    <content type="html"><![CDATA[<p>Android 5.0发布了好长时间，一直都没有来得及研究。前两周终于将android 5.0源码下载了下来，大致看了一下代码。我所关注的并非Material Design，而是Android 5.0的web引擎。从Android 4.4开始，采用了chromium/blink内核，Android 5.0自然也不例外，只是chromium的版本升级到了37.0.2062.116。想到我的chromium webview项目，仍然采用的是34.0.1847，因此打算也将chromium版本进行一次升级。</p>
+
+<p>因为可恶的GFW，下载代码及其不顺利，虽然有VPN，但是对于几十G的chromium下载量，下载速度太慢，而且git不支持断点续传。在折腾了两三个星期之后，决定在公司的服务器上建立chromium的镜像。不知道从哪个版本开始，gclient开始全面转向git。由于git的天然的分布式特点，这为完全镜像chromium源码库提供了便利。</p>
+
+<p>chromium源码库是由chromium本身加上一堆第三方开源库组成，极其庞大。为此我写了一个脚本，放到了github上，有兴趣的可以访问<a href="https://github.com/mogoweb/chromium_mirror_script">chromium_mirror_script</a>项目，其中chromium_git_list.txt为所有的源码库列表，来自<a href="https://chromium.googlesource.com/">https://chromium.googlesource.com/</a>，随着时间的推移，这个列表也可能发生变化。</p>
+
+<p>有了内部的chromium镜像后，我们可以修改.DEPS.git文件，将其中的git_url值替换为本地git地址，这样通过gclient下载，就是从本地镜像服务器上获取代码了。</p>
 ]]></content>
   </entry>
   
