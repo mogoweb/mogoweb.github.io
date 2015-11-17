@@ -3,11 +3,11 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>关于我 - 放飞梦想</title>
+	<title>Chromium for Android开源了 - 放飞梦想</title>
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="70后程序员，仍然战斗在编码第一线。半路出家，进入IT领域，从此踏上不归路。中途曾回炉锻造，无赖顽石一块，未能点石成金。 回首过去，深感羞愧，使用过多种编程语言和技术（Fortran， ASM， Turbo C，Turbo Pascal，Visual Basic，ASP， PHP，SQL &hellip;">
+	<meta name="description" content="最近一段时间都在忙其它的事情，没有关注chromium的最新进展。这几天浏览 http://www.chromium.org 上的文档，发现android build目标增加了一个：chrome_public_apk。编译方法： Build the full browser ~/chromium/ &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -79,24 +79,70 @@
 	
 		
 	
-	<div id="content" class="inner"><article class="page">
-    
-    <h1 class="title">关于我</h1>
-    
-    <div class="entry-content"><p>70后程序员，仍然战斗在编码第一线。半路出家，进入IT领域，从此踏上不归路。中途曾回炉锻造，无赖顽石一块，未能点石成金。</p>
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Chromium for Android开源了</h2>
+	<div class="entry-content"><p>最近一段时间都在忙其它的事情，没有关注chromium的最新进展。这几天浏览 <a href="http://www.chromium.org">http://www.chromium.org</a> 上的文档，发现android build目标增加了一个：chrome_public_apk。编译方法：</p>
 
-<p>回首过去，深感羞愧，使用过多种编程语言和技术（Fortran， ASM， Turbo C，Turbo Pascal，Visual Basic，ASP， PHP，SQL Server，Oracle，Java，C++ Builder、Visual C++、C#，Linux、Windows Mobile，Symbian、Android，Python），遗憾的是，未能精通一二，至今未能开发出一款令自己满意的产品。经历过互联网浪潮和移动浪潮，却未能成为时代的弄潮儿。</p>
+<blockquote><h1>Build the full browser</h1>
 
-<p>目前主要从事嵌入式设备上的浏览器开发。喜好专研技术，热衷于知识分享。擅长于WebKit移植与优化，对软件架构设计有着浓厚的兴趣。您可以通过chen.zhengyong@gmail.com联系我。</p>
+<p>~/chromium/src$ ninja -C out/Release chrome_public_apk</p>
 
-<!--
-微信公众号: mogoweb, 您可以扫描下面的二维码订阅:
+<p>~/chromium/src$ build/android/adb_install_apk.py out/Release/apks/ChromePublic.apk</p></blockquote>
 
-![](http://mogoweb.qiniudn.com/weixin_2014_qrcode_for_mogoweb_wx.jpg)
+<p>搜索了一下相关新闻，大约在2015年5月份开始，chromium中开始加入了chrome for android的源码。从2012年开始，chromium中开始出现Android的移植代码，但只有Content API和ContentShell，离一个完备的浏览器还有一定的距离。当然，基于Content API开发浏览器也是可行的，当年就是这么干的。Chromium for Android和Chrome for Android并非完全一样，就如同桌面版Chromium浏览器和Chrome浏览器之间的区别。</p>
 
-业余喜欢旅游、摄影，网易lofter空间: [摩高影像](http://mogoweb.lofter.com)
--->
+<p>下面放上一些Chromium for Android浏览器的截图，慢慢品味吧：</p>
 
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_welcome.png" alt="welcome" /></p>
+
+<p>欢迎界面</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_account.png" alt="account" /></p>
+
+<p>帐号同步界面</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_main.png" alt="main" /></p>
+
+<p>浏览器主界面</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_menu.png" alt="menu" /></p>
+
+<p>浏览器菜单</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_settings.png" alt="settings" /></p>
+
+<p>浏览器设置</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_tabs.png" alt="tabs" /></p>
+
+<p>浏览器标签页</p>
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-09-25T09:08:49+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium</a>
+
+
+</div>
+	
+	<div class="comments"><a href="#disqus_thread">Comments</a></div>
+	
 </div>
 </article>
 
@@ -115,11 +161,10 @@
 
 
 <section id="comment">
-    <h1 class="title">Comments</h1>
+    <h2 class="title">Comments</h2>
     <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
 </section>
-
 </div>
 	<footer id="footer" class="inner">Copyright &copy; 2015
 
@@ -140,8 +185,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://mogoweb.net/about/index.html';
-        var disqus_url = 'http://mogoweb.net/about/index.html';
+        var disqus_identifier = 'http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/';
+        var disqus_url = 'http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/';
         var disqus_script = 'embed.js';
       
     (function () {

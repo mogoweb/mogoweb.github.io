@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.net/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-09-24T21:54:01+08:00</updated>
+  <updated>2015-11-17T18:01:37+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,381 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Android源码阅读与理解（二）：Android系统Build流程详解]]></title>
+    <link href="http://mogoweb.net/blog/2015/11/17/android-system-building-flow/"/>
+    <updated>2015-11-17T08:51:50+08:00</updated>
+    <id>http://mogoweb.net/blog/2015/11/17/android-system-building-flow</id>
+    <content type="html"><![CDATA[<p>个人认为，成为一个靠谱的Android系统工程师，必须具备以下技能：</p>
+
+<ul>
+<li>翻墙</li>
+<li>会使用Linux系统</li>
+<li>阅读英文资料</li>
+</ul>
+
+
+<p>翻墙技能就不用说了，因为不翻墙，Android源码难以获取，更不用谈体验墙外精彩的世界了。关于第二点，最好的Android系统开发环境就是Linux（推荐ubuntu），如果能够熟练使用Linux系统可以节省不少折腾环境的时间。最后英文阅读能力也很关键，因为碰到问题Google, <a href="http://www.stackoverflow.com">StackOverflow</a>非常有用，上面的回答有不少是用英文写的。</p>
+
+<p>在这里略过下载Android源码，最好的方法是参考<a href="http://source.android.com">官方文档</a>。简单说一下我的环境：</p>
+
+<ul>
+<li>Ubuntu 14.04 LTS 64位</li>
+<li>Android 4.4.2源码</li>
+<li>Sublime Text 2</li>
+<li>Intel&reg; Core&trade; i7-2630QM CPU @ 2.00GHz, 8G RAM, 1TB hd</li>
+</ul>
+
+
+<p>源码下载后，执行如下命令即可编译Android系统(后面的文章将使用$ANDROID_SRC指代Android源码所在目录，如非特别指明，假设命令行在Android源码目录下执行):</p>
+
+<ol>
+<li>source build/envsetup.sh</li>
+<li>lunch</li>
+<li>make -j4</li>
+</ol>
+
+
+<p>下面就解析以上三个步骤分别做了什么事情。</p>
+
+<h2>设置环境变量</h2>
+
+<p>打开$ANDROID_SRC/build/envsetup.sh文件，我们可以看到文件中定义了一些shell函数，其作用是初始化编译环境，并引入一些辅助的Shell函数，这其中就包括第二步使用lunch函数。这些shell函数可以看做shell命令，方便我们进行一些build任务，比如常用的mm。下面就列出一些常用的函数：</p>
+
+<p><strong>表 1. build/envsetup.sh 中定义的常用函数</strong></p>
+
+<hr />
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;"> <strong>名称</strong> </th>
+<th style="text-align:left;"> <strong>说明</strong> </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">lunch          </td>
+<td style="text-align:left;"> 选择产品，格式为lunch BUILDID-BUILDTYPE，如果不指定，会弹出一个列表选择 </td>
+</tr>
+<tr>
+<td style="text-align:left;">tapas          </td>
+<td style="text-align:left;"> build未打包到image的app，命令行后可以跟一个或者多个app的名称</td>
+</tr>
+<tr>
+<td style="text-align:left;">croot          </td>
+<td style="text-align:left;"> 切换到源码树的根目录 </td>
+</tr>
+<tr>
+<td style="text-align:left;">m              </td>
+<td style="text-align:left;"> 在源码树的根目录执行 make </td>
+</tr>
+<tr>
+<td style="text-align:left;">mm             </td>
+<td style="text-align:left;"> Build 当前目录下的模块 </td>
+</tr>
+<tr>
+<td style="text-align:left;">mmm                </td>
+<td style="text-align:left;"> Build 指定目录下的模块 </td>
+</tr>
+<tr>
+<td style="text-align:left;">mma            </td>
+<td style="text-align:left;"> Build 当前目录下的模块及所有依赖的模块 </td>
+</tr>
+<tr>
+<td style="text-align:left;">mmma           </td>
+<td style="text-align:left;"> Build 指定目录下的模块及所有依赖的模块 </td>
+</tr>
+<tr>
+<td style="text-align:left;">cgrep          </td>
+<td style="text-align:left;"> 在所有 C/C++ 文件上执行 grep </td>
+</tr>
+<tr>
+<td style="text-align:left;">jgrep          </td>
+<td style="text-align:left;"> 在所有 Java 文件上执行 grep </td>
+</tr>
+<tr>
+<td style="text-align:left;">resgrep        </td>
+<td style="text-align:left;"> 在所有 res/*.xml 文件上执行 grep </td>
+</tr>
+<tr>
+<td style="text-align:left;">godir          </td>
+<td style="text-align:left;"> 转到包含某个文件的目录路径 </td>
+</tr>
+<tr>
+<td style="text-align:left;">printconfig    </td>
+<td style="text-align:left;"> 显示当前 Build 的配置信息 </td>
+</tr>
+<tr>
+<td style="text-align:left;">add_lunch_combo</td>
+<td style="text-align:left;"> 在 lunch 函数的菜单中添加一个条目 </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>除了定义辅助Shell函数，在脚本的结尾处，遍历device和vendor目录下的vendorsetup.sh文件，vendorsetup.sh文件定义与设备相关的环境变量，比如<em>/device/generic/armv7-a-neon/vendorsetup.sh</em>就定义了如下：</p>
+
+<blockquote><p>add_lunch_combo mini_armv7a_neon-userdebug</p></blockquote>
+
+<p>这会在lunch菜单中增加一个选项：mini_armv7a_neon-userdebug</p>
+
+<h2>lunch函数详解</h2>
+
+<p>Android支持不同的硬件，比如不同的CPU架构（ARM、MIPS，X86），不同厂商的外设（如蓝牙、wifi、基带等），另外可能还需要分Debug版本和Release版本，这都是在lunch中进行选择的。lunch命令的格式为lunch BUILDID-BUILDTYPE，其中BUILDTYPE取值如下：</p>
+
+<p><strong>表 2. BUILDTYPE说明</strong></p>
+
+<hr />
+
+<table>
+<thead>
+<tr>
+<th style="text-align:left;"> <strong>BUILDTYPE</strong> </th>
+<th style="text-align:left;"> <strong>说明</strong> </th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">user           </td>
+<td style="text-align:left;"> 相当于Release版本，无root权限，不打包调试工具，适合最后的产品发布 </td>
+</tr>
+<tr>
+<td style="text-align:left;">userdebug      </td>
+<td style="text-align:left;"> 和user类似，但多了root权限，可以调试，适合于产品调试 </td>
+</tr>
+<tr>
+<td style="text-align:left;">eng            </td>
+<td style="text-align:left;"> 开发阶段的配置，另外还打包了许多调试工具，适合于产品初期阶段 </td>
+</tr>
+</tbody>
+</table>
+
+
+<p>BUILDID则是一组特性集合的代码，这个通常与具体的平台相关。除了Android源码预置的选项外，还可以通过add_lunch_combo命令添加自定义的组合。当我们要开发一款新的Android产品时，首先就需要在Build系统中添加对于该产品的定义。</p>
+
+<p>产品定义文件通常位于device目录下，vendor目录已经不建议使用（nexus系列的产品定义就是放在vendor目录）。device目录下通常根据公司名及产品名分为二级目录，比如generic的目录结构如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> device
+</span><span class='line'>   |-- generic
+</span><span class='line'>         |-- armv7-a-neon
+</span><span class='line'>         |-- common
+</span><span class='line'>         |-- goldfish
+</span><span class='line'>         |-- mini-emulator-armv7-a-neon
+</span><span class='line'>         |-- mini-emulator-mips
+</span><span class='line'>         |-- mini-emulator-x86
+</span><span class='line'>         |-- mips
+</span><span class='line'>         |-- x86</span></code></pre></td></tr></table></div></figure>
+
+
+<p>通常一个产品定义至少包含4个文件：AndroidProducts.mk, BoardConfig.mk, vendorsetup.sh及版本定义文件（文件名不固定）。关于如何添加产品定义，请参考<a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-android-build/index.html">&lt;&lt;理解 Android Build 系统>></a>一文的<strong>添加新的产品</strong>一节。</p>
+
+<h2>build Android系统</h2>
+
+<p>最后一步执行<em>make -j4</em>才开始真正的进行编译操作，j后面的数字代表同时编译的job数，这个数字可根据CPU核心线程数而定，通常可指定为CPU核心线程的1~2倍，数字越大，代表同时进行编译的任务越多，整个编译过程也会越快。如果不指定目标，默认就会实用“droid”目标，build出完整的Android系统镜像。</p>
+
+<p>Android build系统使用了GNU make，这点很让人意外，因为GNU make实在太难用了，Makefile也很难阅读。不过Google的天才工程师引入了模块化、写了很多实用函数，修改/添加起来还算容易。</p>
+
+<h3>Build输出目录结构</h3>
+
+<p>所有的编译产物都将位于 /out 目录下，该目录下主要有以下几个子目录：</p>
+
+<ul>
+<li>out/host/：该目录下包含了host端的工具和库，例如：emulator，adb，aapt等。</li>
+<li>out/target/common/：该目录下包含了针对设备的共用的编译产物，主要是 Java 应用代码和 Java 库。</li>
+<li>out/target/product/&lt;product_name>/：包含了针对特定设备的编译结果以及平台相关的 C/C++ 库和二进制文件。其中，&lt;product_name>是具体目标设备的名称。</li>
+</ul>
+
+
+<h3>Build生成的镜像文件</h3>
+
+<p>Build 的产物中最重要的是三个镜像文件，它们都位于 out/target/product/&lt;product_name>/ 目录下。这三个文件是：</p>
+
+<ul>
+<li>system.img：包含了 Android OS 的系统文件，库，可执行文件以及预置的应用程序，将被挂载为根分区。</li>
+<li>ramdisk.img：在启动时将被 Linux 内核挂载为只读分区，它包含了 /init 文件和一些配置文件。它用来挂载其他系统镜像并启动 init 进程。</li>
+<li>userdata.img：将被挂载为 /data，包含了应用程序相关的数据以及和用户相关的数据。</li>
+</ul>
+
+
+<p>另外还有cache.img,启动模拟器时可使用-cache参数来挂载该文件，指定/cache内容。一般来说我们不直接使用userdata.img，而是使用userdata_qemu.data，用来存放用户数据，可读写，android启动后mount到 /data。只有使用-wipe-data参数启动模拟器是时候才会用到userdata.img，它会使用userdata.img的内容覆盖userdata-qemu.img。</p>
+
+<h2>参考文档</h2>
+
+<ol>
+<li><a href="http://www.stackoverflow.com">Android官方文档</a></li>
+<li><a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-android-build/index.html">理解 Android Build 系统</a></li>
+<li><a href="http://www.cloudchou.com/android/post-134.html">Android编译系统详解(一)——build/envsetup.sh</a></li>
+<li><a href="http://www.devdiv.com/android_-blog-1-1488.html">Android模拟器镜像文件介绍</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Android源码阅读与理解（一）：开篇]]></title>
+    <link href="http://mogoweb.net/blog/2015/11/13/reading-android-source-preface/"/>
+    <updated>2015-11-13T20:36:35+08:00</updated>
+    <id>http://mogoweb.net/blog/2015/11/13/reading-android-source-preface</id>
+    <content type="html"><![CDATA[<p>作为一个自认为苦逼的程序员，有一阵子曾考虑逃离程序世界，做一个文艺青年。你看，出去旅旅游、读读书、摄个影，没事发个呆，生活该是多么的惬意。反观程序员，每天对着冰冷的机器，有事无事还要加个班。正如一个段子所写：</p>
+
+<blockquote><p>你苦战通宵游戏时，布里斯班的灯鱼已划过珊瑚丛;</p>
+
+<p>你赶场招聘会时，蒙巴萨的小蟹刚溜出渔夫的掌心;</p>
+
+<p>你写程序代码时，布拉格的电车正摇着铃晃过金色夕阳;</p>
+
+<p>你挤进汹涌的食堂时，哥本哈根的街头画家完成了第99幅立体画。</p>
+
+<p>有一些穿高跟鞋走不到的路，有一些喷着香水闻不到的空气，有一些在楼宇里永远碰遇不到的人。</p></blockquote>
+
+<p>但是，看村上春书的《当我谈跑步时我谈些什么》如同嚼蜡，看侯孝贤、王家卫的电影直睡觉之后，我发现其实身上缺少文艺细胞，无事发呆更是让我难受。其实仔细想想，写代码时虽然苦逼，但是当纠出一个苦苦追寻了半个月的bug的时刻，内心还是感觉很爽的。不读村上春树，读读东野圭吾也挺开心的。每天充实的感觉比无所事事更舒服。所以，我还是需要做回自己，做自己喜欢、自己擅长的事情。读到池建强的《是旅行还是长跑》中这样一段话：</p>
+
+<blockquote><p>只要你没有一个强悍的爹，就要先忘掉那些小鱼小蟹，还有珊瑚丛，那些暂时还不属于你，踏踏实实地练习和提升才是王道，为自己规划一个十年的长跑，可以时不时停下来休息一下，低下头汗水就落入尘埃，抬起头就看看夕阳西下，你抹去疲惫，然后继续前行。十年看似很长，但实在很短，十年以后你回头看看，你究竟是成了人中龙凤，还是小鱼小虾，是你认知了世界，还是世界抛弃了你。</p></blockquote>
+
+<p>瞬间引起了共鸣。</p>
+
+<p>闲话扯远了，作为一个国产OS的从业者，一直都从Android系统吸(chao)收(xi)营(yuan)养(ma)。其实我们更想借鉴ios系统，可惜人家不开源，光看表面是做不了神似的。在开发的过程中，也碰到不少问题，零零碎碎读过一些Android的源码，但基本上都是现学现用，缺乏整体的理解。既然做不了文艺青年，那我就来挑战一下Android系统源码吧。当然现在Android源码分析的书和文章也比较多，比如我手头就有邓凡平的《深入理解Android》、杨云君的《Android的设计与实现》和罗升阳的《Android系统源代码情景分析》，网上的文章更是不计其数。但别人分析了也是别人的，买了他们的书，但买不到他们的知识。还是需要亲自深入代码分析，知识才能变成我的。</p>
+
+<p>在后续的学习中，我将结合自身的工作，分析我所感兴趣的部分。Android系统是一个相当庞大的系统，想要深入掌握每个细节，那是一个不可能完成的任务。所以我会略去驱动、linux内核、media等部分，初步计划阅读的部分如下：</p>
+
+<ol>
+<li>Android build系统</li>
+<li>Android系统启动</li>
+<li>Binder原理与实现</li>
+<li>Surface系统</li>
+<li>Dalvik虚拟机</li>
+<li>chromium Webview</li>
+</ol>
+
+
+<p>为了让自己能坚持下去，要求在阅读过程中记笔记，每周至少写一篇博客，梳理一下阅读心得。希望我能够坚持下去并有所得，加油！</p>
+
+<p><strong>[注]</strong> 本文引用的文字出自池建强《MacTalk人生元编程》P.194。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[基于chromium for android开发Android浏览器]]></title>
+    <link href="http://mogoweb.net/blog/2015/11/03/develop-android-browser-base-on-chromium-for-android/"/>
+    <updated>2015-11-03T08:39:21+08:00</updated>
+    <id>http://mogoweb.net/blog/2015/11/03/develop-android-browser-base-on-chromium-for-android</id>
+    <content type="html"><![CDATA[<p>在上一篇文章&lt;&lt; <a href="http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/">Chromium for Android开源了</a> >>中谈到了Google已经完全开源了Chromium for Android，这样我们就完全可以开发与Chrome for Android媲美的Android浏览器了。通常浏览器的一些新特性和新功能会先出现在Chromium for Android上，稳定后才会出现在Chrome for Android上，如果我们基于Chromium for Android开发浏览器产品，在新特性和新功能方面不会落后于Chrome浏览器.</p>
+
+<p>Chromium开源项目的代码及其庞大，也相当的复杂。对于Android开发人员，特别是UI开发人员来说，没有一个合适的IDE环境，会是一个非常痛苦的事情。我们通常是这样开发的，在sublime text中阅读、修改代码，使用chromium的构建系统build出apk，安装到手机，进行调试。对于native代码来说，这样的开发方式也不会有太多麻烦，因为native部分的代码通常修改很少。但如果主要进行UI的定制，这种开发方式就非常痛苦了。</p>
+
+<p>为了应对这个问题，考虑如下方案：</p>
+
+<ol>
+<li>采用Android Studio作为开发环境，从Chromium for Android抽取chrome模块的源码，加入Android project。</li>
+<li>native代码在chromium环境中build，作为so加入Android project</li>
+<li>基础模块(base, content, net等)在chromium环境build为jar包，加入Android project</li>
+<li>content, chrome, ui等模块的资源文件加入Android library project</li>
+</ol>
+
+
+<p>资源文件为什么不能直接都添加到Android project呢？因为命名空间的原因，比如content模块的资源的命名空间为org.chromium.content, chrome模块的资源的命名空间为org.chromium.chrome，所以需要建立不同的Android library project, 指定不同的包名。最后整个项目的结构如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>browser
+</span><span class='line'>  |_ app
+</span><span class='line'>  |    |_ libs
+</span><span class='line'>  |    |_ src
+</span><span class='line'>  |         |_ main
+</span><span class='line'>  |              |_ aidl
+</span><span class='line'>  |              |_ assets
+</span><span class='line'>  |              |_ java
+</span><span class='line'>  |              |_ jniLibs
+</span><span class='line'>  |              |_ res
+</span><span class='line'>  |_ libraries
+</span><span class='line'>       |_ androidmedia_res
+</span><span class='line'>       |_ chrome_res
+</span><span class='line'>       |_ content_res
+</span><span class='line'>       |_ datausagechart_res
+</span><span class='line'>       |_ ui_res</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注意事项：</p>
+
+<ol>
+<li>chromium项目的源码和资源有些是自动生成的，需要到out目录下去复制</li>
+<li>pak和dat等文件需要加入到assets目录，而且不能压缩</li>
+<li>aidl文件加入到main/aidl下，android studio会自动处理</li>
+</ol>
+
+
+<p>实践证明，这种方案是行之有效的，请参考github上的项目: <a href="https://github.com/mogoweb/365browser">365browser</a>。在script目录下有从chromium项目同步代码和资源的脚本。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Chromium for Android开源了]]></title>
+    <link href="http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source/"/>
+    <updated>2015-09-25T09:08:49+08:00</updated>
+    <id>http://mogoweb.net/blog/2015/09/25/chromium-for-android-already-open-source</id>
+    <content type="html"><![CDATA[<p>最近一段时间都在忙其它的事情，没有关注chromium的最新进展。这几天浏览 <a href="http://www.chromium.org">http://www.chromium.org</a> 上的文档，发现android build目标增加了一个：chrome_public_apk。编译方法：</p>
+
+<blockquote><h1>Build the full browser</h1>
+
+<p>~/chromium/src$ ninja -C out/Release chrome_public_apk</p>
+
+<p>~/chromium/src$ build/android/adb_install_apk.py out/Release/apks/ChromePublic.apk</p></blockquote>
+
+<p>搜索了一下相关新闻，大约在2015年5月份开始，chromium中开始加入了chrome for android的源码。从2012年开始，chromium中开始出现Android的移植代码，但只有Content API和ContentShell，离一个完备的浏览器还有一定的距离。当然，基于Content API开发浏览器也是可行的，当年就是这么干的。Chromium for Android和Chrome for Android并非完全一样，就如同桌面版Chromium浏览器和Chrome浏览器之间的区别。</p>
+
+<p>下面放上一些Chromium for Android浏览器的截图，慢慢品味吧：</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_welcome.png" alt="welcome" /></p>
+
+<p>欢迎界面</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_account.png" alt="account" /></p>
+
+<p>帐号同步界面</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_main.png" alt="main" /></p>
+
+<p>浏览器主界面</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_menu.png" alt="menu" /></p>
+
+<p>浏览器菜单</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_settings.png" alt="settings" /></p>
+
+<p>浏览器设置</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_tabs.png" alt="tabs" /></p>
+
+<p>浏览器标签页</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[打造自己的chrome for android]]></title>
@@ -920,10 +1295,10 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span> <span class="nf">application</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSApplication</span><span class="o">*</span><span class="p">)</span> <span class="n">sender</span> <span class="n">openFile</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span> <span class="n">pathname</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span> <span class="nf">application</span> <span class="o">:</span> <span class="p">(</span><span class="n">NSApplication</span><span class="o">*</span><span class="p">)</span> <span class="n">sender</span> <span class="nl">openFile</span> <span class="p">:</span> <span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span> <span class="n">pathname</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;application is asking to open %@&quot;</span><span class="p">,</span> <span class="n">pathname</span><span class="p">);</span>
-</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nb">YES</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span></code></pre></td></tr></table></div></figure>
 
@@ -978,25 +1353,25 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <span class='line-number'>21</span>
 <span class='line-number'>22</span>
 <span class='line-number'>23</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="nc">NSObject</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="bp">NSObject</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'>    <span class="kt">double</span> <span class="n">x</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@property</span> <span class="kt">int</span> <span class="n">y</span><span class="p">;</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="p">;</span>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span><span class="p">;</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="p">;</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span><span class="p">;</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@implementation</span> <span class="nc">Foo</span>
 </span><span class='line'><span class="k">@synthesize</span> <span class="n">y</span><span class="p">;</span>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">f:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">int</span><span class="p">)</span> <span class="nf">g:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="nv">x</span><span class="o">:</span><span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">y</span>
 </span><span class='line'><span class="p">{</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'>
@@ -1027,7 +1402,7 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <p>和C++不同的是，Objective-C是单根继承体系，所有的类都直接或间接继承自NSObject（注：Objective-C语言规范并没有规定这个根类的名字），这一点和Java类似。同样的，Objective-C不支持多继承。和Java语言中的接口类似的东西在Objective-C中被称作协议(protocol)。协议是一个方法声明的列表，有些方法是必须实现的，有些方法可以定义为可选的。和类一样，协议可以继承其它的协议。一个Objective-C类可以实现多个协议。值得一提的是，协议的名字可以和类名一样，比如NSObject是一个类，同时还存在一个名为NSObject的协议。因为采用了不同的关键字，所以编译器能够区分。比如下面的代码中，Foo继承NSObject类，同时实现了NSObject协议：</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="nc">NSObject</span> <span class="o">&lt;</span><span class="n">NSObject</span><span class="o">&gt;</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Foo</span> : <span class="bp">NSObject</span> <span class="o">&lt;</span><span class="bp">NSObject</span><span class="o">&gt;</span>
 </span></code></pre></td></tr></table></div></figure>
 
 
@@ -1068,14 +1443,14 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 <span class='line-number'>29</span>
 <span class='line-number'>30</span>
 <span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="nc">NSObject</span> <span class="p">{</span>
-</span><span class='line'>    <span class="n">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">@interface</span> <span class="nc">Person</span> : <span class="bp">NSObject</span> <span class="p">{</span>
+</span><span class='line'>    <span class="bp">NSString</span> <span class="o">*</span><span class="n">name</span><span class="p">;</span>
 </span><span class='line'><span class="p">}</span>
-</span><span class='line'><span class="o">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nl">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="n">name</span><span class="p">;</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">name</span><span class="p">;</span>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@implementation</span> <span class="nc">Person</span>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
 </span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Person&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
@@ -1085,16 +1460,16 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
 </span><span class='line'><span class="k">@implementation</span> <span class="nc">Student</span>
-</span><span class='line'><span class="k">-</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="n">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
+</span><span class='line'><span class="p">-(</span><span class="kt">void</span><span class="p">)</span><span class="nf">setName:</span><span class="p">(</span><span class="bp">NSString</span><span class="o">*</span><span class="p">)</span><span class="nv">nameValue</span> <span class="p">{</span>
 </span><span class='line'>    <span class="n">name</span> <span class="o">=</span> <span class="n">nameValue</span><span class="p">;</span>
 </span><span class='line'>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Student&#39;s name:%@&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
 </span><span class='line'><span class="p">}</span>
 </span><span class='line'><span class="k">@end</span>
 </span><span class='line'>
-</span><span class='line'><span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
-</span><span class='line'>    <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'><span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span><span class="o">*</span> <span class="n">argv</span><span class="p">[])</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">@autoreleasepool</span> <span class="p">{</span>
 </span><span class='line'>        <span class="n">Person</span><span class="o">*</span> <span class="n">person</span> <span class="o">=</span> <span class="p">[[</span><span class="n">Student</span> <span class="n">alloc</span><span class="p">]</span><span class="n">init</span><span class="p">];</span>
-</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">setName:</span><span class="s">@&quot;Student A&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">person</span> <span class="nl">setName</span><span class="p">:</span><span class="s">@&quot;Student A&quot;</span><span class="p">];</span>
 </span><span class='line'>    <span class="p">}</span>
 </span><span class='line'>
 </span><span class='line'>    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
@@ -1828,405 +2203,6 @@ cabal install happy
 <p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_iphoto_preferences.png" alt="偏好设置" /></p>
 
 <p>修改这一设置的目的是不用将原始的RAW文件复制到iPhoto库，节省空间。然后点选菜单项“文件 ｜ 导入到图库“，选择微云目录下的照片，完成导入。这样如果要浏览照片，就可以在iPhoto中进行，大部分照片可以进行简单的修饰。如果需要复杂的修饰处理，可以打开PhotoShop，对微云下的RAW格式文件进行处理。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Chromium网络加载速度研究(2)]]></title>
-    <link href="http://mogoweb.net/blog/2014/04/03/chromium-loading-spped-research-1/"/>
-    <updated>2014-04-03T18:10:06+08:00</updated>
-    <id>http://mogoweb.net/blog/2014/04/03/chromium-loading-spped-research-1</id>
-    <content type="html"><![CDATA[<p>本文主要内容翻译自chromium的文档<a href="http://www.chromium.org/developers/design-documents/network-stack/netlog">NetLog: Chrome’s network logging system</a>，如果您觉得文章写的不明白，请参看原文。</p>
-
-<p>通过&lt;&lt;<a href="http://mogoweb.github.io/blog/2014/03/18/chromium-loading-speed-research-0/">Chromium网络加载速度研究(1)</a>>>这篇文章的分析，可以得出结论，云端加速是高富帅的玩法。对于个人开发者和小公司而言，是没有那个实力去部署强大的数据中心的。所以接下来还得继续研究，看看有没有其它的途径提高网页加载速度。在着手优化之前，我们需要一个profiling手段找出瓶颈，有目的的优化。另一方面，也需要考虑如何评估优化的效果。如果没有一个客观的评估，优化方案是否有效心中就没有底。谈到Profiling，大多数人估计都会想到log大法，就是在程序的一些关键位置打上log。log通常包括时间、事件、状态等。在chromium中，开发人员早就预料了此类需求，设计了一套强大的NetLog。下面就分析一下chromium中NetLog的设计、实现及其用法。</p>
-
-<!--more-->
-
-
-<h2>概述</h2>
-
-<p>NetLog是一套为Chrome网络栈而设计的事件日志机制，帮助调试问题和分析性能。它遵照&#8221;抓取->转储->分析&#8221;的工作流程，这点和某些工具，如tcpdump有些相像。</p>
-
-<p>典型的使用场景为：</p>
-
-<ol>
-<li>用户启用网络日志</li>
-<li>用户重现问题</li>
-<li>用户将日志上传到BUG报告系统</li>
-<li>开发人员分析日志，定位问题</li>
-</ol>
-
-
-<p>在chrome网络栈内部，在一些关键位置都加入了日志机制，产生事件。观察者监控事件流，对数据进行处理。Chrome中已有的观察者有：</p>
-
-<ul>
-<li>(net_log_logger.cc) 将事件流序列化到文件</li>
-<li>(net_internals_ui.cc) 将事件传递到Javascript应用程序chrome://net-internals,改应用程序可以将数据可视化展现，也可以导出到文件</li>
-</ul>
-
-
-<h2>NetLog的设计理念：</h2>
-
-<ul>
-<li>NetLog缺省关闭</li>
-<li>NetLog关闭时不会影响性能</li>
-<li>Chrome官方发行版本支持NetLog</li>
-<li>事件容易序列化/反序列化到磁盘</li>
-<li>NetLog仅仅用作记录日志</li>
-</ul>
-
-
-<p>也就是说，日志如何序列化，如何分析并非NetLog需要关心的事情。此外，不要通过NetLog获取内部网络信息，比如为NetLog增加一个观察者得到内部网络状态信息。正确的做法是为NetworkDelegate增加接口，进行充分的测试，然后增加文档进行说明。</p>
-
-<h2>NetLog事件的结构定义</h2>
-
-<p>C++中NetLog事件用net::NetLog::Entry定义，这是在内存中的表示，非常容易序列化到JSON。</p>
-
-<p>不到必要的时候，NetLog事件并不会序列化到JSON。在需要序列化事件时，JSON格式如下：</p>
-
-<table>
-<thead>
-<tr>
-<th style="text-align:center;">字段 </th>
-<th style="text-align:center;"> 类型 </th>
-<th style="text-align:left;"> 描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;">time </td>
-<td style="text-align:center;"> string </td>
-<td style="text-align:left;">事件发生的时间（毫秒)，这是时间滴答数而不是unix时间戳. 尽管这是一个数字域，使用字符串表示是避免精度损失</td>
-</tr>
-<tr>
-<td style="text-align:center;">type </td>
-<td style="text-align:center;"> number </td>
-<td style="text-align:left;">事件类型的ID，枚举值定义在<a href="http://src.chromium.org/viewvc/chrome/trunk/src/net/base/net_log_event_type_list.h?view=markup">net_log_event_type_list.h</a></td>
-</tr>
-<tr>
-<td style="text-align:center;">source </td>
-<td style="text-align:center;"> object </td>
-<td style="text-align:left;">产生事件的实例，比如可以标识出某个特定的URLRequest</td>
-</tr>
-<tr>
-<td style="text-align:center;">phase </td>
-<td style="text-align:center;"> number </td>
-<td style="text-align:left;">BEGIN, END, NONE三个枚举值之一</td>
-</tr>
-<tr>
-<td style="text-align:center;">params </td>
-<td style="text-align:center;"> object </td>
-<td style="text-align:left;">可选字段</td>
-</tr>
-</tbody>
-</table>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Chromium网络加载速度研究(1)]]></title>
-    <link href="http://mogoweb.net/blog/2014/03/18/chromium-loading-speed-research-0/"/>
-    <updated>2014-03-18T16:22:09+08:00</updated>
-    <id>http://mogoweb.net/blog/2014/03/18/chromium-loading-speed-research-0</id>
-    <content type="html"><![CDATA[<p>本文主要内容翻译自Google的文档<a href="https://developers.google.com/chrome/mobile/docs/data-compression?hl=zh-CN">Data Compression Proxy</a>，如果您觉得文章写的不明白，请参看原文。</p>
-
-<p>对于一款浏览器而言，速度无疑是非常重要的，其中加载速度更是重中之重。UC浏览器很早就采用了云端加速技术，所以在网页加载速度方面一直很有优势。现在越来越多的浏览器，如Opera、QQ浏览器都采用了服务器端加速技术。Chrome移动版从V33开始正式支持数据压缩代理。下面就分析一下Chrome for Android所采用的数据压缩技术。</p>
-
-<!--more-->
-
-
-<h2>数据压缩代理</h2>
-
-<p>最新的Chrome for Android支持数据压缩代理，通过Google部署的代理服务器优化网站内容，可以极大的减少数据流量。有数据表明，采用这一特性可以减少web页面大小的50%。要启用这一功能，进入Chrome浏览器的菜单&#8221;设置->带宽管理->减少数据流量消耗&#8221;，然后打开即可。</p>
-
-<h2>实现原理</h2>
-
-<p>最核心的优化，减少数据大小，是由Google服务器实现的。当开启了&#8221;数据压缩代理&#8221;特性时，Chrome在手机和运行于Google数据中心的服务器之间建立连接，所有非加密的HTTP请求都通过该连接中转。</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_compression-proxy.png" alt="Data Compression Proxy" /></p>
-
-<p>代理服务器收到手机发起的请求后，向目标网站发起请求，对每个回应进行优化，再回给手机。内容优化是通过Google的开源库<a href="https://developers.google.com/speed/pagespeed/">PageSpeed</a>实现的，该库针对Chrome移动浏览器进行了特别的微调。网页的渲染、JavaScript执行，是由手机上的Chrome浏览器完成的。</p>
-
-<ul>
-<li>HTTPS连接不通过数据压缩代理</li>
-<li>使用数据压缩代理不需要Google账号</li>
-<li>匿名窗口中的浏览不经过数据压缩代理</li>
-</ul>
-
-
-<p>如果您对压缩代理节省的带宽表示怀疑，可以进入到浏览器设置中查看浏览器接收数据的原始大小和优化大小的对比图。如下图所示，带宽节省增长很快。</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_bandwidth-usage.png" alt="bandwidth usage" /></p>
-
-<p>让我们近距离观察一下压缩代理进行了那些特别的优化。</p>
-
-<h3>SPDY</h3>
-
-<p>从手机到代理服务器会尽力采用SPDY, 这是一个针对Web优化的协议，得到了Chrome/Firefox和Opera的支持，也是即将到来的HTTP/2.0标准的基础。如果SPDY连接无法创建，则会建立一个普通的HTTP/1.1代理连接。</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_http-https.png" alt="http-https" /></p>
-
-<p>使用SPDY协议，代理服务器可以在一个TCP连接上同时复用多个请求和回应，这样做有很大的好处：它可以分摊多个请求的TCP握手开销。去掉每个请求的TCP慢速启动阶段，提高吞吐量，还能在数据流上智能的定义请求和回应优先级。事实上，研究表明仅仅使用SPDY可以减少移动网络下23%的页面加载时间，这还没有将内容优化算在内。</p>
-
-<p>此外，使用数据压缩代理还有许多其它的好处：</p>
-
-<ul>
-<li>DNS延迟绑定：DNS查找由代理服务器执行，而不是由手机，这样查找过程可以快很多。</li>
-<li>更少的网络活动和更快的加载速度意味着移动射频活动期更短（减少电量消耗）</li>
-</ul>
-
-
-<h3>内容优化</h3>
-
-<p>悲剧的是，大多数网站并没有对移动终端进行优化，导致内容加载低效和渲染慢。PageSpeed的经验表明，许多内容的优化可以自动完成，就如同数据压缩代理所做的。</p>
-
-<p><em>图片转码:</em> 平均下来，每个页面60%的传输数据是图片。为此，代理服务器特别对此进行优化，将所有的图片都转码为<a href="https://developers.google.com/speed/webp/">WebP</a>格式。WebP比当前流行的格式，如JPEG和PNG，数据量更小。代理支持最新的WebP无损格式，并根据设备分辨率和像素密度对每个图像进行优化。综合各种方法，图像大小可以减少80%。</p>
-
-<p><em>内容压缩:</em> 代理智能的压缩和缩减HTML、JavaScript和CSS资源，通过移除不必要的空格、注释以及其它与页面渲染无关的元数据，再加上对所有资源启用gzip压缩，可以极大的节约带宽。</p>
-
-<p><em>安全浏览:</em> 代理实现了移动Chrome浏览器上的<a href="http://blog.chromium.org/2012/01/all-about-safe-browsing.html">安全浏览</a>，当您访问恶意或者钓鱼网站时会告之浏览器，浏览器会显示一个警告页面。恶意网站列表由代理持续更新。</p>
-
-<h2>该采用云加速技术吗？</h2>
-
-<p>通过前面的分析，采用数据压缩代理似乎是个不错的方案，但是从图1可以看出，所有的数据都需要通过数据压缩代理中转，这就要求：</p>
-
-<ul>
-<li>拥有强大的服务器，快速的进行数据压缩</li>
-<li>拥有强大的数据中心，否则瓶颈会存在于数据压缩代理</li>
-<li>拥有强大的分布式计算能力，浏览器终端需要能够就近连接数据压缩代理</li>
-</ul>
-
-
-<p>在中国，Chrome for Android如果开启数据压缩代理功能，速度反而更慢，其原因就在于Google在中国并没有部署服务器。对于个人开发者和中小企业，一来无法部署强大的数据中心，二来也无法使用Google的服务，所以服务器端加速方案不具备可行性。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Android 4.4 WebView实现分析]]></title>
-    <link href="http://mogoweb.net/blog/2014/01/16/analysis-of-android-4-4-webview-implementation/"/>
-    <updated>2014-01-16T19:22:09+08:00</updated>
-    <id>http://mogoweb.net/blog/2014/01/16/analysis-of-android-4-4-webview-implementation</id>
-    <content type="html"><![CDATA[<p>随着Android4.4的发布，Android WebView改成由Chromium驱动了。浏览Android4.4源代码，可以看到之前版本中的external/WebKit目录被移除掉了，取而代之的是chromium_org。也就是说chromium已经完全取代了之前的WebKit for Android。虽然chromium完全取代了以前的WebKit for Android，但Android WebView的API接口并没有变，与老的版本完全兼容。这样带来的好处是基于WebView构建的APP，无需做任何修改，就能享受chromium内核的高效与强大。下面就Android 4.4中WebView的实现进行分析。</p>
-
-<p>先来看看frameworks/base/core/java/android/webkit下的文件，里面有我们熟悉的WebView、WebSettings、WebViewClient等类，其中最主要的就是WebView了，相关的类关系如下：</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_android_4_4_webview_classes_diagram.png" alt="" /></p>
-
-<p>从图中可以看出，设计者抽象出了一个WebViewProvider接口，WebView本身并不做事，所有的处理就是交给WebViewProvider。而WebViewProvider只是一个接口，由实现者决定采用哪种引擎。从Android4.1开始，就采用了这种设计架构，开始为chromium核心的WebView做准备。在Android 4.4之前的版本，由WebViewClassic实现WebViewProvider接口。在Android4.4中，则是WebViewChromium实现WebViewProvider接口。WebViewFactory也采用了相似的结构，决定了如何实例化WebViewFactoryProvider，WebViewFactoryProvider有一个关键的接口createWebView，创建具体的WebViewProvider。（注：AOSP master源码基于WebKit的实现仍然保留，但在Android4.4中已经移除，由于采用了灵活的架构，所以在两种核心之间非常容易切换）</p>
-
-<!--more-->
-
-
-<p>目前的代码结构如下图所示，在ContentAPI之上，Chromium的WebView实现封装了一个新的类AwContents，该类主要基于ContentViewCore类的实现，不同的是，AwContents需要基于一个原来存在于“chrome/”目录下的模块（图中的BrowserComponents），但是AwContents不应该依赖该目录，所以，将chrome中的一些所谓的浏览器模块化是Chromium的一个方向。目前，一些模块以及从chrome中抽取出来了，参见“components/”。</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_android_4_4_webview_awcontents.png" alt="" /></p>
-
-<p>AwContents提供的不是WebView的API，所以，需要一层桥接部分，将AwContents桥接到WebView，这就是图中的桥接模块，该模块位于Android源代码中的frameworks/webview/chromium/java/com/android/webview/chromium/目录下，WebViewChromium和WebViewChromiumFactory类作为WebView的具体实现，依赖于Chromium项目的AwContents模块，整体模块图如下：</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_androd_4_4_webview_components.png" alt="" /></p>
-
-<p>AwContents基于Content之上，专门针对Android WebView需求而进行的一个封装，这个封装只针对Android平台。</p>
-
-<p>WebView同样也是基于ContentAPI(web contents, ContentViewCore等)，在这点上来说，它同Content Shell和Chromium浏览器没有大的不同，区别在于它们对很多Delegate类的实现不同，这是ContentAPI用于让使用者参与内部逻辑和实现的过程。具体来说，它主要有以下两个方面的不同：</p>
-
-<ol>
-<li>渲染机制</li>
-</ol>
-
-
-<p>因为WebView提供的是一个View控件，那么View控件的容器可能接受储存在CPU中的结构（如bitmap），也可能是储存在GPU内存中的结构（如surface），所以它需要提供两种不同的输出结果。</p>
-
-<p>Chromium引入了一种新的合成器UberCompositor++，该合成器支持输出到GPU和CPU内存两种方式。对于Compositor的结果输出到给定View的GPU内存这种方式，关键点在于实现AwContents.InternalAccessDelegate接口的requestDrawGL方法。与requestDrawGL实现有关的代码不多，只涉及到DrawGLFunctor.java和GraphicsUtils.java，以及与之关联的native实现draw_gl_functor.cpp, graphic_buffer_impl.cpp和graphics_utils.cpp，naitve代码位于frameworks/webview/chromium/plat_support目录下。这部分代码不多，但牵涉到了Android源码，并不是只使用了Android SDK和NDK的API。</p>
-
-<ol>
-<li>进程</li>
-</ol>
-
-
-<p>目前WebView只支持单进程方式，未来不排除支持多进程方式。单进程意味了没有办法使用Android的isolated UID机制，因此，某种程度上来讲，安全性降低了，而且页面的渲染崩溃会导致使用WebView的应用程序崩溃。</p>
-
-<h4>Android 4.4中的chromium</h4>
-
-<p>Android 4.4代码树中的chromium源码位于external/chromium_org，而不是external/chromium, external/chromium是一个老版本的chromium，主要提供chromium net网络栈。external/chromium_org下的chromium版本为r227252，对应的Chromium发行版本为30.0.1599.101， Blink版本为r159105。</p>
-
-<p>AOSP源码中的默认浏览器基于chromium核心，但Browser代码和之前的版本并没有差别，这也看出WebView API的兼容性相当好。而google官方则宣布以后android系统中不再提供浏览器，只有Chrome for Android。</p>
-
-<h4>Android4.4中的chromium移植分析</h4>
-
-<p>从Android4.4的chromium_org git库log可以看到，从chromium源码获取分支后，只cherry-pick了两个提交，而且cherry-pick的代码也是来自chromium项目，信息如下：</p>
-
-<p>commit 3311b27cb6fdbe7af035a7d769944a17328c6227</p>
-
-<p>Author: Ben Murdoch <a href="&#x6d;&#x61;&#x69;&#108;&#x74;&#111;&#x3a;&#98;&#101;&#x6e;&#109;&#x40;&#103;&#111;&#111;&#x67;&#x6c;&#101;&#x2e;&#x63;&#111;&#x6d;">&#98;&#x65;&#x6e;&#x6d;&#64;&#103;&#x6f;&#x6f;&#103;&#108;&#101;&#x2e;&#99;&#111;&#x6d;</a></p>
-
-<p>Date:&#160;&#160; Mon Oct 21 12:33:52 2013 +0100</p>
-
-<p>&#160;&#160;&#160; Cherry pick&#160; [Android] MediaPlayerBridge should pass Bridge to getAllowedOperations</p>
-
-<p>&#160;&#160;&#160; Cherry pick of <a href="https://codereview.chromium.org/32213003/">https://codereview.chromium.org/32213003/</a></p>
-
-<p>&#160;&#160;&#160; Bug: 11311417</p>
-
-<p>&#160;&#160;&#160; Original description:</p>
-
-<p>&#160;&#160;&#160; [Android] MediaPlayerBridge should pass Bridge to getAllowedOperations</p>
-
-<p>&#160;&#160;&#160; Right now the Java side is expecting a MediaPlayer object to be passed</p>
-
-<p>&#160;&#160;&#160; to the MediaPlayerBridge.getAllowedOperations function, but native</p>
-
-<p>&#160;&#160;&#160; is actually passing it a MediaPlayerBridge. Update the code to be</p>
-
-<p>&#160;&#160;&#160; consistent &#8211; Java now expects the MediaPlayerBrdige and uses it to</p>
-
-<p>&#160;&#160;&#160; extract a MediaPlayer.</p>
-
-<p>&#160;&#160;&#160; Change-Id: I5ac618c833c6c3ff015d43405a9a4d507fce9ba5</p>
-
-<p>commit 41a8683eef4139670e32f284a160dc3702d9a5c2</p>
-
-<p>Author: Ben Murdoch <a href="&#x6d;&#97;&#105;&#108;&#116;&#x6f;&#58;&#98;&#x65;&#x6e;&#109;&#x40;&#103;&#x6f;&#111;&#x67;&#x6c;&#x65;&#46;&#99;&#x6f;&#x6d;">&#x62;&#101;&#x6e;&#x6d;&#x40;&#103;&#x6f;&#x6f;&#103;&#108;&#x65;&#46;&#x63;&#111;&#x6d;</a></p>
-
-<p>Date:&#160;&#160; Mon Oct 21 11:04:45 2013 +0100</p>
-
-<p>&#160;&#160;&#160; Cherry pick android: fix base::Time::FromLocalExploded() crash.</p>
-
-<p>&#160;&#160;&#160; Cherry pick of <a href="https://codereview.chromium.org/27472003/">https://codereview.chromium.org/27472003/</a></p>
-
-<p>&#160;&#160;&#160; Bug: 11313033</p>
-
-<p>&#160;&#160;&#160; Original description:</p>
-
-<p>&#160;&#160;&#160; android: fix base::Time::FromLocalExploded() crash.</p>
-
-<p>&#8230;skipping&#8230;</p>
-
-<p>&#160;&#160;&#160; Record Chromium merge at DEPS revision 30.0.1599.101</p>
-
-<p>&#160;&#160;&#160; This commit was generated by merge_to_master.py.</p>
-
-<p>&#160;&#160;&#160; Change-Id: Ie9e9e034f3e5d9a3fe3edf87595c7be467d3136b</p>
-
-<p>结合前面的分析，可以得出如下结论：</p>
-
-<p>1）AwContents都是基于Android SDK/NDK开发，并没有使用Android Source里面的未公开API和库。</p>
-
-<p>2）Android 4.4中使用的chromium，直接取自chromium开源项目，虽然它使用了自己的git库：<a href="https://android.googlesource.com/platform/external/chromium_org">https://android.googlesource.com/platform/external/chromium_org</a></p>
-
-<p>3）Android4.4中的chromium并没有针对android平台做一些特殊修改，和chromium开源项目的代码一致</p>
-
-<p>4）与Android source密切相关的代码位于ChromiumWebView。</p>
-
-<p>如前面所述，在实现reqeustDrawGL时，使用到了Frameworks 未公开的API，native部分代码也用到了Android source中的代码。所涉及的类和Android Source如下：</p>
-
-<pre><code>1. HardwareCanvas
-2. ViewRootImpl
-3. DrawGlInfo.h
-4. GraphicBuffer.h
-5. GraphicsJNI.h
-</code></pre>
-
-<p>5）整个chromium移植代码中，与android source密切相关的代码极少，绝大部分都是基于SDK和NDK而开发。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[[译]Android WebView]]></title>
-    <link href="http://mogoweb.net/blog/2013/10/24/translated-android-webview/"/>
-    <updated>2013-10-24T15:27:02+08:00</updated>
-    <id>http://mogoweb.net/blog/2013/10/24/translated-android-webview</id>
-    <content type="html"><![CDATA[<p>原文地址：<a href="https://crosswalk-project.org/#wiki/android-webview">https://crosswalk-project.org/#wiki/android-webview</a></p>
-
-<ul>
-<li><p>架构&amp;组件</p>
-
-<ul>
-<li>AOSP中的Android WebView将基于AwContents，其位于Content API和Content View之上。</li>
-<li>与Content API不同，它还依赖于从最初的chrome browser分离出来的组件，组件位于components/下，包含auto_login_parser，navigation_interception，visitedlink_browser，visitedlink_renderer和web_contents_delegate_android，这些都是用于页面。</li>
-<li>无渲染进程（进程内渲染），无沙盒机制（sandbox机制）</li>
-<li>图形架构和Content Shell有很大的不同，且正在开发中，将支持软件和硬件输出。</li>
-</ul>
-</li>
-<li><p>API</p>
-
-<ul>
-<li>API类似于EFL WebView，不会暴露内部的browser/renderer/gpu进程。</li>
-<li>能够加载URL，接收加载过程中的事件和回调。</li>
-<li>可通过addJavaScriptInterface扩展JavaScript API，允许JavaScript调用Java代码，反之这不支持。</li>
-<li>提供了若干API接收页面状态改变通知和页面回调。</li>
-</ul>
-</li>
-<li><p>消息循环和事件处理</p>
-
-<ul>
-<li>整合利用Android消息处理</li>
-<li>native代码设置定时器到Java侧的消息循环</li>
-</ul>
-</li>
-<li><p>图形</p>
-
-<ul>
-<li>渲染使用chromium合成器，开启了硬件加速</li>
-<li>合成器输出支持软件和硬件Surface</li>
-<li>硬件加速的架构和content shell不同，和ChromeOS类似。现在还处在早期开发阶段，使用了UberCompositor，支持软件输出</li>
-</ul>
-</li>
-<li><p>WebAPI扩展</p>
-
-<ul>
-<li>API addJavaScriptInterface可用于JavaScript API扩展，但支持JavaScript调用Java代码。</li>
-<li>相反方向的调用（Java -> JavaScript）不支持</li>
-<li>addJavaScriptInterface通过NPObject机制（之前用于NPAPI插件）支持进程外访问，虽然在WebView中不再需要。</li>
-<li>来自Java侧的事件通知貌似还不支持</li>
-</ul>
-</li>
-<li><p>API细节和涵盖范围</p>
-
-<ul>
-<li>WebViewClient用于页面状态改变通知</li>
-<li>WebChromeClient包含参与渲染逻辑的回调</li>
-<li>原生代码/JS交互</li>
-<li>页面加载</li>
-<li>导航&amp;历史记录</li>
-<li>文字搜索</li>
-<li>事件处理</li>
-<li>轨迹球、触摸、键盘</li>
-<li>不支持鼠标事件</li>
-<li>设置：编码</li>
-<li>页面信息：标题、favicon</li>
-<li>HTTPS/SSL</li>
-<li>页面加载状态、缩放、重定向、URL重载，等等</li>
-</ul>
-</li>
-<li><p>源码</p>
-
-<ul>
-<li>src/android_webview
-
-<ul>
-<li>android_webview_java.jar, libwebviewchromium.so和webviewchromium.pak是本模块的编译目标.</li>
-</ul>
-</li>
-<li>Google的工程师正在Android开源项目里开发基于Chrome核心的新WebView.
-
-<ul>
-<li>官方 站点:
-<a href="https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/webkit/">https://android.googlesource.com/platform/frameworks/base.git/+/master/core/java/android/webkit/</a></li>
-<li>镜像:
-<a href="https://github.com/android/platform_frameworks_base/tree/master/core/java/android/webkit">https://github.com/android/platform_frameworks_base/tree/master/core/java/android/webkit</a></li>
-<li>第三方开发者也在基于android_webview模块开发ChromeView
-
-<ul>
-<li>ChromeView有着和Android Webview一样的API. <a href="https://github.com/pwnall/chromeview-src">https://github.com/pwnall/chromeview-src</a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
 ]]></content>
   </entry>
   
