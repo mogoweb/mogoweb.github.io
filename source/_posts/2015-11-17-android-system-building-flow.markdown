@@ -55,7 +55,7 @@ categories:
 |printconfig    | 显示当前 Build 的配置信息 |
 |add_lunch_combo| 在 lunch 函数的菜单中添加一个条目 |
 
-除了定义辅助Shell函数，在脚本的结尾处，遍历device和vendor目录下的vendorsetup.sh文件，vendorsetup.sh文件定义与设备相关的环境变量，比如*/device/generic/armv7-a-neon/vendorsetup.sh*就定义了如下：
+除了定义辅助Shell函数，在脚本的结尾处，还会遍历device和vendor目录下的vendorsetup.sh文件，vendorsetup.sh文件定义与设备相关的环境变量，比如*/device/generic/armv7-a-neon/vendorsetup.sh*就定义了如下：
 
 > add_lunch_combo mini_armv7a_neon-userdebug
 
@@ -96,21 +96,21 @@ BUILDID则是一组特性集合的代码，这个通常与具体的平台相关�
 
 ## build Android系统
 
-最后一步执行*make -j4*才开始真正的进行编译操作，j后面的数字代表同时编译的job数，这个数字可根据CPU核心线程数而定，通常可指定为CPU核心线程的1~2倍，数字越大，代表同时进行编译的任务越多，整个编译过程也会越快。如果不指定目标，默认就会实用“droid”目标，build出完整的Android系统镜像。
+最后一步执行*make -j4*才开始真正的进行编译操作，j后面的数字代表同时编译的job数，这个数字可根据CPU核心线程数而定，通常可指定为CPU核心线程的1~2倍，数字越大，代表同时进行编译的任务越多，整个编译过程也会越快，但需要注意过犹不及。如果不指定目标，默认就会使用“droid”目标，build出完整的Android系统镜像。
 
-Android build系统使用了GNU make，这点很让人意外，因为GNU make实在太难用了，Makefile也很难阅读。不过Google的天才工程师引入了模块化、写了很多实用函数，修改/添加起来还算容易。
+Android build系统使用了GNU make，这点很让人意外，因为GNU Makefile实在太难编写了，也不易阅读。不过Google的天才工程师进行了模块化、写了很多实用函数，修改/添加起来还算容易。
 
 ### Build输出目录结构
 
-所有的编译产物都将位于 /out 目录下，该目录下主要有以下几个子目录：
+所有的编译产物都将位于 out 目录下，该目录下主要有以下几个子目录：
 
 * out/host/：该目录下包含了host端的工具和库，例如：emulator，adb，aapt等。
 * out/target/common/：该目录下包含了针对设备的共用的编译产物，主要是 Java 应用代码和 Java 库。
-* out/target/product/<product_name\>/：包含了针对特定设备的编译结果以及平台相关的 C/C++ 库和二进制文件。其中，<product_name\>是具体目标设备的名称。
+* out/target/product/*product_name*/：包含了针对特定设备的编译结果以及平台相关的 C/C++ 库和二进制文件。其中，*product_name*是具体目标设备的名称。
 
 ### Build生成的镜像文件
 
-Build 的产物中最重要的是三个镜像文件，它们都位于 out/target/product/<product_name\>/ 目录下。这三个文件是：
+Build 的产物中最重要的是三个镜像文件，它们都位于 out/target/product/*product_name*/ 目录下。这三个文件是：
 
 * system.img：包含了 Android OS 的系统文件，库，可执行文件以及预置的应用程序，将被挂载为根分区。
 * ramdisk.img：在启动时将被 Linux 内核挂载为只读分区，它包含了 /init 文件和一些配置文件。它用来挂载其他系统镜像并启动 init 进程。
