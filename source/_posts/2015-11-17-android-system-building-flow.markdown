@@ -18,9 +18,11 @@ categories:
 在这里略过下载Android源码，最好的方法是参考[官方文档][2]。简单说一下我的环境：
 
 * Ubuntu 14.04 LTS 64位
-* Android 4.4.2源码
+* Android 5.1.1源码
 * Sublime Text 2
 * Intel(R) Core(TM) i7-2630QM CPU @ 2.00GHz, 8G RAM, 1TB hd
+
+配备一台Nexus 4/5也是极好的，这个上淘宝，几百元就能搞定，可以省下不少时间（用模拟器也可以，但是比较慢，对主机要求也比较高）。Nexus系列作为google的亲儿子，通常都会得到最新的更新，最适合折腾系统了。
 
 源码下载后，执行如下命令即可编译Android系统(后面的文章将使用$ANDROID_SRC指代Android源码所在目录，如非特别指明，假设命令行在Android源码目录下执行):
 
@@ -41,7 +43,7 @@ categories:
 | **名称** | **说明** |
 |:--------------|:-----------------|
 |lunch          | 选择产品，格式为lunch BUILDID-BUILDTYPE，如果不指定，会弹出一个列表选择 |
-|tapas          | build未打包到image的app，命令行后可以跟一个或者多个app的名称
+|tapas          | build未打包到image的app，命令行后可以跟一个或者多个app的名称。用法为: tapas [<App1> <App2> ...] [arm|x86|mips|armv5|arm64|x86_64|mips64] [eng|userdebug|user] |
 |croot          | 切换到源码树的根目录 |
 |m              | 在源码树的根目录执行 make |
 |mm             | Build 当前目录下的模块 |
@@ -49,17 +51,19 @@ categories:
 |mma            | Build 当前目录下的模块及所有依赖的模块 |
 |mmma           | Build 指定目录下的模块及所有依赖的模块 |
 |cgrep          | 在所有 C/C++ 文件上执行 grep |
+|ggrep          | 在所有 Gradle 文件上执行 grep |
 |jgrep          | 在所有 Java 文件上执行 grep |
 |resgrep        | 在所有 res/*.xml 文件上执行 grep |
+|sgrep          | 在所有源码上执行grep |
 |godir          | 转到包含某个文件的目录路径 |
 |printconfig    | 显示当前 Build 的配置信息 |
 |add_lunch_combo| 在 lunch 函数的菜单中添加一个条目 |
 
-除了定义辅助Shell函数，在脚本的结尾处，还会遍历device和vendor目录下的vendorsetup.sh文件，vendorsetup.sh文件定义与设备相关的环境变量，比如*/device/generic/armv7-a-neon/vendorsetup.sh*就定义了如下：
+除了定义辅助Shell函数，在脚本的结尾处，还会遍历device和vendor目录下的vendorsetup.sh文件，vendorsetup.sh文件定义与设备相关的环境变量，比如*/device/lge/hammerhead/vendorsetup.sh*就定义了如下：
 
-> add_lunch_combo mini_armv7a_neon-userdebug
+> add_lunch_combo aosp_hammerhead-userdebug
 
-这会在lunch菜单中增加一个选项：mini_armv7a_neon-userdebug
+这会在lunch菜单中增加一个选项：aosp_hammerhead-userdebug
 
 ## lunch函数详解
 
@@ -77,22 +81,18 @@ Android支持不同的硬件，比如不同的CPU架构（ARM、MIPS，X86），
 
 BUILDID则是一组特性集合的代码，这个通常与具体的平台相关。除了Android源码预置的选项外，还可以通过add_lunch_combo命令添加自定义的组合。当我们要开发一款新的Android产品时，首先就需要在Build系统中添加对于该产品的定义。
 
-产品定义文件通常位于device目录下，vendor目录已经不建议使用（nexus系列的产品定义就是放在vendor目录）。device目录下通常根据公司名及产品名分为二级目录，比如generic的目录结构如下：
+产品定义文件通常位于device目录下，vendor目录已经不建议使用（nexus系列的产品定义就是放在vendor目录）。device目录下通常根据公司名及产品名分为二级目录，比如lge的目录结构如下：
 
 ```
  device
-   |-- generic
-         |-- armv7-a-neon
-         |-- common
-         |-- goldfish
-         |-- mini-emulator-armv7-a-neon
-         |-- mini-emulator-mips
-         |-- mini-emulator-x86
-         |-- mips
-         |-- x86
+   |-- lge
+         |-- hammerhead
+         |-- hammerhead-kernel
+         |-- mako
+         |-- mako-kernel
 ```
 
-通常一个产品定义至少包含4个文件：AndroidProducts.mk, BoardConfig.mk, vendorsetup.sh及版本定义文件（文件名不固定）。关于如何添加产品定义，请参考[<<理解 Android Build 系统>>][3]一文的**添加新的产品**一节。
+其中mako和hammerhead分别为nexus4和nexus5的产品代号。通常一个产品定义至少包含4个文件：AndroidProducts.mk, BoardConfig.mk, vendorsetup.sh及版本定义文件（文件名不固定）。关于如何添加产品定义，请参考[<<理解 Android Build 系统>>][3]一文的**添加新的产品**一节。
 
 ## build Android系统
 
