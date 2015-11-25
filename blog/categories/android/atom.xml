@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | 放飞梦想]]></title>
   <link href="http://mogoweb.net/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-11-18T08:43:00+08:00</updated>
+  <updated>2015-11-25T11:41:39+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -33,11 +33,13 @@
 
 <ul>
 <li>Ubuntu 14.04 LTS 64位</li>
-<li>Android 4.4.2源码</li>
+<li>Android 5.1.1源码</li>
 <li>Sublime Text 2</li>
 <li>Intel&reg; Core&trade; i7-2630QM CPU @ 2.00GHz, 8G RAM, 1TB hd</li>
 </ul>
 
+
+<p>配备一台Nexus 4/5也是极好的，这个上淘宝，几百元就能搞定，可以省下不少时间（用模拟器也可以，但是比较慢，对主机要求也比较高）。Nexus系列作为google的亲儿子，通常都会得到最新的更新，最适合折腾系统了。</p>
 
 <p>源码下载后，执行如下命令即可编译Android系统(后面的文章将使用$ANDROID_SRC指代Android源码所在目录，如非特别指明，假设命令行在Android源码目录下执行):</p>
 
@@ -72,7 +74,7 @@
 </tr>
 <tr>
 <td style="text-align:left;">tapas          </td>
-<td style="text-align:left;"> build未打包到image的app，命令行后可以跟一个或者多个app的名称</td>
+<td style="text-align:left;"> build未打包到image的app，命令行后可以跟一个或者多个app的名称。用法为: tapas [<App1> <App2> &hellip;] [arm|x86|mips|armv5|arm64|x86_64|mips64] [eng|userdebug|user] </td>
 </tr>
 <tr>
 <td style="text-align:left;">croot          </td>
@@ -103,12 +105,20 @@
 <td style="text-align:left;"> 在所有 C/C++ 文件上执行 grep </td>
 </tr>
 <tr>
+<td style="text-align:left;">ggrep          </td>
+<td style="text-align:left;"> 在所有 Gradle 文件上执行 grep </td>
+</tr>
+<tr>
 <td style="text-align:left;">jgrep          </td>
 <td style="text-align:left;"> 在所有 Java 文件上执行 grep </td>
 </tr>
 <tr>
 <td style="text-align:left;">resgrep        </td>
 <td style="text-align:left;"> 在所有 res/*.xml 文件上执行 grep </td>
+</tr>
+<tr>
+<td style="text-align:left;">sgrep          </td>
+<td style="text-align:left;"> 在所有源码上执行grep </td>
 </tr>
 <tr>
 <td style="text-align:left;">godir          </td>
@@ -126,11 +136,11 @@
 </table>
 
 
-<p>除了定义辅助Shell函数，在脚本的结尾处，还会遍历device和vendor目录下的vendorsetup.sh文件，vendorsetup.sh文件定义与设备相关的环境变量，比如<em>/device/generic/armv7-a-neon/vendorsetup.sh</em>就定义了如下：</p>
+<p>除了定义辅助Shell函数，在脚本的结尾处，还会遍历device和vendor目录下的vendorsetup.sh文件，vendorsetup.sh文件定义与设备相关的环境变量，比如<em>/device/lge/hammerhead/vendorsetup.sh</em>就定义了如下：</p>
 
-<blockquote><p>add_lunch_combo mini_armv7a_neon-userdebug</p></blockquote>
+<blockquote><p>add_lunch_combo aosp_hammerhead-userdebug</p></blockquote>
 
-<p>这会在lunch菜单中增加一个选项：mini_armv7a_neon-userdebug</p>
+<p>这会在lunch菜单中增加一个选项：aosp_hammerhead-userdebug</p>
 
 <h2>lunch函数详解</h2>
 
@@ -166,21 +176,17 @@
 
 <p>BUILDID则是一组特性集合的代码，这个通常与具体的平台相关。除了Android源码预置的选项外，还可以通过add_lunch_combo命令添加自定义的组合。当我们要开发一款新的Android产品时，首先就需要在Build系统中添加对于该产品的定义。</p>
 
-<p>产品定义文件通常位于device目录下，vendor目录已经不建议使用（nexus系列的产品定义就是放在vendor目录）。device目录下通常根据公司名及产品名分为二级目录，比如generic的目录结构如下：</p>
+<p>产品定义文件通常位于device目录下，vendor目录已经不建议使用（nexus系列的产品定义就是放在vendor目录）。device目录下通常根据公司名及产品名分为二级目录，比如lge的目录结构如下：</p>
 
 <pre><code> device
-   |-- generic
-         |-- armv7-a-neon
-         |-- common
-         |-- goldfish
-         |-- mini-emulator-armv7-a-neon
-         |-- mini-emulator-mips
-         |-- mini-emulator-x86
-         |-- mips
-         |-- x86
+   |-- lge
+         |-- hammerhead
+         |-- hammerhead-kernel
+         |-- mako
+         |-- mako-kernel
 </code></pre>
 
-<p>通常一个产品定义至少包含4个文件：AndroidProducts.mk, BoardConfig.mk, vendorsetup.sh及版本定义文件（文件名不固定）。关于如何添加产品定义，请参考<a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-android-build/index.html">&lt;&lt;理解 Android Build 系统>></a>一文的<strong>添加新的产品</strong>一节。</p>
+<p>其中mako和hammerhead分别为nexus4和nexus5的产品代号。通常一个产品定义至少包含4个文件：AndroidProducts.mk, BoardConfig.mk, vendorsetup.sh及版本定义文件（文件名不固定）。关于如何添加产品定义，请参考<a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-android-build/index.html">&lt;&lt;理解 Android Build 系统>></a>一文的<strong>添加新的产品</strong>一节。</p>
 
 <h2>build Android系统</h2>
 
