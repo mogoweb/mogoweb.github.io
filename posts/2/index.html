@@ -7,7 +7,7 @@
 	<meta name="author" content="mogoweb">
 
 	
-	<meta name="description" content="Android 5.0发布了好长时间，一直都没有来得及研究。前两周终于将android 5.0源码下载了下来，大致看了一下代码。我所关注的并非Material Design，而是Android 5.0的web引擎。从Android 4.4开始，采用了chromium/blink内核， &hellip;">
+	<meta name="description" content="Ubuntu不仅是一个免费且开源的操作系统，而且其平台也是开放且透明的。每个组件的源码都可以获取到，也可以从源码自己编译软件包。下面就探讨一下在ubuntu下如何获取chromium源码，并编译Chromium Web Browser。 要从ubuntu的仓库下载源码并编译软件包， &hellip;">
 	
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -80,6 +80,269 @@
 		
 	
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2014/12/15/build-chromium-browser-from-source/">
+		
+			Ubuntu上从源码编译chromium浏览器</a>
+	</h2>
+	<div class="entry-content">
+		<p>Ubuntu不仅是一个免费且开源的操作系统，而且其平台也是开放且透明的。每个组件的源码都可以获取到，也可以从源码自己编译软件包。下面就探讨一下在ubuntu下如何获取chromium源码，并编译Chromium Web Browser。</p>
+
+<p>要从ubuntu的仓库下载源码并编译软件包，最方便的就是使用apt-build实用工具。在ubuntu的发布版本中，该实用工具并没有安装，您可以用如下命令安装:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-get install apt-build</span></code></pre></td></tr></table></div></figure>
+
+
+<p>接下来就可以使用如下命令下载并build chromium browser了:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>sudo apt-build install chromium-browser</span></code></pre></td></tr></table></div></figure>
+
+
+<p>因为我的ubuntu是64位系统(ubuntu 11.04 LTS 64bit)，所以出现了如下错误:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+<span class='line-number'>76</span>
+<span class='line-number'>77</span>
+<span class='line-number'>78</span>
+<span class='line-number'>79</span>
+<span class='line-number'>80</span>
+<span class='line-number'>81</span>
+<span class='line-number'>82</span>
+<span class='line-number'>83</span>
+<span class='line-number'>84</span>
+<span class='line-number'>85</span>
+<span class='line-number'>86</span>
+<span class='line-number'>87</span>
+<span class='line-number'>88</span>
+<span class='line-number'>89</span>
+<span class='line-number'>90</span>
+<span class='line-number'>91</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>E: There are problems and -y was used without --force-yes
+</span><span class='line'>E: Failed to process build dependencies
+</span><span class='line'>-----&gt; Updating package lists &lt;-----
+</span><span class='line'>Ign file: apt-build Release.gpg
+</span><span class='line'>Get:1 file: apt-build Release [107 B]                                                                                                                
+</span><span class='line'>Ign file: apt-build/main TranslationIndex                                                                                                            
+</span><span class='line'>Err file: apt-build/main i386 Packages                                                                                                               
+</span><span class='line'>  File not found
+</span><span class='line'>Ign file: apt-build/main Translation-en_US                                                                                                           
+</span><span class='line'>Ign file: apt-build/main Translation-en                                                                                                              
+</span><span class='line'>Get:2 http://mirrors.163.com precise-updates Release.gpg [198 B]                                                                                     
+</span><span class='line'>Get:3 http://mirrors.163.com precise Release.gpg [198 B]                                                                                             
+</span><span class='line'>Hit http://mirrors.163.com precise-updates Release                                                                                                   
+</span><span class='line'>Hit http://mirrors.163.com precise Release                                                                                                           
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/restricted Sources                                                                                        
+</span><span class='line'>Get:4 http://dl.google.com stable Release.gpg [198 B]                                                                                                
+</span><span class='line'>Get:5 http://archive.ubuntu.com precise Release.gpg [198 B]                                                                                          
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/main Sources                                                                                              
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/universe Sources                                                                                          
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/main amd64 Packages                                                                                       
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/restricted amd64 Packages                                                                                 
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/universe amd64 Packages                                                                                   
+</span><span class='line'>Get:6 http://ppa.launchpad.net precise Release.gpg [316 B]                                                                                           
+</span><span class='line'>Get:7 http://extras.ubuntu.com precise Release.gpg [72 B]                                                                                            
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/main i386 Packages                                                                                        
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/restricted i386 Packages                                                                                  
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/universe i386 Packages                                                                                    
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/main TranslationIndex                                                                                     
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/restricted TranslationIndex                                                                               
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/universe TranslationIndex                                                                                 
+</span><span class='line'>Hit http://mirrors.163.com precise/universe amd64 Packages                                                                                           
+</span><span class='line'>Hit http://mirrors.163.com precise/universe i386 Packages                                                                                            
+</span><span class='line'>Hit http://dl.google.com stable Release                                                                                                              
+</span><span class='line'>Hit http://mirrors.163.com precise/universe TranslationIndex                                                                                         
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/main Translation-en                                                                                       
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/restricted Translation-en                                                                                 
+</span><span class='line'>Hit http://mirrors.163.com precise-updates/universe Translation-en                                                                                   
+</span><span class='line'>Hit http://mirrors.163.com precise/universe Translation-en                                                                                           
+</span><span class='line'>Hit http://dl.google.com stable/main amd64 Packages                                                                                                  
+</span><span class='line'>Hit http://archive.ubuntu.com precise Release                                                                                                        
+</span><span class='line'>Hit http://dl.google.com stable/main i386 Packages                                                                                                   
+</span><span class='line'>Hit http://ppa.launchpad.net precise Release                                                                                                         
+</span><span class='line'>Ign http://dl.google.com stable/main TranslationIndex                                                                                                
+</span><span class='line'>Hit http://extras.ubuntu.com precise Release                                                                                                         
+</span><span class='line'>Get:8 http://security.ubuntu.com precise-security Release.gpg [198 B]                                                                                
+</span><span class='line'>Hit http://archive.ubuntu.com precise/main Sources                                                                                                   
+</span><span class='line'>Get:9 http://cn.archive.ubuntu.com precise Release.gpg [198 B]                                                                                       
+</span><span class='line'>Hit http://ppa.launchpad.net precise/main Sources                                                                                                    
+</span><span class='line'>Hit http://extras.ubuntu.com precise/main Sources                                                                                                    
+</span><span class='line'>Hit http://security.ubuntu.com precise-security Release                                                                                              
+</span><span class='line'>Hit http://archive.ubuntu.com precise/restricted Sources                                                                                             
+</span><span class='line'>Hit http://ppa.launchpad.net precise/main amd64 Packages                                                                                    
+</span><span class='line'>Hit http://ppa.launchpad.net precise/main i386 Packages                                                                              
+</span><span class='line'>Ign http://ppa.launchpad.net precise/main TranslationIndex                                                                           
+</span><span class='line'>Hit http://extras.ubuntu.com precise/main amd64 Packages                                                                             
+</span><span class='line'>Hit http://extras.ubuntu.com precise/main i386 Packages                                                                              
+</span><span class='line'>Ign http://extras.ubuntu.com precise/main TranslationIndex                                                                           
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/restricted Sources                                                
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/main Sources                                                      
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/universe Sources                                                                   
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise Release                                                                                   
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/main amd64 Packages                                                
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/restricted amd64 Packages                                                                            
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/universe amd64 Packages                                                                              
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/main i386 Packages                                                                                   
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/restricted i386 Packages                                                                             
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/universe i386 Packages                                                                               
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/main TranslationIndex                                                                                
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/restricted TranslationIndex                                                                          
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/universe TranslationIndex                                                                            
+</span><span class='line'>Ign http://dl.google.com stable/main Translation-en_US                                                                                               
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/main Translation-en                                                                                  
+</span><span class='line'>Ign http://dl.google.com stable/main Translation-en                                                                                                  
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise/main Sources                                                                                                
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/restricted Translation-en                                                                            
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise/restricted Sources                                                                                          
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise/main amd64 Packages                                                                                         
+</span><span class='line'>Hit http://security.ubuntu.com precise-security/universe Translation-en                                                                              
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise/restricted amd64 Packages                                                                                   
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise/main i386 Packages                                                                                          
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise/restricted i386 Packages                                                                                    
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise/main TranslationIndex                                                                                       
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise/restricted TranslationIndex                                                                                 
+</span><span class='line'>Ign http://ppa.launchpad.net precise/main Translation-en_US                                                                                          
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise/main Translation-en                                                                                         
+</span><span class='line'>Ign http://extras.ubuntu.com precise/main Translation-en_US                                                                                          
+</span><span class='line'>Ign http://extras.ubuntu.com precise/main Translation-en                                                                                             
+</span><span class='line'>Hit http://cn.archive.ubuntu.com precise/restricted Translation-en                                                                                   
+</span><span class='line'>Ign http://ppa.launchpad.net precise/main Translation-en                                                                                             
+</span><span class='line'>Fetched 1,576 B in 10s (147 B/s)                                                                                                                     
+</span><span class='line'>W: Failed to fetch file:/var/cache/apt-build/repository/dists/apt-build/main/binary-i386/Packages  File not found</span></code></pre></td></tr></table></div></figure>
+
+
+<p>从网上找到了答案，解决方法就是指定配置文件中的架构：修改<em>/etc/apt/sources.list.d/apt-build.list</em>文件，将其中的</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>deb file:/var/cache/apt-build/repository apt-build main</span></code></pre></td></tr></table></div></figure>
+
+
+<p>替换为:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>deb [arch=amd64] file:/var/cache/apt-build/repository apt-build main</span></code></pre></td></tr></table></div></figure>
+
+
+<p>接下来就是下载源码，再经过漫长的build过程，生成并安装Chromium Web Browser。版本信息如下图:</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2014_chromium_for_linux_37.0.2062.120_info.png" alt="chrome://version" /></p>
+
+<p>下载的源码位于<em>/var/cache/apt-build/build/</em>下：</p>
+
+<p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2014_chromium_ubuntu_source_info.png" alt="" /></p>
+
+<p>从上图中可以看到源码包的大小只有200多M，而我们从chromium开源项目下的源码通常有7、8个G，主要原因是这里下的源码是不带git和svn信息的，是纯粹的源代码。</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-15T15:09:43+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/chromium/'>chromium</a>, <a class='category' href='/blog/categories/ubuntu/'>ubuntu</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2014/12/15/build-chromium-browser-from-source/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
 
 
     <article class="post">
@@ -857,50 +1120,6 @@
 </div>
 </article>
 
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/">
-		
-			使用iPhoto和微云管理照片</a>
-	</h2>
-	<div class="entry-content">
-		<p>自从上次移动硬盘损坏，丢失了不少珍贵的照片，一直心有余悸，现在保存资料都会进行双备份。近一两年，云存储市场风起云涌，越来越多的企业加入战团。不仅免费，而且容量越来越大。当腾讯宣布微云免费容量10T后，我毫不犹豫的就申请了一个账号，将资料都保存在云端（基本上是一些照片和视频，对于普通老百姓，隐私从来都不是大事），形成本地和云端双保险。喜上加喜，近期新入手了一台iMac，Mac OS自带的iPhoto应用程序让人爱不释手，管理照片起来非常方便，可以直接导入RAW文件，还提供简单的编辑功能。但iPhoto通常是将相机照片导入到自己的库中，这样会出现iPhoto和微云两套照片，有点浪费空间。在琢磨了一段时间后，总结了一套自己的照片管理方法。</p>
-
-
-		
-		<a href="/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/" class="more-link">阅读全文 &rarr;</a>
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-25T07:35:09+08:00" pubdate data-updated="true"></time></div>
-	<div class="tags">
-
-
-	<a class='category' href='/blog/categories/macji-qiao/'>mac技巧</a>, <a class='category' href='/blog/categories/xia-zhe-teng/'>瞎折腾,</a>
-
-
-</div>
-	
-	<div class="comments"><a href="/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/#disqus_thread">Comments</a></div>
-	
-</div>
-</article>
-
 <nav id="pagenavi">
     
         
@@ -913,7 +1132,7 @@
     <div class="center"><a href="/blog/archives">Blog Archives</a></div>
 </nav>
 </div>
-	<footer id="footer" class="inner">Copyright &copy; 2015
+	<footer id="footer" class="inner">Copyright &copy; 2016
 
     mogoweb
 

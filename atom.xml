@@ -4,7 +4,7 @@
   <title><![CDATA[放飞梦想]]></title>
   <link href="http://mogoweb.net/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-11-25T11:41:39+08:00</updated>
+  <updated>2016-07-30T11:33:22+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,109 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[using chromium mirror in china]]></title>
+    <link href="http://mogoweb.net/blog/2016/07/27/using-chromium-mirror-in-china/"/>
+    <updated>2016-07-27T08:44:27+08:00</updated>
+    <id>http://mogoweb.net/blog/2016/07/27/using-chromium-mirror-in-china</id>
+    <content type="html"><![CDATA[<p>在中国，由于伟大的GFW的存在，使得我们开发人员备受折磨。如果仅仅是使用google搜索，使用普通的梯子，差不多可以应付。但是对于Android和chromium开发人员而言，动辄几十G的代码，没有一个很稳定的梯子实在不行。现代的SCM系统通常采用git，好处不必说了，但有一个重大的问题，不支持断点续传。也就是说，如果有10几个G的源码，下载到90%，突然断了，就前功尽弃了。偏偏GFW又格外努力，好好的梯子，说不定哪天就突然被封，通常越是出名，封锁的越厉害。</p>
+
+<p>因为这几年一直在做浏览器开发相关的工作，对此有深刻体会。我们在公司内部为chromium的git库做了镜像，开发人员可以减少一些痛苦。然而chromium更新的相当频繁，我们做镜像也跟得相当痛苦。</p>
+
+<p>不过现在好了，CodeAurora下的Chromium browser for snapdragon也做了chromium的镜像，而且非常贴心的在中国部署了镜像服务器。这个项目由高通资助，致力于浏览器在高通snapdragon芯片上的优化。如果你是在开发ARM上的浏览器产品，非常具有借鉴意义。</p>
+
+<p>下面说明一下如何通过CodeAurora的镜像服务器下载chromium源码。在此需要说明的是，通过镜像服务器，下载源码是不需要翻墙的，但是在后面，有一些工具链什么的，还是需要从google的服务器上下载，仍然需要翻墙。不过此时的下载量较小，普通的VPN，比如GreenVPN可以应付的过来。</p>
+
+<p>因为chromium browser for snapdragon项目fork自chromium，所以下载、build、安装等方法，和chromium项目基本相同，在此不多说，如果需要，请访问相关文档：</p>
+
+<p><a href="https://wiki.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/Setup/">Environment Setup</a></p>
+
+<p><a href="https://chromium.googlesource.com/chromium/src/+/master/docs/android_build_instructions.md">Android Build Instructions</a></p>
+
+<h2>配置CAF镜像</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git config --global url.https://source.codeaurora.org.insteadOf git://codeaurora.org
+</span><span class='line'>git config --global url.https://beijing.source.codeaurora.org.insteadOf git://codeaurora.org
+</span><span class='line'>git config --global url.https://beijing.source.codeaurora.org.insteadOf https://source.codeaurora.org</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注：还有几个可选镜像，可根据实际情况选择上海或香港的镜像服务器，将上面的beijing替换为shanghai或hongkong即可。</p>
+
+<h2>选择活动的分支</h2>
+
+<p>截止写这篇文章为止，有三个主要的分支：</p>
+
+<ul>
+<li>m52 beta分支</li>
+<li>m46 正式分支</li>
+<li>m42 维护分支，不建议在新项目中采用</li>
+</ul>
+
+
+<p>考虑到chromium v52已经出来一段时间，趋于稳定，而且经过一段beta期后，很快就会成为正式版本，所以推荐使用m52分支。</p>
+
+<h2>m52下载与编译指南</h2>
+
+<ul>
+<li>编辑.gclient文件，内容如下：</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>solutions = [
+</span><span class='line'>  { "name"        : "src",
+</span><span class='line'>    "url"         : "git://codeaurora.org/quic/chrome4sdp/chromium/src.git@refs/remotes/origin/m52",
+</span><span class='line'>    "deps_file"   : "DEPS",
+</span><span class='line'>    "managed"     : False,
+</span><span class='line'>    "safesync_url": "",
+</span><span class='line'>  },
+</span><span class='line'>]
+</span><span class='line'>target_os = ["android"]</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>同步代码</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export GYP_CHROMIUM_NO_ACTION=1 # don't process gyp
+</span><span class='line'>gclient sync
+</span><span class='line'>cd src
+</span><span class='line'>./build/install-build-deps-android.sh
+</span><span class='line'>. ./build/android/envsetup.sh
+</span><span class='line'>gn gen out/Default --args='target_os="android" is_debug=false'</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>生成SWE浏览器</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ninja -C out/Default swe_browser_apk</span></code></pre></td></tr></table></div></figure>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Android源码阅读与理解（二）：Android系统Build流程详解]]></title>
@@ -2185,26 +2288,6 @@ cabal install happy
 <p>2014-08-18</p>
 
 <p>完成TintBrowser在Chromium WebView上的适配，并修改了若干UI，命名为365浏览器，已经在腾讯开放平台上上架，你可以从<a href="http://android.myapp.com/myapp/detail.htm?apkName=com.mogoweb">这里</a>下载。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用iPhoto和微云管理照片]]></title>
-    <link href="http://mogoweb.net/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos/"/>
-    <updated>2014-05-25T07:35:09+08:00</updated>
-    <id>http://mogoweb.net/blog/2014/05/25/using-iphoto-and-weiyun-to-manage-photos</id>
-    <content type="html"><![CDATA[<p>自从上次移动硬盘损坏，丢失了不少珍贵的照片，一直心有余悸，现在保存资料都会进行双备份。近一两年，云存储市场风起云涌，越来越多的企业加入战团。不仅免费，而且容量越来越大。当腾讯宣布微云免费容量10T后，我毫不犹豫的就申请了一个账号，将资料都保存在云端（基本上是一些照片和视频，对于普通老百姓，隐私从来都不是大事），形成本地和云端双保险。喜上加喜，近期新入手了一台iMac，Mac OS自带的iPhoto应用程序让人爱不释手，管理照片起来非常方便，可以直接导入RAW文件，还提供简单的编辑功能。但iPhoto通常是将相机照片导入到自己的库中，这样会出现iPhoto和微云两套照片，有点浪费空间。在琢磨了一段时间后，总结了一套自己的照片管理方法。</p>
-
-<!--more-->
-
-
-<p>首先，在微云文件夹里面，还是按照手工的方式整理文件夹，基本的目录命名原则是第一层目录为年份，在年份下面再根据日期和事件（或地点）建立子文件夹。单反拍的照片用RAW格式存储，将SD卡取下来，接到电脑上，将其中的照片文件复制到对应的子文件夹。这一步完成了数码照片在微云上的存储。RAW格式虽然方便后期处理，但是浏览起来不太方便，如果要发布到网上，或者传给他人，还是需要转成jpg格式才行，这时就需要iPhoto上场了。</p>
-
-<p>接下来，打开iPhoto，点选菜单项“iPhoto ｜ 偏好设置“，在弹出的界面，点击“高级”选项卡，去掉“将项目拷贝到iPhoto图库“前面的勾，如下图所示：</p>
-
-<p><img src="http://mogoweb.qiniudn.com/mogoweb_2014_iphoto_preferences.png" alt="偏好设置" /></p>
-
-<p>修改这一设置的目的是不用将原始的RAW文件复制到iPhoto库，节省空间。然后点选菜单项“文件 ｜ 导入到图库“，选择微云目录下的照片，完成导入。这样如果要浏览照片，就可以在iPhoto中进行，大部分照片可以进行简单的修饰。如果需要复杂的修饰处理，可以打开PhotoShop，对微云下的RAW格式文件进行处理。</p>
 ]]></content>
   </entry>
   

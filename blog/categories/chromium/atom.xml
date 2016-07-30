@@ -4,7 +4,7 @@
   <title><![CDATA[Category: chromium | 放飞梦想]]></title>
   <link href="http://mogoweb.net/blog/categories/chromium/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-11-25T11:41:39+08:00</updated>
+  <updated>2016-07-30T11:33:22+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,88 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[using chromium mirror in china]]></title>
+    <link href="http://mogoweb.net/blog/2016/07/27/using-chromium-mirror-in-china/"/>
+    <updated>2016-07-27T08:44:27+08:00</updated>
+    <id>http://mogoweb.net/blog/2016/07/27/using-chromium-mirror-in-china</id>
+    <content type="html"><![CDATA[<p>在中国，由于伟大的GFW的存在，使得我们开发人员备受折磨。如果仅仅是使用google搜索，使用普通的梯子，差不多可以应付。但是对于Android和chromium开发人员而言，动辄几十G的代码，没有一个很稳定的梯子实在不行。现代的SCM系统通常采用git，好处不必说了，但有一个重大的问题，不支持断点续传。也就是说，如果有10几个G的源码，下载到90%，突然断了，就前功尽弃了。偏偏GFW又格外努力，好好的梯子，说不定哪天就突然被封，通常越是出名，封锁的越厉害。</p>
+
+<p>因为这几年一直在做浏览器开发相关的工作，对此有深刻体会。我们在公司内部为chromium的git库做了镜像，开发人员可以减少一些痛苦。然而chromium更新的相当频繁，我们做镜像也跟得相当痛苦。</p>
+
+<p>不过现在好了，CodeAurora下的Chromium browser for snapdragon也做了chromium的镜像，而且非常贴心的在中国部署了镜像服务器。这个项目由高通资助，致力于浏览器在高通snapdragon芯片上的优化。如果你是在开发ARM上的浏览器产品，非常具有借鉴意义。</p>
+
+<p>下面说明一下如何通过CodeAurora的镜像服务器下载chromium源码。在此需要说明的是，通过镜像服务器，下载源码是不需要翻墙的，但是在后面，有一些工具链什么的，还是需要从google的服务器上下载，仍然需要翻墙。不过此时的下载量较小，普通的VPN，比如GreenVPN可以应付的过来。</p>
+
+<p>因为chromium browser for snapdragon项目fork自chromium，所以下载、build、安装等方法，和chromium项目基本相同，在此不多说，如果需要，请访问相关文档：</p>
+
+<p><a href="https://wiki.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/Setup/">Environment Setup</a></p>
+
+<p><a href="https://chromium.googlesource.com/chromium/src/+/master/docs/android_build_instructions.md">Android Build Instructions</a></p>
+
+<h2>配置CAF镜像</h2>
+
+<pre><code>git config --global url.https://source.codeaurora.org.insteadOf git://codeaurora.org
+git config --global url.https://beijing.source.codeaurora.org.insteadOf git://codeaurora.org
+git config --global url.https://beijing.source.codeaurora.org.insteadOf https://source.codeaurora.org
+</code></pre>
+
+<p>注：还有几个可选镜像，可根据实际情况选择上海或香港的镜像服务器，将上面的beijing替换为shanghai或hongkong即可。</p>
+
+<h2>选择活动的分支</h2>
+
+<p>截止写这篇文章为止，有三个主要的分支：</p>
+
+<ul>
+<li>m52 beta分支</li>
+<li>m46 正式分支</li>
+<li>m42 维护分支，不建议在新项目中采用</li>
+</ul>
+
+
+<p>考虑到chromium v52已经出来一段时间，趋于稳定，而且经过一段beta期后，很快就会成为正式版本，所以推荐使用m52分支。</p>
+
+<h2>m52下载与编译指南</h2>
+
+<ul>
+<li>编辑.gclient文件，内容如下：</li>
+</ul>
+
+
+<pre><code>solutions = [
+  { "name"        : "src",
+    "url"         : "git://codeaurora.org/quic/chrome4sdp/chromium/src.git@refs/remotes/origin/m52",
+    "deps_file"   : "DEPS",
+    "managed"     : False,
+    "safesync_url": "",
+  },
+]
+target_os = ["android"]
+</code></pre>
+
+<ul>
+<li>同步代码</li>
+</ul>
+
+
+<pre><code>export GYP_CHROMIUM_NO_ACTION=1 # don't process gyp
+gclient sync
+cd src
+./build/install-build-deps-android.sh
+. ./build/android/envsetup.sh
+gn gen out/Default --args='target_os="android" is_debug=false'
+</code></pre>
+
+<ul>
+<li>生成SWE浏览器</li>
+</ul>
+
+
+<pre><code>ninja -C out/Default swe_browser_apk
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[基于chromium for android开发Android浏览器]]></title>
@@ -208,44 +290,6 @@ gyp: Call to 'echo android 1&gt;&amp;2' returned exit status 0.
 </blockquote>
 
 <p>所以结论是Chromium for Android中可以使用TextureView替代SurfaceView作为合成表面，但带来的后果是占用更多的内存，性能下降。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[关于Ubuntu菜单项中的%U参数]]></title>
-    <link href="http://mogoweb.net/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry/"/>
-    <updated>2015-03-11T16:05:57+08:00</updated>
-    <id>http://mogoweb.net/blog/2015/03/11/about-percent-u-paramters-in-ubuntu-menu-entry</id>
-    <content type="html"><![CDATA[<p>今天在研究chromium deb打包的时候，发现Google Chrome deb包中的/usr/share/applications/google-chrome.desktop文件定义入口为：
-<code>
-Exec=/usr/bin/google-chrome-stable %U
-</code>
-这个%U参数是做什么用的呢？查找了一下资料，有如下描述：
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>%u A single URL. Local files may either be passed as file: URLs or as file path.&lt;/p&gt;
-</span><span class='line'>
-</span><span class='line'>&lt;p&gt;%U A list of URLs. Each URL is passed as a separate argument to the executable program. Local files may either be passed as file: URLs or as file path.</span></code></pre></td></tr></table></div></figure>
-也就是说，加入了%U参数，可以传递多个URL给Chrome浏览器，浏览器会依次打开各URL。比如您在文件管理器中选择了多个html文件，然后在鼠标右键菜单中点击&#8221;Open with Google Chrome&#8221;，Chrome浏览器就会依次打开所选的网页。</p>
-
-<p>以下是Exec支持的参数说明，来自<a href="http://standards.freedesktop.org/desktop-entry-spec/latest/ar01s06.html">http://standards.freedesktop.org/desktop-entry-spec/latest/ar01s06.html</a>:
-<code>
-Code    Description
-%f  A single file name, even if multiple files are selected. The system reading the desktop entry should recognize that the program in question cannot handle multiple file arguments, and it should should probably spawn and execute multiple copies of a program for each selected file if the program is not able to handle additional file arguments. If files are not on the local file system (i.e. are on HTTP or FTP locations), the files will be copied to the local file system and %f will be expanded to point at the temporary file. Used for programs that do not understand the URL syntax.
-%F  A list of files. Use for apps that can open several local files at once. Each file is passed as a separate argument to the executable program.
-%u  A single URL. Local files may either be passed as file: URLs or as file path.
-%U  A list of URLs. Each URL is passed as a separate argument to the executable program. Local files may either be passed as file: URLs or as file path.
-%d  Deprecated.
-%D  Deprecated.
-%n  Deprecated.
-%N  Deprecated.
-%i  The Icon key of the desktop entry expanded as two arguments, first --icon and then the value of the Icon key. Should not expand to any arguments if the Icon key is empty or missing.
-%c  The translated name of the application as listed in the appropriate Name key in the desktop entry.
-%k  The location of the desktop file as either a URI (if for example gotten from the vfolder system) or a local filename or empty if no location is known.
-%v  Deprecated.
-%m  Deprecated.
-</code></p>
 ]]></content>
   </entry>
   

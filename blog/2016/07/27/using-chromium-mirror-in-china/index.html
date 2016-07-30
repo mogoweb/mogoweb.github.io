@@ -1,0 +1,264 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>using chromium mirror in china - 放飞梦想</title>
+	<meta name="author" content="mogoweb">
+
+	
+	<meta name="description" content="在中国，由于伟大的GFW的存在，使得我们开发人员备受折磨。如果仅仅是使用google搜索，使用普通的梯子，差不多可以应付。但是对于Android和chromium开发人员而言，动辄几十G的代码，没有一个很稳定的梯子实在不行。现代的SCM系统通常采用git，好处不必说了，但有一个重大的问题， &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="放飞梦想" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script async="true" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">放飞梦想</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:mogoweb.net">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		
+    
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+    
+	</div>
+	<form class="search" action="https://www.google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:mogoweb.net">
+	</form>
+</nav>
+
+</header>
+	
+		
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Using Chromium Mirror in China</h2>
+	<div class="entry-content"><p>在中国，由于伟大的GFW的存在，使得我们开发人员备受折磨。如果仅仅是使用google搜索，使用普通的梯子，差不多可以应付。但是对于Android和chromium开发人员而言，动辄几十G的代码，没有一个很稳定的梯子实在不行。现代的SCM系统通常采用git，好处不必说了，但有一个重大的问题，不支持断点续传。也就是说，如果有10几个G的源码，下载到90%，突然断了，就前功尽弃了。偏偏GFW又格外努力，好好的梯子，说不定哪天就突然被封，通常越是出名，封锁的越厉害。</p>
+
+<p>因为这几年一直在做浏览器开发相关的工作，对此有深刻体会。我们在公司内部为chromium的git库做了镜像，开发人员可以减少一些痛苦。然而chromium更新的相当频繁，我们做镜像也跟得相当痛苦。</p>
+
+<p>不过现在好了，CodeAurora下的Chromium browser for snapdragon也做了chromium的镜像，而且非常贴心的在中国部署了镜像服务器。这个项目由高通资助，致力于浏览器在高通snapdragon芯片上的优化。如果你是在开发ARM上的浏览器产品，非常具有借鉴意义。</p>
+
+<p>下面说明一下如何通过CodeAurora的镜像服务器下载chromium源码。在此需要说明的是，通过镜像服务器，下载源码是不需要翻墙的，但是在后面，有一些工具链什么的，还是需要从google的服务器上下载，仍然需要翻墙。不过此时的下载量较小，普通的VPN，比如GreenVPN可以应付的过来。</p>
+
+<p>因为chromium browser for snapdragon项目fork自chromium，所以下载、build、安装等方法，和chromium项目基本相同，在此不多说，如果需要，请访问相关文档：</p>
+
+<p><a href="https://wiki.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/Setup/">Environment Setup</a></p>
+
+<p><a href="https://chromium.googlesource.com/chromium/src/+/master/docs/android_build_instructions.md">Android Build Instructions</a></p>
+
+<h2>配置CAF镜像</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git config --global url.https://source.codeaurora.org.insteadOf git://codeaurora.org
+</span><span class='line'>git config --global url.https://beijing.source.codeaurora.org.insteadOf git://codeaurora.org
+</span><span class='line'>git config --global url.https://beijing.source.codeaurora.org.insteadOf https://source.codeaurora.org</span></code></pre></td></tr></table></div></figure>
+
+
+<p>注：还有几个可选镜像，可根据实际情况选择上海或香港的镜像服务器，将上面的beijing替换为shanghai或hongkong即可。</p>
+
+<h2>选择活动的分支</h2>
+
+<p>截止写这篇文章为止，有三个主要的分支：</p>
+
+<ul>
+<li>m52 beta分支</li>
+<li>m46 正式分支</li>
+<li>m42 维护分支，不建议在新项目中采用</li>
+</ul>
+
+
+<p>考虑到chromium v52已经出来一段时间，趋于稳定，而且经过一段beta期后，很快就会成为正式版本，所以推荐使用m52分支。</p>
+
+<h2>m52下载与编译指南</h2>
+
+<ul>
+<li>编辑.gclient文件，内容如下：</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>solutions = [
+</span><span class='line'>  { "name"        : "src",
+</span><span class='line'>    "url"         : "git://codeaurora.org/quic/chrome4sdp/chromium/src.git@refs/remotes/origin/m52",
+</span><span class='line'>    "deps_file"   : "DEPS",
+</span><span class='line'>    "managed"     : False,
+</span><span class='line'>    "safesync_url": "",
+</span><span class='line'>  },
+</span><span class='line'>]
+</span><span class='line'>target_os = ["android"]</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>同步代码</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>export GYP_CHROMIUM_NO_ACTION=1 # don't process gyp
+</span><span class='line'>gclient sync
+</span><span class='line'>cd src
+</span><span class='line'>./build/install-build-deps-android.sh
+</span><span class='line'>. ./build/android/envsetup.sh
+</span><span class='line'>gn gen out/Default --args='target_os="android" is_debug=false'</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>生成SWE浏览器</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ninja -C out/Default swe_browser_apk</span></code></pre></td></tr></table></div></figure>
+
+
+
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-07-27T08:44:27+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/chromium/'>chromium</a>
+
+
+</div>
+	
+	<div class="comments"><a href="#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2016
+
+    mogoweb
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'mogoweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mogoweb.net/blog/2016/07/27/using-chromium-mirror-in-china/';
+        var disqus_url = 'http://mogoweb.net/blog/2016/07/27/using-chromium-mirror-in-china/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//go.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+</body>
+</html>

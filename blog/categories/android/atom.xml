@@ -4,7 +4,7 @@
   <title><![CDATA[Category: android | 放飞梦想]]></title>
   <link href="http://mogoweb.net/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://mogoweb.net/"/>
-  <updated>2015-11-25T11:41:39+08:00</updated>
+  <updated>2016-07-30T11:33:22+08:00</updated>
   <id>http://mogoweb.net/</id>
   <author>
     <name><![CDATA[mogoweb]]></name>
@@ -12,6 +12,88 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[using chromium mirror in china]]></title>
+    <link href="http://mogoweb.net/blog/2016/07/27/using-chromium-mirror-in-china/"/>
+    <updated>2016-07-27T08:44:27+08:00</updated>
+    <id>http://mogoweb.net/blog/2016/07/27/using-chromium-mirror-in-china</id>
+    <content type="html"><![CDATA[<p>在中国，由于伟大的GFW的存在，使得我们开发人员备受折磨。如果仅仅是使用google搜索，使用普通的梯子，差不多可以应付。但是对于Android和chromium开发人员而言，动辄几十G的代码，没有一个很稳定的梯子实在不行。现代的SCM系统通常采用git，好处不必说了，但有一个重大的问题，不支持断点续传。也就是说，如果有10几个G的源码，下载到90%，突然断了，就前功尽弃了。偏偏GFW又格外努力，好好的梯子，说不定哪天就突然被封，通常越是出名，封锁的越厉害。</p>
+
+<p>因为这几年一直在做浏览器开发相关的工作，对此有深刻体会。我们在公司内部为chromium的git库做了镜像，开发人员可以减少一些痛苦。然而chromium更新的相当频繁，我们做镜像也跟得相当痛苦。</p>
+
+<p>不过现在好了，CodeAurora下的Chromium browser for snapdragon也做了chromium的镜像，而且非常贴心的在中国部署了镜像服务器。这个项目由高通资助，致力于浏览器在高通snapdragon芯片上的优化。如果你是在开发ARM上的浏览器产品，非常具有借鉴意义。</p>
+
+<p>下面说明一下如何通过CodeAurora的镜像服务器下载chromium源码。在此需要说明的是，通过镜像服务器，下载源码是不需要翻墙的，但是在后面，有一些工具链什么的，还是需要从google的服务器上下载，仍然需要翻墙。不过此时的下载量较小，普通的VPN，比如GreenVPN可以应付的过来。</p>
+
+<p>因为chromium browser for snapdragon项目fork自chromium，所以下载、build、安装等方法，和chromium项目基本相同，在此不多说，如果需要，请访问相关文档：</p>
+
+<p><a href="https://wiki.codeaurora.org/xwiki/bin/Chromium+for+Snapdragon/Setup/">Environment Setup</a></p>
+
+<p><a href="https://chromium.googlesource.com/chromium/src/+/master/docs/android_build_instructions.md">Android Build Instructions</a></p>
+
+<h2>配置CAF镜像</h2>
+
+<pre><code>git config --global url.https://source.codeaurora.org.insteadOf git://codeaurora.org
+git config --global url.https://beijing.source.codeaurora.org.insteadOf git://codeaurora.org
+git config --global url.https://beijing.source.codeaurora.org.insteadOf https://source.codeaurora.org
+</code></pre>
+
+<p>注：还有几个可选镜像，可根据实际情况选择上海或香港的镜像服务器，将上面的beijing替换为shanghai或hongkong即可。</p>
+
+<h2>选择活动的分支</h2>
+
+<p>截止写这篇文章为止，有三个主要的分支：</p>
+
+<ul>
+<li>m52 beta分支</li>
+<li>m46 正式分支</li>
+<li>m42 维护分支，不建议在新项目中采用</li>
+</ul>
+
+
+<p>考虑到chromium v52已经出来一段时间，趋于稳定，而且经过一段beta期后，很快就会成为正式版本，所以推荐使用m52分支。</p>
+
+<h2>m52下载与编译指南</h2>
+
+<ul>
+<li>编辑.gclient文件，内容如下：</li>
+</ul>
+
+
+<pre><code>solutions = [
+  { "name"        : "src",
+    "url"         : "git://codeaurora.org/quic/chrome4sdp/chromium/src.git@refs/remotes/origin/m52",
+    "deps_file"   : "DEPS",
+    "managed"     : False,
+    "safesync_url": "",
+  },
+]
+target_os = ["android"]
+</code></pre>
+
+<ul>
+<li>同步代码</li>
+</ul>
+
+
+<pre><code>export GYP_CHROMIUM_NO_ACTION=1 # don't process gyp
+gclient sync
+cd src
+./build/install-build-deps-android.sh
+. ./build/android/envsetup.sh
+gn gen out/Default --args='target_os="android" is_debug=false'
+</code></pre>
+
+<ul>
+<li>生成SWE浏览器</li>
+</ul>
+
+
+<pre><code>ninja -C out/Default swe_browser_apk
+</code></pre>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Android源码阅读与理解（二）：Android系统Build流程详解]]></title>
@@ -365,85 +447,6 @@
 <p><img src="http://7d9je4.com1.z0.glb.clouddn.com/mogoweb_2015_chromium_for_android_tabs.png" alt="tabs" /></p>
 
 <p>浏览器标签页</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[打造自己的chrome for android]]></title>
-    <link href="http://mogoweb.net/blog/2015/09/10/customize-chrome-for-android/"/>
-    <updated>2015-09-10T22:01:54+08:00</updated>
-    <id>http://mogoweb.net/blog/2015/09/10/customize-chrome-for-android</id>
-    <content type="html"><![CDATA[<p>[注] 这是两年前写的一篇旧文，现翻出来，根据现在的实际变化作了修订。</p>
-
-<p>chromium移植已经接近尾声，正在冲刺beta版本。不过越往后面，越是一些难啃的骨头。虽然背靠chromium这座大山，但是网页的复杂性超乎想象。更郁闷的是，有些BUG在chrome for android上没有，但在我们的浏览器上存在。因此经常会有这样的质疑：人家的chrome浏览器好好的，你做的浏览器为什么会有这样的问题。面对这样的质疑，真是有苦说不出。在有些人看来，别人都把源代码开放出来了，超过他们是理所当然的。没有办法，碰到难啃的骨头只能迎难而上了。好在chrome for android（V25之后的版本）开始支持自行定制了，虽然没法调试全部的代码，但是部分代码还是可以调试的。这样在分析我们和chrome浏览器在代码执行路径上的差异，也许能够提供一种思路。下面就谈谈如何构建自己的chrome for android。</p>
-
-<!--excerpt-->
-
-
-<ol>
-<li><p>使用您的android设备下载chrome for android，如果能够翻墙的话就在Google Play下载，国内的应用商店也一般有，这里就不详细说了。</p></li>
-<li><p>打开您的android设备上的chrome for android，地址栏中输入chrome://version</p></li>
-<li><p>记下Build ID(版本号ID)后的那一长串数字。</p></li>
-<li><p>在PC机上访问 <a href="http://storage.googleapis.com/chrome-browser-components/">http://storage.googleapis.com/chrome-browser-components/</a>&lt;BUILD_ID>/index.html。其中&lt;BUILD_ID>为步骤3中的ID。下载该页面所列的文件。以下将以$CHROME_PREBUILT指代所存放的目录。</p></li>
-<li><p>下载与chrome for android版本对应的chromium源码，请参考[<a href="http://dev.chromium.org/developers/how-tos/get-the-code#TOC-Check-out-the-source-for-a-branch-or-specific-release">http://dev.chromium.org/developers/how-tos/get-the-code#TOC-Check-out-the-source-for-a-branch-or-specific-release</a>]上的指导将代码切换到正确的release分支。下面就以$CHROMIUM_SRC指代chromium源码的src目录</p></li>
-<li><p>build出自己的libchromeview.so库</p>
-
-<ul>
-<li>cd $CHROMIUM_SRC</li>
-<li>mkdir chrome-android-prebuilts</li>
-<li>cp $CHROME_PREBUILT/chromeview_target.gyp chrome-android-prebuilts/libchrome.gyp</li>
-<li>mkdir -p out/Release</li>
-<li>cp $CHROME_PREBUILT/libchrome_android_prebuilt.a out/Release</li>
-<li>CHROMIUM_GYP_FILE=&ldquo;chrome-android-prebuilts/libchrome.gyp&rdquo; build/gyp_chromium</li>
-<li>ninja -C  out/Release libchrome_prebuilt</li>
-</ul>
-</li>
-<li><p>解包官方chrome的apk</p>
-
-<ul>
-<li> 使用USB连接设备</li>
-<li> cd $CHROME_SRC</li>
-<li> mkdir out/apk</li>
-<li> cd out/apk</li>
-<li> adb pull $(adb shell pm path $CHROME_PACKAGE | sed &#8216;s/package:([^\r ]+).*$/\1/g&#8217;)</li>
-<li> 将pull出的apk重命名为Chrome.apk</li>
-<li> apktool d Chrome.apk</li>
-</ul>
-
-
-<p> 注1：您也可以从网上下载Chrome for android，但要确保下载正确的版本</p>
-
-<p> 注2：apktool 可以从<a href="http://code.google.com/p/android-apktool/">http://code.google.com/p/android-apktool/</a> 下载</p></li>
-<li><p>更新应用程序包</p>
-
-<ul>
-<li> cp $CHROME_PREBUILT/change_chromium_package.py .</li>
-<li> chmod a+x change_chromium_package.py</li>
-<li> ./change_chromium_package.py -u Chrome -p desired_package_name -a desired_app_name</li>
-<li> cp $CHROMIUM_SRC/out/Release/lib.target/libchromeview_prebuilt.so libchromeview.so</li>
-<li> arm-linux-androideabi-strip libchromeview.so</li>
-<li> cp libchromeview.so $CHROMIUM_SRC/out/apk/Chrome/lib/armeabi-v7a</li>
-</ul>
-</li>
-<li><p>重新打包和安装apk</p>
-
-<ul>
-<li> apktool b Chrome Chromium_unaligned.apk</li>
-<li> 签名apk，为了简便起见，可以使用debug key：</li>
-</ul>
-
-
-<blockquote><p>jarsigner -sigalg MD5withRSA -digestalg SHA1 -keystore PATH_TO_ANDROID_SDK/.android/debug.keystore -storepass android Chromium_unaligned.apk androiddebugkey</p></blockquote>
-
-<ul>
-<li> zipalign -f -v 4 Chromium_unaligned.apk Chromium.apk</li>
-<li> adb install -r Chromium.apk</li>
-</ul>
-</li>
-</ol>
-
-
-<p>到此，自有品牌的chrome浏览器就此诞生，您可以更换logo，修复chromium的bug等等。</p>
 ]]></content>
   </entry>
   
