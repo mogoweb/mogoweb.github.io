@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "using chromium mirror in china"
+title: "在中国使用chromium镜像"
 date: 2016-07-27 08:44:27 +0800
 comments: true
 categories:
