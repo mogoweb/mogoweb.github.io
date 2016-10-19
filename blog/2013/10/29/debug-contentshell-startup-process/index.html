@@ -1,0 +1,185 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>调试ContentShell启动过程的方法 - 放飞梦想</title>
+	<meta name="author" content="mogoweb">
+
+	
+	<meta name="description" content="本文探讨的如何调试ContentShell for Android的启动过程，主要是C++部分代码的流程，这对于理解ContentShell的启动流程、render进程是如何创建并启动的有很大的帮助。 理解Contenthell启动流程的最好方法是使用调试器逐步跟踪， &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="放飞梦想" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script async="true" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">放飞梦想</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:mogoweb.net">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		
+    
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+    
+	</div>
+	<form class="search" action="https://www.google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:mogoweb.net">
+	</form>
+</nav>
+
+</header>
+	
+		
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">调试ContentShell启动过程的方法</h2>
+	<div class="entry-content"><p>本文探讨的如何调试ContentShell for Android的启动过程，主要是C++部分代码的流程，这对于理解ContentShell的启动流程、render进程是如何创建并启动的有很大的帮助。</p>
+
+<p>理解Contenthell启动流程的最好方法是使用调试器逐步跟踪，不过chromium在很多地方采用了异步方式，单步跟踪相当困难，比较好的方法是在关键代码处打上断点，查看调用栈。由于ContentShell程序一启动，就会执行启动流程，启动主进程和render进程，并加载网页，这时再用gdb attach到进程，往往我们希望跟踪的代码已经执行过去了。一种比较土的方法就是在程序入口处加上sleep语句，在程序暂停时，执行gdb attach到进程，然后在关键代码处设上断点。这种方法有点不好的地方就是sleep的时间不好定，定短了，gdb还没有attach上去，程序已经执行过了。设长了，每次等的时间就长了。</p>
+
+<p>其实chromium开发者已经考虑到这种需求，所以加入了一个命令行参数：wait-for-java-debugger。查看代码，可以发现在ContentShellActivity.java中就有一个方法waitForDebuggerIfNeeded()，其作用就是等待java调试器attach之后才继续往下执行。所以本文介绍的方法就是jdb/gdb组合来调试ContentShell启动过程。</p>
+
+<ol>
+<li>修改content/shell/android/shell_apk/AndroidManifest.xml，在application节点加入android:debuggable=&ldquo;true&#8221;，然后编译ContentShell，安装到连接的android设备</li>
+<li>从<a href="https://pan.baidu.com/s/1i5seB8h">这里</a>下载jdb_content_shell脚本，放到build/android目录下。</li>
+<li><p>执行如下命令增加命令行参数：
+<pre>adb_content_shell_command_line &ndash;wait-for-java-debugger</pre></p></li>
+<li><p>启动android设备上的ContentShell。应该可以看到界面只是一个空白界面，程序没有接着往下执行。</p></li>
+<li>执行adb_gdb_content_shell命令启动gdb调试，设置断点。</li>
+<li>执行jdb_content_shell命令，可以观察到程序在继续往后执行。</li>
+</ol>
+
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-29T08:42:23+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android,</a>, <a class='category' href='/blog/categories/chromium/'>chromium</a>
+
+
+</div>
+	
+	<div class="comments"><a href="#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2016
+
+    mogoweb
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'mogoweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mogoweb.net/blog/2013/10/29/debug-contentshell-startup-process/';
+        var disqus_url = 'http://mogoweb.net/blog/2013/10/29/debug-contentshell-startup-process/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//go.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+</body>
+</html>

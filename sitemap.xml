@@ -97,8 +97,20 @@
     <lastmod>2014-01-16T19:22:09+08:00</lastmod>
   </url>
   <url>
+    <loc>http://mogoweb.net/blog/2013/10/29/debug-contentshell-startup-process/</loc>
+    <lastmod>2013-10-29T08:42:23+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://mogoweb.net/blog/2013/10/24/translated-android-webview/</loc>
     <lastmod>2013-10-24T15:27:02+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://mogoweb.net/blog/2013/09/26/research-of-browser-plugin/</loc>
+    <lastmod>2013-09-26T08:55:28+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://mogoweb.net/blog/2013/08/30/implement-read-mode-in-browser/</loc>
+    <lastmod>2013-08-30T09:06:23+08:00</lastmod>
   </url>
   <url>
     <loc>http://mogoweb.net/blog/2013/08/10/sublime-text-config/</loc>
@@ -142,7 +154,16 @@
     <loc>http://mogoweb.net/blog/categories/chromium/</loc>
   </url>
   <url>
+    <loc>http://mogoweb.net/blog/categories/browser/</loc>
+  </url>
+  <url>
+    <loc>http://mogoweb.net/blog/categories/plugin/</loc>
+  </url>
+  <url>
     <loc>http://mogoweb.net/blog/categories/android/</loc>
+  </url>
+  <url>
+    <loc>http://mogoweb.net/blog/categories/chromium/</loc>
   </url>
   <url>
     <loc>http://mogoweb.net/blog/categories/xia-zhe-teng/</loc>
@@ -161,9 +182,6 @@
   </url>
   <url>
     <loc>http://mogoweb.net/blog/categories/objective-c/</loc>
-  </url>
-  <url>
-    <loc>http://mogoweb.net/blog/categories/chromium/</loc>
   </url>
   <url>
     <loc>http://mogoweb.net/blog/categories/ubuntu/</loc>

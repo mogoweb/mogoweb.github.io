@@ -1,0 +1,207 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>浏览器中实现阅读模式 - 放飞梦想</title>
+	<meta name="author" content="mogoweb">
+
+	
+	<meta name="description" content="这里对阅读模式的定义是：去除网页上与主题内容无关的图片、导航、广告等等，给用户提供一个清爽的网页。在PC浏览器中，chrome/firefox都有这样的扩展/插件。我个人用的最多的是chrome上的印象笔记.悦读插件，和evernote整合，非常好用。从IOS 6开始， &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="放飞梦想" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script async="true" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">放飞梦想</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:mogoweb.net">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		
+    
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+    
+	</div>
+	<form class="search" action="https://www.google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:mogoweb.net">
+	</form>
+</nav>
+
+</header>
+	
+		
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">浏览器中实现阅读模式</h2>
+	<div class="entry-content"><p>这里对阅读模式的定义是：去除网页上与主题内容无关的图片、导航、广告等等，给用户提供一个清爽的网页。在PC浏览器中，chrome/firefox都有这样的扩展/插件。我个人用的最多的是chrome上的<strong>印象笔记.悦读</strong>插件，和evernote整合，非常好用。从IOS 6开始，safari浏览器也提供了<strong>阅读器</strong>功能，用户界面如下：</p>
+
+<p><a href="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_1.png"><img style="border-right-width: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px" title="safari_readmode_1" border="0" alt="safari_readmode_1" src="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_1_thumb.png" width="274" height="484" /></a> <a href="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_2.png"><img style="border-right-width: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px" title="safari_readmode_2" border="0" alt="safari_readmode_2" src="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_2_thumb.png" width="274" height="484" /></a></p>
+
+<p>当网页中主题内容比较明确、且文字内容较多时，地址栏上就会出现“阅读器”按钮，点击“阅读器”按钮，就会提供给用户一个清爽的网页。更绝的是，如果网页内容包含多个分页，“阅读器”模式下还可以自动整合，无需费力的点击下一页了，相当贴心，如下图所示：</p>
+
+<p><a href="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_3.png"><img style="border-right-width: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px" title="safari_readmode_3" border="0" alt="safari_readmode_3" src="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_3_thumb.png" width="274" height="484" /></a></p>
+
+<p>如果要在浏览器中实现这一个功能，可以有三种方法：</p>
+
+<!--excerpt-->
+
+
+<p>1、服务器端对网页进行处理</p>
+
+<p>其思路和百度转码相同，就是在服务器端对网页进行处理，UC浏览器能够做到省流量，也是采用了这一技术。不过百度转码主要目的是为网页瘦身，所以处理出来的效果惨不忍睹。国外有一家公司，提供了免费的readability API，其口号是：</p>
+
+<blockquote><p>Transforms any article … into a calm, humane, readable experience</p></blockquote>
+
+<p>详情请访问<a href="http://www.readability.com">http://www.readability.com</a>。</p>
+
+<p>使用国外免费的API，实现简单，无需架设服务器，但缺点也是明显的，速度不够理想，容易被墙，说不定哪天就不能使用了。</p>
+
+<p>2、修改webkit，对DOM树进行处理</p>
+
+<p>webkit中，有一个步骤就是解析html，形成DOM树，有了这个DOM树就好办了，有什么节点、节点属性、节点样式都一目了然。所以接下来要做的事情就是筛选主题内容，过滤无关紧要的节点。至于采用什么算法进行筛选，还没有找到现成的C++库，网上有一个C#库：<a href="https://github.com/marek-stoj/NReadability">NReadability</a> 可供参考，如果对javascript比较熟的话，直接参考<a href="https://code.google.com/p/arc90labs-readability/">readability</a>提供的js脚本也可以。</p>
+
+<p>通过修改webkit实现阅读模式，速度快，更容易和浏览器界面进行整合（比如，safari中，只有文字较多的网页才会出现<strong>阅读器</strong>），也比较适合对js前端开发不熟悉的C++程序员，缺点是webkit比较复杂，需要对webkit了解深入，而且之后的维护也是个麻烦事情。</p>
+
+<p>3、注入js，对DOM树进行处理</p>
+
+<p>javascript具有操作DOM的能力，也可以应用样式表来修改节点的样式，所以通过注入JS脚本来实现阅读模式是一个不错的选择。chrome/firefox中扩展插件，或者一种称为<a href="http://zh.wikipedia.org/zh-cn/%E5%B0%8F%E4%B9%A6%E7%AD%BE">bookmarklet</a>的小片代码就是这样实现的。</p>
+
+<p>回到chromium for android，ContentView提供了evaluateJavaScript方法为当前ContentView注入javascript，所以实现起来非常容易。</p>
+
+<h3>TODO</h3>
+
+<p>在safari中，实现了多页拼接的处理。Readability在<a href="http://blog.arc90.com/2010/08/02/readability-updated-to-support-multi-page-articles/">一篇文章</a>中也声明实现了多页合并的处理，不过我对javascript研究的不够多，还没有弄清是如何实现的。如果有精通web前端开发的同学一起探讨，非常欢迎。</p>
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-30T09:06:23+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/chromium/'>chromium,</a>, <a class='category' href='/blog/categories/webkit/'>webkit</a>
+
+
+</div>
+	
+	<div class="comments"><a href="#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2016
+
+    mogoweb
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'mogoweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mogoweb.net/blog/2013/08/30/implement-read-mode-in-browser/';
+        var disqus_url = 'http://mogoweb.net/blog/2013/08/30/implement-read-mode-in-browser/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//go.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+</body>
+</html>

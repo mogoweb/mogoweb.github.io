@@ -271,6 +271,64 @@
     <article class="post">
 	<h2 class="title">
 		
+		<a href="/blog/2013/10/29/debug-contentshell-startup-process/">
+		
+			调试ContentShell启动过程的方法</a>
+	</h2>
+	<div class="entry-content">
+		<p>本文探讨的如何调试ContentShell for Android的启动过程，主要是C++部分代码的流程，这对于理解ContentShell的启动流程、render进程是如何创建并启动的有很大的帮助。</p>
+
+<p>理解Contenthell启动流程的最好方法是使用调试器逐步跟踪，不过chromium在很多地方采用了异步方式，单步跟踪相当困难，比较好的方法是在关键代码处打上断点，查看调用栈。由于ContentShell程序一启动，就会执行启动流程，启动主进程和render进程，并加载网页，这时再用gdb attach到进程，往往我们希望跟踪的代码已经执行过去了。一种比较土的方法就是在程序入口处加上sleep语句，在程序暂停时，执行gdb attach到进程，然后在关键代码处设上断点。这种方法有点不好的地方就是sleep的时间不好定，定短了，gdb还没有attach上去，程序已经执行过了。设长了，每次等的时间就长了。</p>
+
+<p>其实chromium开发者已经考虑到这种需求，所以加入了一个命令行参数：wait-for-java-debugger。查看代码，可以发现在ContentShellActivity.java中就有一个方法waitForDebuggerIfNeeded()，其作用就是等待java调试器attach之后才继续往下执行。所以本文介绍的方法就是jdb/gdb组合来调试ContentShell启动过程。</p>
+
+<ol>
+<li>修改content/shell/android/shell_apk/AndroidManifest.xml，在application节点加入android:debuggable=&ldquo;true&#8221;，然后编译ContentShell，安装到连接的android设备</li>
+<li>从<a href="https://pan.baidu.com/s/1i5seB8h">这里</a>下载jdb_content_shell脚本，放到build/android目录下。</li>
+<li><p>执行如下命令增加命令行参数：
+<pre>adb_content_shell_command_line &ndash;wait-for-java-debugger</pre></p></li>
+<li><p>启动android设备上的ContentShell。应该可以看到界面只是一个空白界面，程序没有接着往下执行。</p></li>
+<li>执行adb_gdb_content_shell命令启动gdb调试，设置断点。</li>
+<li>执行jdb_content_shell命令，可以观察到程序在继续往后执行。</li>
+</ol>
+
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-29T08:42:23+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android,</a>, <a class='category' href='/blog/categories/chromium/'>chromium</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2013/10/29/debug-contentshell-startup-process/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
 		<a href="/blog/2013/10/24/translated-android-webview/">
 		
 			[译]Android WebView</a>
@@ -396,6 +454,193 @@
 </div>
 	
 	<div class="comments"><a href="/blog/2013/10/24/translated-android-webview/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/09/26/research-of-browser-plugin/">
+		
+			浏览器插件扩展研究</a>
+	</h2>
+	<div class="entry-content">
+		<p>首先说明一下，本文探讨的并非NPAPI和PPAPI这种插件技术，而是一种扩展浏览器功能的方法，并且范围仅限于Android平台。插件技术在软件系统中得到了广泛的应用，程序员熟悉的Eclipse就是因为有着极好的插件扩展机制，几乎可以作为所有的程序设计语言的IDE。一般人熟悉的媒体播放器，也使用到了插件技术，以支持不同的编码和格式。甚至photoshop中的滤镜，也算的上是插件。</p>
+
+<p>百度百科上对插件的定义为：</p>
+
+<blockquote><p>插件(Plug-in,又称addin、add-in、addon或add-on,又译外挂)是一种遵循一定规范的<a href="http://baike.baidu.com/view/592964.htm">应用程序接口</a>编写出来的程序。</p></blockquote>
+
+<p>插件和应用程序的最大区别在于插件必须依赖于应用程序才能发挥自身功能，仅靠插件是无法正常运行的。相反地，应用程序并不需要依赖插件就可以运行。一般而言，插件具有以下特征：</p>
+
+<ul>
+<li>独立于应用程序部署，可以被应用程序动态加载。比如Eclipse的插件，可以直接放到plugins目录，就可以被Eclipse识别并动态加载。视频解码器可以单独安装，媒体播放器可以根据视频格式自动加载。</li>
+<li>具有自描述元数据，比如插件名称、icon、版本、描述等，能够以统一的方式被应用程序检索到。</li>
+<li>遵循应用程序的应用程序接口，插件一般只针对特定的应用程序而开发。</li>
+</ul>
+
+
+<!--excerpt-->
+
+
+<p>要实现插件机制，需要解决如下问题：</p>
+
+<ul>
+<li>自注册。要求插件能够独立于应用程序记录某些信息，让应用程序能够找到插件，并且加载。比如Windows下可以通过注册表。</li>
+<li>动态加载。要求应用程序能够动态的加载插件，而不是静态绑定。比如Java应用程序可以通过反射机制动态。</li>
+<li>插件管理。应用程序一般要求能够安装、卸载、禁用插件，显示插件信息。</li>
+</ul>
+
+
+<h3>Android插件系统设计</h3>
+
+<p>Android是采用现代设计思想而设计的移动操作系统，其天然的组件架构为设计插件系统提供了极大的便利。我将按照如下思路设计插件：</p>
+
+<ul>
+<li>插件都设计为Service。通过AIDL定义插件和应用程序之间的应用程序接口，插件实现应用程序定义的接口，应用程序通过Android IPC机制调用接口。插件和应用程序位于不同的进程控件，避免由于插件崩溃而影响到应用程序的运行。</li>
+<li>插件可以有UI，也可以是纯实现功能的后台服务。插件编译为单独的apk包，可独立于应用程序部署/卸载。</li>
+<li>应用程序通过Android Package Manager发现插件。为了区分应用程序所属的插件，可以定义一个特殊的Intent（比如aexp.intent.action.PICK_PLUGIN），并在插件的AndroidManifest.xml中定义Intent filter。</li>
+<li>利用Android的元数据(meta-data)定义插件信息，比如名称、描述、版本等等。</li>
+<li>应用程序监听 ACTION_PACKAGE_ADDED, ACTION_PACKAGE_REMOVED和ACTION_PACKAGE_REPLACED事件来动态的更新插件列表。</li>
+<li>利用Android的Receiver机制，实现应用程序和插件之间的事件交互。</li>
+</ul>
+
+
+<p>插件的例子请看参考文档，无法翻墙的同学看<a href="https://app.box.com/s/37j3ds11u9kv0avz6mpc">这里</a>。</p>
+
+<h3>浏览器插件框架设计</h3>
+
+<p>Chrome浏览器的extensions技术非常强大，让广大的开发人员使用html/css/js就能扩充Chrome浏览器的功能。Google甚至还打造了chrome web store，上面已经有成千上万个插件，有很多新奇和实用的插件，不得不佩服程序员的创造力。不过Chrome for android尚不支持extensions，在开发Browser，曾考虑过enable chromium的extensions开关，后来有些问题实在无法解决，只能放弃。</p>
+
+<p>为了让插件能够更好的扩充浏览器功能，浏览器也需要开放一些接口和事件给插件，比如：</p>
+
+<ul>
+<li>tabs操作，包括新建tab、关闭tab，在tab上加载指定的URL</li>
+<li>bookmark</li>
+<li>history</li>
+</ul>
+
+
+<p>如果想要设计一份完备的浏览器编程API，建议参考<a href="http://developer.chrome.com/extensions/extension.html">Chrome extensions文档</a>，虽然是以js提供的，但非常完备，具有极高的参考价值。</p>
+
+<h3>参考文档</h3>
+
+<ol>
+<li><p><a href="http://mylifewithandroid.blogspot.com/">MY LIFE WITH ANDROID :-) Plugins</a></p></li>
+<li><p><a href="http://mylifewithandroid.blogspot.com/">MY LIFE WITH ANDROID :-) plugins with user interface</a></p></li>
+</ol>
+
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-26T08:55:28+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android,</a>, <a class='category' href='/blog/categories/browser/'>browser</a>, <a class='category' href='/blog/categories/plugin/'>plugin</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2013/09/26/research-of-browser-plugin/#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2013/08/30/implement-read-mode-in-browser/">
+		
+			浏览器中实现阅读模式</a>
+	</h2>
+	<div class="entry-content">
+		<p>这里对阅读模式的定义是：去除网页上与主题内容无关的图片、导航、广告等等，给用户提供一个清爽的网页。在PC浏览器中，chrome/firefox都有这样的扩展/插件。我个人用的最多的是chrome上的<strong>印象笔记.悦读</strong>插件，和evernote整合，非常好用。从IOS 6开始，safari浏览器也提供了<strong>阅读器</strong>功能，用户界面如下：</p>
+
+<p><a href="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_1.png"><img style="border-right-width: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px" title="safari_readmode_1" border="0" alt="safari_readmode_1" src="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_1_thumb.png" width="274" height="484" /></a> <a href="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_2.png"><img style="border-right-width: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px" title="safari_readmode_2" border="0" alt="safari_readmode_2" src="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_2_thumb.png" width="274" height="484" /></a></p>
+
+<p>当网页中主题内容比较明确、且文字内容较多时，地址栏上就会出现“阅读器”按钮，点击“阅读器”按钮，就会提供给用户一个清爽的网页。更绝的是，如果网页内容包含多个分页，“阅读器”模式下还可以自动整合，无需费力的点击下一页了，相当贴心，如下图所示：</p>
+
+<p><a href="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_3.png"><img style="border-right-width: 0px; display: inline; border-top-width: 0px; border-bottom-width: 0px; border-left-width: 0px" title="safari_readmode_3" border="0" alt="safari_readmode_3" src="http://mogoweb.net/wp-content/uploads/2013/08/safari_readmode_3_thumb.png" width="274" height="484" /></a></p>
+
+<p>如果要在浏览器中实现这一个功能，可以有三种方法：</p>
+
+<!--excerpt-->
+
+
+<p>1、服务器端对网页进行处理</p>
+
+<p>其思路和百度转码相同，就是在服务器端对网页进行处理，UC浏览器能够做到省流量，也是采用了这一技术。不过百度转码主要目的是为网页瘦身，所以处理出来的效果惨不忍睹。国外有一家公司，提供了免费的readability API，其口号是：</p>
+
+<blockquote><p>Transforms any article … into a calm, humane, readable experience</p></blockquote>
+
+<p>详情请访问<a href="http://www.readability.com">http://www.readability.com</a>。</p>
+
+<p>使用国外免费的API，实现简单，无需架设服务器，但缺点也是明显的，速度不够理想，容易被墙，说不定哪天就不能使用了。</p>
+
+<p>2、修改webkit，对DOM树进行处理</p>
+
+<p>webkit中，有一个步骤就是解析html，形成DOM树，有了这个DOM树就好办了，有什么节点、节点属性、节点样式都一目了然。所以接下来要做的事情就是筛选主题内容，过滤无关紧要的节点。至于采用什么算法进行筛选，还没有找到现成的C++库，网上有一个C#库：<a href="https://github.com/marek-stoj/NReadability">NReadability</a> 可供参考，如果对javascript比较熟的话，直接参考<a href="https://code.google.com/p/arc90labs-readability/">readability</a>提供的js脚本也可以。</p>
+
+<p>通过修改webkit实现阅读模式，速度快，更容易和浏览器界面进行整合（比如，safari中，只有文字较多的网页才会出现<strong>阅读器</strong>），也比较适合对js前端开发不熟悉的C++程序员，缺点是webkit比较复杂，需要对webkit了解深入，而且之后的维护也是个麻烦事情。</p>
+
+<p>3、注入js，对DOM树进行处理</p>
+
+<p>javascript具有操作DOM的能力，也可以应用样式表来修改节点的样式，所以通过注入JS脚本来实现阅读模式是一个不错的选择。chrome/firefox中扩展插件，或者一种称为<a href="http://zh.wikipedia.org/zh-cn/%E5%B0%8F%E4%B9%A6%E7%AD%BE">bookmarklet</a>的小片代码就是这样实现的。</p>
+
+<p>回到chromium for android，ContentView提供了evaluateJavaScript方法为当前ContentView注入javascript，所以实现起来非常容易。</p>
+
+<h3>TODO</h3>
+
+<p>在safari中，实现了多页拼接的处理。Readability在<a href="http://blog.arc90.com/2010/08/02/readability-updated-to-support-multi-page-articles/">一篇文章</a>中也声明实现了多页合并的处理，不过我对javascript研究的不够多，还没有弄清是如何实现的。如果有精通web前端开发的同学一起探讨，非常欢迎。</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-30T09:06:23+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/chromium/'>chromium,</a>, <a class='category' href='/blog/categories/webkit/'>webkit</a>
+
+
+</div>
+	
+	<div class="comments"><a href="/blog/2013/08/30/implement-read-mode-in-browser/#disqus_thread">Comments</a></div>
 	
 </div>
 </article>

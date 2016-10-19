@@ -1,0 +1,234 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>浏览器插件扩展研究 - 放飞梦想</title>
+	<meta name="author" content="mogoweb">
+
+	
+	<meta name="description" content="首先说明一下，本文探讨的并非NPAPI和PPAPI这种插件技术，而是一种扩展浏览器功能的方法，并且范围仅限于Android平台。插件技术在软件系统中得到了广泛的应用，程序员熟悉的Eclipse就是因为有着极好的插件扩展机制，几乎可以作为所有的程序设计语言的IDE。一般人熟悉的媒体播放器， &hellip;">
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="放飞梦想" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script async="true" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.2.min.js"></script>
+	
+</head>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">放飞梦想</a></h1>
+<nav id="main-nav"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul class="main">
+	<li><a href="/">首页</a></li>
+    <li><a href="/mogo-browser/">365浏览器</li>
+    <li><a href="/blog/archives">存档</a></li>
+    <li><a href="/resources">资源</a></li>
+    <li><a href="/about">关于</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:mogoweb.net">
+			</form>
+		</div>
+	</div>
+</nav>
+<nav id="sub-nav" class="alignright">
+	<div class="social">
+		
+		
+		
+		
+    
+		
+		
+		
+		
+		
+		<a class="rss" href="/atom.xml" title="RSS">RSS</a>
+		
+    
+	</div>
+	<form class="search" action="https://www.google.com/search" method="get">
+		<input class="alignright" type="text" name="q" results="0">
+		<input type="hidden" name="q" value="site:mogoweb.net">
+	</form>
+</nav>
+
+</header>
+	
+		
+	
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">浏览器插件扩展研究</h2>
+	<div class="entry-content"><p>首先说明一下，本文探讨的并非NPAPI和PPAPI这种插件技术，而是一种扩展浏览器功能的方法，并且范围仅限于Android平台。插件技术在软件系统中得到了广泛的应用，程序员熟悉的Eclipse就是因为有着极好的插件扩展机制，几乎可以作为所有的程序设计语言的IDE。一般人熟悉的媒体播放器，也使用到了插件技术，以支持不同的编码和格式。甚至photoshop中的滤镜，也算的上是插件。</p>
+
+<p>百度百科上对插件的定义为：</p>
+
+<blockquote><p>插件(Plug-in,又称addin、add-in、addon或add-on,又译外挂)是一种遵循一定规范的<a href="http://baike.baidu.com/view/592964.htm">应用程序接口</a>编写出来的程序。</p></blockquote>
+
+<p>插件和应用程序的最大区别在于插件必须依赖于应用程序才能发挥自身功能，仅靠插件是无法正常运行的。相反地，应用程序并不需要依赖插件就可以运行。一般而言，插件具有以下特征：</p>
+
+<ul>
+<li>独立于应用程序部署，可以被应用程序动态加载。比如Eclipse的插件，可以直接放到plugins目录，就可以被Eclipse识别并动态加载。视频解码器可以单独安装，媒体播放器可以根据视频格式自动加载。</li>
+<li>具有自描述元数据，比如插件名称、icon、版本、描述等，能够以统一的方式被应用程序检索到。</li>
+<li>遵循应用程序的应用程序接口，插件一般只针对特定的应用程序而开发。</li>
+</ul>
+
+
+<!--excerpt-->
+
+
+<p>要实现插件机制，需要解决如下问题：</p>
+
+<ul>
+<li>自注册。要求插件能够独立于应用程序记录某些信息，让应用程序能够找到插件，并且加载。比如Windows下可以通过注册表。</li>
+<li>动态加载。要求应用程序能够动态的加载插件，而不是静态绑定。比如Java应用程序可以通过反射机制动态。</li>
+<li>插件管理。应用程序一般要求能够安装、卸载、禁用插件，显示插件信息。</li>
+</ul>
+
+
+<h3>Android插件系统设计</h3>
+
+<p>Android是采用现代设计思想而设计的移动操作系统，其天然的组件架构为设计插件系统提供了极大的便利。我将按照如下思路设计插件：</p>
+
+<ul>
+<li>插件都设计为Service。通过AIDL定义插件和应用程序之间的应用程序接口，插件实现应用程序定义的接口，应用程序通过Android IPC机制调用接口。插件和应用程序位于不同的进程控件，避免由于插件崩溃而影响到应用程序的运行。</li>
+<li>插件可以有UI，也可以是纯实现功能的后台服务。插件编译为单独的apk包，可独立于应用程序部署/卸载。</li>
+<li>应用程序通过Android Package Manager发现插件。为了区分应用程序所属的插件，可以定义一个特殊的Intent（比如aexp.intent.action.PICK_PLUGIN），并在插件的AndroidManifest.xml中定义Intent filter。</li>
+<li>利用Android的元数据(meta-data)定义插件信息，比如名称、描述、版本等等。</li>
+<li>应用程序监听 ACTION_PACKAGE_ADDED, ACTION_PACKAGE_REMOVED和ACTION_PACKAGE_REPLACED事件来动态的更新插件列表。</li>
+<li>利用Android的Receiver机制，实现应用程序和插件之间的事件交互。</li>
+</ul>
+
+
+<p>插件的例子请看参考文档，无法翻墙的同学看<a href="https://app.box.com/s/37j3ds11u9kv0avz6mpc">这里</a>。</p>
+
+<h3>浏览器插件框架设计</h3>
+
+<p>Chrome浏览器的extensions技术非常强大，让广大的开发人员使用html/css/js就能扩充Chrome浏览器的功能。Google甚至还打造了chrome web store，上面已经有成千上万个插件，有很多新奇和实用的插件，不得不佩服程序员的创造力。不过Chrome for android尚不支持extensions，在开发Browser，曾考虑过enable chromium的extensions开关，后来有些问题实在无法解决，只能放弃。</p>
+
+<p>为了让插件能够更好的扩充浏览器功能，浏览器也需要开放一些接口和事件给插件，比如：</p>
+
+<ul>
+<li>tabs操作，包括新建tab、关闭tab，在tab上加载指定的URL</li>
+<li>bookmark</li>
+<li>history</li>
+</ul>
+
+
+<p>如果想要设计一份完备的浏览器编程API，建议参考<a href="http://developer.chrome.com/extensions/extension.html">Chrome extensions文档</a>，虽然是以js提供的，但非常完备，具有极高的参考价值。</p>
+
+<h3>参考文档</h3>
+
+<ol>
+<li><p><a href="http://mylifewithandroid.blogspot.com/">MY LIFE WITH ANDROID :-) Plugins</a></p></li>
+<li><p><a href="http://mylifewithandroid.blogspot.com/">MY LIFE WITH ANDROID :-) plugins with user interface</a></p></li>
+</ol>
+
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-26T08:55:28+08:00" pubdate data-updated="true"></time></div>
+	<div class="tags">
+
+
+	<a class='category' href='/blog/categories/android/'>android,</a>, <a class='category' href='/blog/categories/browser/'>browser</a>, <a class='category' href='/blog/categories/plugin/'>plugin</a>
+
+
+</div>
+	
+	<div class="comments"><a href="#disqus_thread">Comments</a></div>
+	
+</div>
+</article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+		
+		
+		<a class="addthis_button_tweet"></a>
+		
+		
+		
+	</div>
+	
+</div>
+
+
+
+<section id="comment">
+    <h2 class="title">Comments</h2>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2016
+
+    mogoweb
+
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+<script type="text/javascript">
+      var disqus_shortname = 'mogoweb';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://mogoweb.net/blog/2013/09/26/research-of-browser-plugin/';
+        var disqus_url = 'http://mogoweb.net/blog/2013/09/26/research-of-browser-plugin/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//go.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+</body>
+</html>
